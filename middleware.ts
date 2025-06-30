@@ -7,17 +7,17 @@ export function middleware(request: NextRequest) {
 
   const isLoggedIn = !!token;
 
-  if (!isLoggedIn && path.startsWith('/dashboard')) {
+  if (!isLoggedIn && path.startsWith('/manage')) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
   if (isLoggedIn && (path === '/login' || path === '/')) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
+    return NextResponse.redirect(new URL('/manage', request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/', '/login', '/dashboard/:path*'],
+  matcher: ['/', '/login', '/manage/:path*'],
 };
