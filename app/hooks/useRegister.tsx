@@ -12,7 +12,7 @@ interface User {
   id: string;
   name: string;
   email: string;
-  role: "ADMIN" | "CUSTOMER";
+  role: "ADMIN" | "CUSTOMER" | undefined;
 }
 
 export const register = async (input: RegisterInput) => {

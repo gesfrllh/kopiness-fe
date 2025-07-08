@@ -1,4 +1,4 @@
-import React, { useState, ReactElement, isValidElement, cloneElement } from 'react';
+import React, { useState, ReactElement, isValidElement, cloneElement, useEffect } from 'react';
 import clsx from 'clsx';
 
 type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
@@ -8,9 +8,10 @@ interface Group {
   label: string;
   required?: boolean;
   children: ReactElement<InputProps | TextareaProps>;
+  value?: string
 }
 
-const FormGroup: React.FC<Group> = ({ children, label, required }) => {
+const FormGroup: React.FC<Group> = ({ children, label, required, value }) => {
   const [focus, setFocus] = useState(false);
   const [hasValue, setHasValue] = useState(false);
 
@@ -20,12 +21,16 @@ const FormGroup: React.FC<Group> = ({ children, label, required }) => {
     setHasValue(!!e.target.value);
   };
 
+  useEffect(() => {
+    setHasValue(!!value)
+  }, [value])
+
   return (
     <div className="relative w-full mt-4">
       <label
         className={clsx(
-          'absolute left-3 transition-all bg-white px-1',
-          focus || hasValue ? 'text-xs -top-2 text-amber-800' : 'text-gray-500 top-2.5'
+          'absolute left-3 transition-all px-1',
+          focus || hasValue ? 'text-xs -top-2 bg-white text-amber-800' : 'text-gray-500 top-2.5'
         )}
       >
         {label} {required && <span className="text-red-500">*</span>}

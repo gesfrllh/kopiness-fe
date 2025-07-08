@@ -44,8 +44,8 @@ export default function LoginPage() {
     } catch (err: unknown) {
       setError(formatError(err))
       showNotify({
-        type: "success",
-        title: 'Sukses!',
+        type: "error",
+        title: 'Error!',
         text: `${formatError(err)}`
       })
     } finally {
@@ -54,8 +54,8 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="grid grid-cols-2 min-h-screen items-center gap-12 bg-gray-100">
-      <div className='h-full flex flex-col items-center justify-center bg-white shadow-lg'>
+    <main className="grid grid-cols-2 min-h-screen items-center md:gap-12 bg-gray-100">
+      <div className='h-full hidden md:flex flex-col items-center justify-center bg-white shadow-lg'>
         <Image src={LoginLogo} alt="" width={320} />
         <div className='p-8'>
           <h1 className='font-semibold '>Ngopi? Jangan nanggung!</h1>
