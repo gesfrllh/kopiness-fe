@@ -11,6 +11,7 @@ import Image from 'next/image'
 import Logo from '@/public/assets/logo.svg'
 import Button from '../Base/Button'
 import { showNotify } from '../Base/notification/notify-controllers'
+import Link from 'next/link'
 interface loginPage {
   email: string,
   password: string,
@@ -97,6 +98,10 @@ export default function LoginPage() {
             className='w-full mt-8'>
             {loading ? 'Logging in...' : 'Login'}
           </Button>
+          <div className='flex gap-2 py-4 justify-end'>
+            Belum punya akun ?
+            <Link href={'/registrations'} className='text-red-500'>Register</Link>
+          </div>
         </form>
       </div>
     </main>
