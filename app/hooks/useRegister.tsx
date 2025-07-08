@@ -1,31 +1,30 @@
-import { gql } from "@apollo/client";
-import client from "../../lib/apollo";
-import Cookies from 'js-cookie'
+import { REGISTER_MUTATION } from "@/graphql/mutations/register";
+import client from "@/lib/apollo";
 
-interface AuthRegisterPayload {
-  token: string,
-  user: {id: string, name: string}
+interface RegisterInput {
+  name: string;
+  email: string;
+  password: string;
+  role: "ADMIN" | "CUSTOMER";
 }
-const LOGIN_MUTATION = gql`
-  mutation login($input: LoginInput!){
-    login(input: $input) {
-      token,
-      user {
-        id
-        name
-      }
-    }
-  }
-`
 
-export const login = async (input: { email: string; password: string }) => {
-  const res = await client.mutate<{ login: AuthRegisterPayload }, { input: { email: string; password: string } }>({
-    mutation: LOGIN_MUTATION,
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: "ADMIN" | "CUSTOMER";
+}
+
+export const register = async (input: RegisterInput) => {
+  const res = await client.mutate<
+    { register: User },
+    { input: RegisterInput }
+  >({
+    mutation: REGISTER_MUTATION,
     variables: { input },
   });
 
-  if (!res.data) throw new Error("No Data Returned");
+  if (!res.data) throw new Error("No data returned");
 
-  Cookies.set("token", res.data.login.token, { expires: 1 });
-  return res.data;
+  return res.data.register;
 };
