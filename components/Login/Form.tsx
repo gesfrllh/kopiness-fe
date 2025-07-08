@@ -98,7 +98,7 @@ export default function LoginPage() {
             className='w-full mt-8'>
             {loading ? 'Logging in...' : 'Login'}
           </Button>
-          <div className='flex gap-2 py-4 justify-end'>
+          <div className='flex gap-2 py-4 justify-end borderi'>
             Belum punya akun ?
             <Link href={'/registrations'} className='text-red-500'>Register</Link>
           </div>
