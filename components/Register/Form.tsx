@@ -8,7 +8,7 @@ import Button from '../Base/Button'
 import Link from 'next/link'
 import Logo from '@/public/assets/logo.svg'
 import Select from '../Base/Select'
-import { register } from '@/app/hooks/useRegister'
+import { register } from '@/hooks/useRegister'
 import { showNotify } from '../Base/notification/notify-controllers'
 import router from 'next/router'
 import { formatError } from '@/utils/formatError'
@@ -40,9 +40,9 @@ const Form = () => {
         showNotify({
           type: "success",
           title: 'Sukses!',
-          text: "Login Berhasil!"
+          text: "User telah didaftarkan."
         })
-        router.push('/dashboard')
+        router.push('/login')
       }
     } catch (err: unknown) {
       showNotify({
@@ -76,6 +76,7 @@ const Form = () => {
             <Select
               label="Role"
               name="role"
+              required={true}
               value={form.role}
               onChange={(value) => setForm({ ...form, role: value as UserRole })}
               options={[

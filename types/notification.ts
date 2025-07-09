@@ -1,6 +1,5 @@
 import { JSX } from "react";
 
-
 export interface NotifyProps {
   type?: "success" | "error" | "warning" | "info";
   title?: string;

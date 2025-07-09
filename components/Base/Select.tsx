@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import FormGroup from "./FormGroup";
 import { FiChevronDown } from "react-icons/fi";
-import { div } from "framer-motion/client";
 
 interface Option {
   label: string;
@@ -30,7 +29,6 @@ const Select: React.FC<SelectProps> = ({
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  // Close dropdown if clicked outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) {

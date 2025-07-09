@@ -7,7 +7,7 @@ export function middleware(request: NextRequest) {
 
   const isLoggedIn = !!token;
 
-  if (!isLoggedIn && (path === '/' || path === '/manage')) {
+  if (!isLoggedIn && (path === '/' || path === '/manage' || path.startsWith('/manage/'))) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 

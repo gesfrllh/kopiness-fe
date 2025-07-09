@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from 'react'
-import { login } from '../../app/hooks/useAuth'
+import { login } from '@/hooks/useAuth'
 import { formatError } from '@/utils/formatError'
 import FormGroup from '../../components/Base/FormGroup'
 import FormInput from '../../components/Base/FormInput'
@@ -12,6 +12,7 @@ import Logo from '@/public/assets/logo.svg'
 import Button from '../Base/Button'
 import { showNotify } from '../Base/notification/notify-controllers'
 import Link from 'next/link'
+import { useAuthStore } from '@/store/useAuthStore'
 interface loginPage {
   email: string,
   password: string,
@@ -22,34 +23,28 @@ export default function LoginPage() {
     email: '',
     password: ''
   })
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+
+  const login = useAuthStore(state => state.login)
+  const loading = useAuthStore(state => state.loading)
   const router = useRouter()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
-    setError('')
 
     try {
-      const response = await login(form)
-      if (response) {
-        showNotify({
-          type: "success",
-          title: 'Sukses!',
-          text: "Login Berhasil!"
-        })
-        router.push('/dashboard')
-      }
+      await login(form.email, form.password)
+      showNotify({
+        type: "success",
+        title: 'Sukses!',
+        text: "Login Berhasil!"
+      })
+      router.push('/manage/dashboard')
     } catch (err: unknown) {
-      setError(formatError(err))
       showNotify({
         type: "error",
         title: 'Error!',
         text: `${formatError(err)}`
       })
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -76,8 +71,6 @@ export default function LoginPage() {
           <div className='flex justify-center'>
             <Image src={Logo} alt='Logo' width={92} />
           </div>
-          {error && <p className="text-red-500 mb-4">{error}</p>}
-
           <FormGroup label='Email' required={true}>
             <FormInput
               name='email'

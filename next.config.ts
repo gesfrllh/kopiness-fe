@@ -8,11 +8,11 @@ const nextConfig: NextConfig = {
   publicRuntimeConfig: {
     apiUrl: process.env.NEXT_PUBLIC_API_BASE_URL
   },
-  webpack(config){
+  webpack(config) {
     config.resolve.extensions.push('.mjs')
     return config
   },
-  
+  devIndicators: false,
 };
 
 export default nextConfig;
