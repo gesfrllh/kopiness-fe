@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Poppins } from "next/font/google";
+import { Geist, Geist_Mono, Poppins, Bebas_Neue } from "next/font/google";
 import "./globals.scss";
 import { ToastProvider } from "@/components/Base/notification/ToastProvider";
+import ResponsiveInit from "./ResponsiveInit";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -12,6 +13,12 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+const bebasNeue = Bebas_Neue({
+  variable: "--font-bebas-neue",
+  subsets: ["latin"],
+  weight: ["400"]
+})
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -32,8 +39,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <ToastProvider position="top-right">
+        <ResponsiveInit />
         <body
-          className={`${geistSans.variable} ${geistMono.variable} ${poppins.className} antialiased`}
+          className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} ${poppins.variable} antialiased`}
         >
           {children}
         </body>

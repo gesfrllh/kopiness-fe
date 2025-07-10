@@ -1,0 +1,128 @@
+.loader-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.loader {
+  width: 40px;
+  aspect-ratio: 1;
+  --c: no-repeat linear-gradient(#b44a02 0 0);
+  background:
+    var(--c) 0 0,
+    var(--c) 0 100%,
+    var(--c) 50% 0,
+    var(--c) 50% 100%,
+    var(--c) 100% 0,
+    var(--c) 100% 100%;
+  background-size: 8px 50%;
+  animation: l7-0 1s infinite;
+  position: relative;
+  overflow: hidden;
+  z-index: 10000;
+}
+
+.loader:before {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  top: calc(50% - 4px);
+  left: -8px;
+  animation: inherit;
+  animation-name: l7-1;
+}
+
+@keyframes l7-0 {
+  16.67% {
+    background-size: 8px 30%, 8px 30%, 8px 50%, 8px 50%, 8px 50%, 8px 50%
+  }
+
+  33.33% {
+    background-size: 8px 30%, 8px 30%, 8px 30%, 8px 30%, 8px 50%, 8px 50%
+  }
+
+  50% {
+    background-size: 8px 30%, 8px 30%, 8px 30%, 8px 30%, 8px 30%, 8px 30%
+  }
+
+  66.67% {
+    background-size: 8px 50%, 8px 50%, 8px 30%, 8px 30%, 8px 30%, 8px 30%
+  }
+
+  83.33% {
+    background-size: 8px 50%, 8px 50%, 8px 50%, 8px 50%, 8px 30%, 8px 30%
+  }
+}
+
+@keyframes l7-1 {
+  20% {
+    left: 0px
+  }
+
+  40% {
+    left: calc(50% - 4px)
+  }
+
+  60% {
+    left: calc(100% - 8px)
+  }
+
+  80%,
+  100% {
+    left: 100%
+  }
+}
+
+
+.animatedText {
+  display: inline-block;
+  font-family: var(--font-akira);
+  text-transform: uppercase;
+  font-size: 32px;
+  cursor: pointer;
+  font-weight: bold;
+
+  span {
+    display: inline-block;
+    transition: color 0.3s ease;
+  }
+
+  &:hover span {
+    animation: rainbowColor 0.5s forwards;
+  }
+
+  &.active {
+    color: transparent;
+    -webkit-text-stroke: 1px #000000;
+  }
+}
+
+@keyframes rainbowColor {
+  0% {
+    color: transparent;
+    -webkit-text-stroke: 1px #000000;
+  }
+
+  25% {
+    color: #610000;
+    -webkit-text-stroke: 1px;
+  }
+
+  50% {
+    color: transparent;
+    -webkit-text-stroke: 1px #000000;
+  }
+
+  100% {
+    color: transparent;
+    -webkit-text-stroke: 1px #000000;
+  }
+
+}

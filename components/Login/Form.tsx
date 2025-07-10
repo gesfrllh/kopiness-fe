@@ -1,7 +1,6 @@
 "use client"
 
-import { useState } from 'react'
-import { login } from '@/hooks/useAuth'
+import { useEffect, useState } from 'react'
 import { formatError } from '@/utils/formatError'
 import FormGroup from '../../components/Base/FormGroup'
 import FormInput from '../../components/Base/FormInput'
@@ -13,6 +12,7 @@ import Button from '../Base/Button'
 import { showNotify } from '../Base/notification/notify-controllers'
 import Link from 'next/link'
 import { useAuthStore } from '@/store/useAuthStore'
+import AnimationLogin from '../animation/AnimationLogin'
 interface loginPage {
   email: string,
   password: string,
@@ -24,29 +24,33 @@ export default function LoginPage() {
     password: ''
   })
 
-  const login = useAuthStore(state => state.login)
-  const loading = useAuthStore(state => state.loading)
+  const { login, loading, error } = useAuthStore()
+
   const router = useRouter()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    try {
-      await login(form.email, form.password)
+    await login(form.email, form.password)
+    if (!error) {
       showNotify({
         type: "success",
         title: 'Sukses!',
         text: "Login Berhasil!"
       })
       router.push('/manage/dashboard')
-    } catch (err: unknown) {
-      showNotify({
-        type: "error",
-        title: 'Error!',
-        text: `${formatError(err)}`
-      })
     }
   }
+
+  useEffect(() => {
+    if (error) {
+      showNotify({
+        type: 'error',
+        title: 'Error!',
+        text: error
+      })
+    }
+  }, [error])
 
   return (
     <main className="grid grid-cols-2 min-h-screen items-center md:gap-12 bg-gray-100">
@@ -91,6 +95,7 @@ export default function LoginPage() {
             className='w-full mt-8'>
             {loading ? 'Logging in...' : 'Login'}
           </Button>
+          {loading ? <AnimationLogin /> : ''}
           <div className='flex gap-2 py-4 justify-end borderi'>
             Belum punya akun ?
             <Link href={'/registrations'} className='text-red-500'>Register</Link>

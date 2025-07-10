@@ -19,7 +19,6 @@ export default function NotifyItem({
   onClose,
 }: Props) {
   const classNames = useMemo(() => {
-    console.log(type)
     return ["notify-item", type ? `notify-item--${type}` : ""].join(" ");
   }, [type]);
 
@@ -46,7 +45,7 @@ export default function NotifyItem({
       <div className="notify-item__header">
         <span className="notify-item__header__icon">{renderIcon()}</span>
         <div className="flex gap-2">
-          {title && <span className="notify-item__header__title">{title}:</span>}  {text && <span className="notify-item__header__desc">{text}</span>} 
+          {title && <span className="notify-item__header__title">{title}:</span>}  {text && <span className="notify-item__header__desc">{text}</span>}
         </div>
         {dismissable && (
           <span className="notify-item__header__close" onClick={onClose}>

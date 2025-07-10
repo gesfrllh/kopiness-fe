@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Akira';
+  src: url('/public/font/akira/Akira.otf') format('opentype');
+  font-weight: normal;
+  font-size: normal;
+}
+
+:root {
+  --font-akira: 'Akira', sans-serif;
+}
+
 body {
   font-family: var(--font-poppins);
 }

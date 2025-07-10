@@ -33,7 +33,9 @@ export const useAuthStore = create<AuthState>((set: SetStateFn) => ({
       })
 
     } catch (error: unknown) {
-      set({ error: formatError(error) || 'Login Failed', loading: false })
+      const message = formatError(error) || 'Login Failed'
+      set({ error: message, loading: false })
+      throw new Error(message)
     }
   },
 
@@ -64,7 +66,9 @@ export const useAuthStore = create<AuthState>((set: SetStateFn) => ({
         loading: false
       })
     } catch (error: unknown) {
-      set({ error: formatError(error) || 'Logout Failed', loading: false })
+      const message = formatError(error) || 'Logout Failed'
+      set({ error: message, loading: false })
+      throw new Error(message)
     }
   },
 

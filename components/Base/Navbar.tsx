@@ -2,7 +2,7 @@
 
 import { Icon } from '@iconify/react'
 import Link from 'next/link'
-import React from 'react'
+import React, { useState } from 'react'
 import { UUIDTypes, v4 as uuid } from 'uuid'
 import Image from 'next/image'
 import Logo from '@/public/assets/logo.svg'
@@ -10,6 +10,8 @@ import { showNotify } from './notification/notify-controllers'
 import { useRouter } from 'next/navigation'
 import { formatError } from '@/utils/formatError'
 import { useAuthStore } from '@/store/useAuthStore'
+import { useResponsiveStore } from '@/store/useResponsiveStore'
+import '../animation/AnimationCss.scss'
 
 interface NavbarProps {
   link: string,
@@ -18,6 +20,8 @@ interface NavbarProps {
 }
 
 const Navbar = () => {
+  const isMobile = useResponsiveStore((state) => state.isMobile)
+  const [isActive, setIsActive] = useState<string>('')
   const dataItem: NavbarProps[] = [
     {
       id: uuid(),
@@ -67,26 +71,50 @@ const Navbar = () => {
     }
   }
 
+  const isActiveLink = (data: string) => {
+    return setIsActive(data)
+  }
+
   return (
     <>
-      <div className='border-b-2 border-amber-800 shadow-lg p-4 flex items-center justify-between'>
+      <div className='border-b-2 fixed shadow-[4px_4px_0px_2px_#4E1F00] bg-white w-full p-8 flex items-center justify-between'>
         <div className='flex items-center gap-8'>
-          <div onClick={handleLogout}>
-            <Icon icon="fa6-solid:circle-user" />
-          </div>
-          <div className='border-2 h-0 relative -top-8'>
-            <Image src={Logo} alt="" width={72} />
+          <div className='h-0 relative -top-16'>
+            <Image src={Logo} alt="" width={132} />
           </div>
         </div>
-        <div className='flex gap-8 border-2'>
-          {dataItem.map((item, idx) => (
-            <div key={idx}>
-              <Link href={item.link}>{item.title}</Link>
-            </div>
-          ))}
-        </div>
-        <div className='cursor-pointer'>
-          <Icon icon="fa6-solid:cart-arrow-down" />
+        {!isMobile ? (
+          <div className="flex gap-8">
+            {dataItem.map((item, idx) => (
+              <div key={idx} onClick={() => isActiveLink(item.title)}>
+                <Link href={item.link} className={`animatedText ${isActive === item.title ? 'active' : ''}`} >
+                  {item.title.split('').map((char, i) => (
+                    <span
+                      key={i}
+                      style={{
+                        animationDelay: `${i * 50}ms`,
+                        animationFillMode: 'forwards',
+                      }}
+                    >
+                      {char}
+                    </span>
+                  ))}
+                </Link>
+              </div>
+            ))}
+          </div>
+
+        ) : (
+          <div>
+          </div>
+        )}
+        <div className='flex gap-8'>
+          <div onClick={handleLogout} className='cursor-pointer'>
+            <Icon icon="fa6-solid:circle-user" width={24} />
+          </div>
+          <div className='cursor-pointer'>
+            <Icon icon="fa6-solid:cart-arrow-down" width={24} />
+          </div>
         </div>
       </div>
     </>
