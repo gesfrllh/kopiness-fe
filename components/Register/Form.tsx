@@ -61,18 +61,20 @@ const Form = () => {
         <div>
           <form
             onSubmit={handleRegister}
-            className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm"
+            className="bg-white p-8 rounded-lg shadow-lg max-w-sm"
           >
             <div className='flex justify-center'>
               <Image src={Logo} alt='Logo' width={92} />
             </div>
-            <FormGroup label='name' required={true}>
-              <FormInput
-                name='name'
-                type='text'
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })} />
-            </FormGroup>
+            <div className='md:w-[320px]'>
+              <FormGroup label='name' required={true}>
+                <FormInput
+                  name='name'
+                  type='text'
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })} />
+              </FormGroup>
+            </div>
             <Select
               label="Role"
               name="role"

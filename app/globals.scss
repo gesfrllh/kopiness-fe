@@ -14,3 +14,16 @@
 body {
   font-family: var(--font-poppins);
 }
+/* Hide scrollbar tapi tetap bisa scroll */
+
+/* Chrome, Safari, Edge */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: none; /* sembunyikan */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+

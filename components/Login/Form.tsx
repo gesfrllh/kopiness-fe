@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState } from 'react'
-import { formatError } from '@/utils/formatError'
 import FormGroup from '../../components/Base/FormGroup'
 import FormInput from '../../components/Base/FormInput'
 import { useRouter } from 'next/navigation'
@@ -13,6 +12,7 @@ import { showNotify } from '../Base/notification/notify-controllers'
 import Link from 'next/link'
 import { useAuthStore } from '@/store/useAuthStore'
 import AnimationLogin from '../animation/AnimationLogin'
+
 interface loginPage {
   email: string,
   password: string,

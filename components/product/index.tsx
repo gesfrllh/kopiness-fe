@@ -1,61 +1,33 @@
+'use client'
+
 import React from 'react';
-import Table, { Column } from '../Base/Table';
+import Card from '../Base/Card';
+import { useProductStore } from '@/store/useProductStore';
+import FormInput from '../Base/FormInput';
+import FormGroup from '../Base/FormGroup';
 
 type User = {
-  id: string; // UUID string
+  id: string;
   name: string;
   isAdmin: boolean;
   details: { age: number; city: string };
 };
 
-const users: User[] = [
-  {
-    id: '550e8400-e29b-41d4-a716-446655440000',
-    name: 'Budi',
-    isAdmin: true,
-    details: { age: 25, city: 'Jakarta' },
-  },
-  {
-    id: '550e8400-e29b-41d4-a716-446655440001',
-    name: 'Sari',
-    isAdmin: false,
-    details: { age: 30, city: 'Bandung' },
-  },
-];
-
-const columns: Column<User>[] = [
-  { header: 'ID', key: 'id' },
-  { header: 'Name', key: 'name' },
-  {
-    header: 'Admin',
-    key: 'isAdmin',
-    render: (value) => {
-      return value ? 'yes' : 'no'
-    }
-  },
-  {
-    header: 'Details',
-    key: 'details',
-    render: (value) => {
-      if (
-        typeof value === 'object' &&
-        value !== null &&
-        'age' in value &&
-        'city' in value
-      ) {
-        const details = value as { age: number; city: string };
-        return `${details.age} years old, from ${details.city}`;
-      }
-      return 'Unknown details';
-    }
-  },
-];
-
 const Product = () => {
+  const prdct = useProductStore((state) => state.products)
+  const search = useProductStore((state) => state.search)
   return (
-    <div>
-      <Table columns={columns} data={users} />
+    <>
+    {/* */}
+    <div className='flex gap-12 flex-wrap overflow-y-auto'>
+      {prdct.map((item, idx) => (
+        <div key={idx}>
+          <Card title={item.title} desc={item.desc} image={item.image} width={32} height={32} price={item.price}/>
+        </div>
+      ))}
     </div>
+      {/* <Table columns={columns} data={users} /> */}
+    </>
   );
 };
 

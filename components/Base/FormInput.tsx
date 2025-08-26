@@ -17,13 +17,13 @@ const FormInput: React.FC<BaseInputProps> = ({
 }) => {
   return (
     <input
-      type={type}
+      type={type  }
       id={name}
       name={name}
       value={value}
       onChange={onChange}
       placeholder={placeholder}
-      className={`w-full outline-none bg-transparent ${className}`}
+      className={`w-full outline-none bg-white ${className}`}
       {...rest}
     />
   );
