@@ -31,14 +31,22 @@ export default function NotifyItem({
     }
   }, [duration, onClose]);
 
-  const renderIcon = () => {
-    if (icon) return typeof icon === "string" ? <Icon icon={icon} /> : icon;
-    if (type === "success") return <Icon icon="fa6-solid:circle-check" />;
-    if (type === "info") return <Icon icon="fa6-solid:circle-info" />;
-    if (type === "error") return <Icon icon="fa6-solid:circle-xmark" />;
-    if (type === "warning") return <Icon icon="fa6-solid:triangle-exclamation" />;
-    return <Icon icon="fa6-solid:info-circle" />;
-  };
+ const renderIcon = () => {
+  if (icon) return typeof icon === "string" ? <Icon icon={icon} /> : icon;
+
+  switch (type) {
+    case "success":
+      return <Icon icon="fa6-solid:circle-check" />;
+    case "info":
+      return <Icon icon="fa6-solid:circle-info" />;
+    case "error":
+      return <Icon icon="fa6-solid:circle-xmark" />;
+    case "warning":
+      return <Icon icon="fa6-solid:triangle-exclamation" />;
+    default:
+      return <Icon icon="fa6-solid:info-circle" />;
+  }
+};
 
   return (
     <div className={classNames}>

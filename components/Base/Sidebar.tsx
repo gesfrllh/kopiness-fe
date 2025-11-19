@@ -12,6 +12,8 @@ import { formatError } from '@/utils/formatError'
 import { useAuthStore } from '@/store/useAuthStore'
 import { useResponsiveStore } from '@/store/useResponsiveStore'
 import '../animation/AnimationCss.scss'
+import FormGroup from './FormGroup'
+import FormInput from './FormInput'
 
 interface NavbarProps {
   link: string,
@@ -91,13 +93,13 @@ const Sidebar = () => {
 
   return (
     <>
-      <div className='h-screen fixed border-2 w-52 flex flex-col items-center shadow-[10px_1px_0px_0px_#422900] bg-white'>
-        <div className='border-b-2 p-4'>
-            <Image src={Logo} alt="" width={132} />
-        </div>
-        <div className='flex flex-col pt-4'>
+      <div className='h-20 fixed w-full flex items-center justify-between px-32 bg-white'>
+        <div className='flex gap-8 items-center'>
+          <Image src={Logo} alt="" width={132} />
+          </div>
+        <div className='flex'>
         {!isMobile ? (
-          <div className="flex gap-8 flex-col">
+          <div className="flex gap-8">
             {dataItem.map((item, idx) => (
               <div key={idx} onClick={() => isActiveLink(item.title)}>
                 <Link href={item.link} className="flex gap-4">

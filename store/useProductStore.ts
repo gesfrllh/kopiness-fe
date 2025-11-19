@@ -6,31 +6,41 @@ interface ProductState {
     addProduct: (product: Product) => void;
     removeProduct: (index: number) => void;
     updateProduct: (index: number, updateProduct: Product) => void;
+    search: string
 }
 
 export const useProductStore = create<ProductState>((set) => ({
+    search: '',
     products: [
-        {
+        {   
+            id: 1,
             title: 'Arabican Coffee Beans',
-            desc: 'Known for their smooth taste and delicate aroma, Arabica coffee beans are among the most popular coffee varieties in the world. They offer a naturally mild flavor with subtle hints of sweetness, floral notes, and a touch of fruitiness. Perfect for brewing a clean, balanced cup, Arabica beans are ideal for those who enjoy a refined and aromatic coffee experience.',
+            sec_title: 'Smooth, Refined, and Naturally Aromatic',
+            desc: 'Known for their smooth taste and delicate aroma, Arabica coffee beans are among the most cherished coffee varieties in the world. Grown at high altitudes and nurtured in cool climates, Arabica offers a naturally mild flavor with subtle sweetness, floral notes, and a gentle fruitiness. Perfect for those who enjoy a clean, balanced cup, Arabica delivers a refined and aromatic coffee experience like no other.',
             image: '/assets/image/beans1.jpg',
             price: 100000,
         },
         {
-            title: 'Produk Baru',
-            desc: 'Deskripsi produk',
+            id: 2,
+            title: 'Robusta Coffee Beans',
+            sec_title: 'Bold, Strong, and Full of Character',
+            desc: "Renowned for their intense flavor and high caffeine content, Robusta coffee beans deliver a bold and powerful coffee experience. With a naturally earthy, nutty taste and a rich crema when brewed as espresso, Robusta is perfect for those who prefer a strong, full-bodied cup with a pleasantly bitter kick. These beans thrive in lowland tropical climates and are ideal for blends, instant coffee, and traditional brews that pack a punch.",
             image: '/assets/image/beans2.jpg',
             price: 100000,
         },
         {
-            title: 'Produk Baru',
-            desc: 'Deskripsi produk',
+            id: 3,
+            title: 'Liberica Coffee Beans',
+            sec_title: 'Rare, Exotic, and Uniquely Aromatic',
+            desc: "Liberica coffee offers a one-of-a-kind profile cherished by adventurous coffee lovers. Known for its large, irregular beans and distinct flavor, Liberica presents a smoky, woody aroma with hints of floral and fruity undertones. The taste is bold and complex — sometimes even wine-like — making it a true departure from conventional coffee. Ideal for those seeking something different, Liberica is a hidden gem waiting to be discovered.",
             image: '/assets/image/beans3.jpg',
             price: 100000,
         },
         {
-            title: 'Produk Baru',
-            desc: 'Deskripsi produk',
+            id: 4,
+            title: 'Excelsa Coffee Beans',
+            sec_title: 'Complex, Fruity, and Intriguingly Layered',
+            desc: "Once classified as its own species, now recognized as a variety of Liberica, Excelsa coffee stands out with its unique combination of light body and tart, fruity notes. It brings a mysterious depth to any cup — often described as a blend between light, bright acidity and dark, roasted flavors. Frequently used in specialty blends to add complexity and lift, Excelsa is a rare bean that appeals to those who appreciate dynamic, evolving flavors in their coffee.",
             image: '/assets/image/beans4.jpg',
             price: 100000,
         }

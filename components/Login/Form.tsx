@@ -96,7 +96,7 @@ export default function LoginPage() {
             {loading ? 'Logging in...' : 'Login'}
           </Button>
           {loading ? <AnimationLogin /> : ''}
-          <div className='flex gap-2 py-4 justify-end borderi'>
+          <div className='flex gap-2 py-4 justify-end'>
             Belum punya akun ?
             <Link href={'/registrations'} className='text-red-500'>Register</Link>
           </div>

@@ -13,4 +13,4 @@ export const useResponsiveStore = create<ResponsiveStore>((set) => ({
   isMobile: false,
   isTablet: false,
   isDesktop: true
-}))
+})) 

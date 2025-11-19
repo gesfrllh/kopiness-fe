@@ -19,3 +19,4 @@ export interface AuthState {
   setUserFromCookie: () => void;
   setError: (error: string | null) => void
 }
+
