@@ -1,9 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'solid' | 'outline';
-}
+import { ButtonProps } from '@/types';
 
 const Button: React.FC<ButtonProps> = ({
   variant = 'solid',

@@ -1,10 +1,5 @@
 import React from 'react';
-
-interface BaseInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  value: string | number;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  name: string;
-}
+import { BaseInputProps } from '@/types';
 
 const FormInput: React.FC<BaseInputProps> = ({
   value,

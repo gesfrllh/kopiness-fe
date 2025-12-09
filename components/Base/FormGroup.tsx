@@ -2,20 +2,11 @@ import React, { useState, ReactElement, isValidElement, cloneElement, useEffect 
 import clsx from 'clsx';
 import { usePasswordStore } from '@/store/usePasswordStore';
 import { Icon } from '@iconify/react';
-
-type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
-type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement>;
-
-interface Group {
-  label: string;
-  required?: boolean;
-  children: ReactElement<InputProps | TextareaProps>;
-  value?: string
-}
+import { BaseInputProps, TextareaProps, Group } from '@/types';
 
 const isPasswordElement = (
-  el: ReactElement<InputProps | TextareaProps>
-): el is ReactElement<InputProps> => {
+  el: ReactElement<BaseInputProps | TextareaProps>
+): el is ReactElement<BaseInputProps> => {
   return 'type' in el.props && el.props.type === 'password';
 };
 

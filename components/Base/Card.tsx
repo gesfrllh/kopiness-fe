@@ -2,19 +2,7 @@ import React from 'react'
 import Image from 'next/image'
 import { formatCurrency } from '@/utils/general'
 import Button from './Button'
-
-interface CardProps {
-  id: number,
-  title: string,
-  sec_title: string,
-  desc: string,
-  image: string,
-  width: number,
-  height: number,
-  price: number,
-  onAddToCart?: () => void,
-  onDetail: (id: number) => void
-}
+import { CardProps } from '@/types'
 
 const Card: React.FC<CardProps> = ({ id, title, desc, image, price, sec_title, onAddToCart, onDetail }) => {
   return (

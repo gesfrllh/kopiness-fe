@@ -3,21 +3,16 @@
 import { Icon } from '@iconify/react'
 import Link from 'next/link'
 import React, { useState } from 'react'
-import { UUIDTypes, v4 as uuid } from 'uuid'
 import Image from 'next/image'
+import { v4 as uuid } from 'uuid'
 import Logo from '@/public/assets/logo.svg'
 import { showNotify } from './notification/notify-controllers'
 import { useRouter } from 'next/navigation'
 import { formatError } from '@/utils/formatError'
 import { useAuthStore } from '@/store/useAuthStore'
+import { NavbarProps } from '@/types'
 import { useResponsiveStore } from '@/store/useResponsiveStore'
 import '../animation/AnimationCss.scss'
-
-interface NavbarProps {
-  link: string,
-  title: string,
-  id: UUIDTypes,
-}
 
 const Navbar = () => {
   const isMobile = useResponsiveStore((state) => state.isMobile)

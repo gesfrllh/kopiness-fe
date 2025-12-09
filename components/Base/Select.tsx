@@ -1,21 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import FormGroup from "./FormGroup";
 import { FiChevronDown } from "react-icons/fi";
-
-interface Option {
-  label: string;
-  value: string;
-}
-
-interface SelectProps {
-  label: string;
-  name: string;
-  value: string;
-  onChange: (value: string) => void;
-  options: Option[];
-  required?: boolean;
-  disabled?: boolean;
-}
+import { Option, SelectProps } from "@/types";
 
 const Select: React.FC<SelectProps> = ({
   label,

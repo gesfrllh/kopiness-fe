@@ -1,15 +1,5 @@
 import React from 'react'
-
-export type Column<T> = {
-  header: string,
-  key: keyof T,
-  render?: (value: unknown, row: T) => React.ReactNode
-}
-
-type TableProps<T> = {
-  columns: Column<T>[],
-  data: T[]
-}
+import type { TableProps } from '@/types'
 
 const Table = <T,>({ columns, data }: TableProps<T>) => {
   return (

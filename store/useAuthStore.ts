@@ -1,10 +1,8 @@
 import { create } from 'zustand'
 import Cookies from 'js-cookie'
-import client from '@/lib/apollo'
-import { LOGIN_MUTATION } from '@/graphql/mutations/login'
-import { gql } from '@apollo/client'
-import { AuthPayload, AuthState } from '@/types/auth/user'
+import { AuthState } from '@/types/auth/user'
 import { formatError } from '@/utils/formatError'
+import { login, logout } from '@/pages/api/auth/api'
 
 type SetStateFn = (partial: Partial<AuthState> | ((state: AuthState) => Partial<AuthState>)) => void
 
@@ -17,21 +15,16 @@ export const useAuthStore = create<AuthState>((set: SetStateFn) => ({
   login: async (email: string, password: string) => {
     set({ loading: true, error: null })
     try {
-      const res = await client.mutate<{ login: AuthPayload }, { input: { email: string, password: string } }>({
-        mutation: LOGIN_MUTATION,
-        variables: { input: { email, password } }
-      })
+      const res = await login(email, password)
 
-      if (!res.data) throw new Error('No data returned!')
-
-      Cookies.set('token', res.data.login.token, { expires: 1 })
+      Cookies.set("token", res.token, { path: "/" })
+      Cookies.set("role", res.user.role, { path: "/" })
 
       set({
-        user: res.data.login.user,
-        token: res.data.login.token,
+        user: res.user,
+        token: res.token,
         loading: false
       })
-
     } catch (error: unknown) {
       const message = formatError(error) || 'Login Failed'
       set({ error: message, loading: false })
@@ -42,23 +35,7 @@ export const useAuthStore = create<AuthState>((set: SetStateFn) => ({
   logout: async () => {
     set({ loading: true })
     try {
-      const token = Cookies.get('token')
-
-      await client.mutate({
-        mutation: gql`
-          mutation {
-            logout
-          }
-        `,
-        context: {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      });
-
-      Cookies.remove('token')
-      await client.clearStore()
+      await logout()
 
       set({
         user: null,
