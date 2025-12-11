@@ -14,12 +14,18 @@ import { useAuthStore } from '@/store/useAuthStore'
 import { useResponsiveStore } from '@/store/useResponsiveStore'
 import '../animation/AnimationCss.scss'
 import { NavbarProps } from '@/types'
+import Button from './Button'
 
 const Sidebar = () => {
   const isMobile = useResponsiveStore((state) => state.isMobile)
   const [isActive, setIsActive] = useState<string>('')
   const [userData, setUserData] = useState<{ role?: string } | null>(null);
-   
+  const logout = useAuthStore(state => state.logout)
+  const loading = useAuthStore(state => state.loading)
+  const route = useRouter()
+  const [openMenu, setOpenMenu] = useState(false)
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const dataItem: NavbarProps[] = [
     {
       id: uuid(),
@@ -32,7 +38,6 @@ const Sidebar = () => {
       title: 'Kasir',
       link: '/manage/cashier',
       icon: <Icon icon="material-symbols-light:shopping-cart-sharp" width={24} />
-
     },
     {
       id: uuid(),
@@ -60,10 +65,6 @@ const Sidebar = () => {
     },
   ]
 
-  const logout = useAuthStore(state => state.logout)
-  const loading = useAuthStore(state => state.loading)
-  const route = useRouter()
-
   const handleLogout = async () => {
     try {
       await logout()
@@ -88,26 +89,41 @@ const Sidebar = () => {
 
   useEffect(() => {
     const roleCookie = Cookies.get('role');
-    setUserData({ role: roleCookie});
+    setUserData({ role: roleCookie });
   }, []);
 
   const filteredData = useMemo(() => {
-    return dataItem.map(item => {
+    const base = dataItem.map(item => {
       if (userData?.role !== 'ADMIN' && item.title === 'Dashboard') {
         return {
           ...item,
           title: 'Home',
           link: '/manage/home',
-          icon: <Icon icon="mdi:account-circle" width={24} />
-        }
+          icon: <Icon icon="material-symbols-light:flood" width={24} />
+        };
       }
       return item;
-    })
-  }, [userData]);
+    });
+
+    if (userData?.role === 'ADMIN') {
+      base.unshift({
+        id: uuid(),
+        title: 'Home',
+        link: '/manage/home',
+        icon: <Icon icon="material-symbols-light:flood" width={24} />
+      });
+    }
+
+    return base;
+  }, [dataItem, userData]);
+
+  const openMobileMenu = () => {
+    setOpenMenu((prev) => !prev)
+  }
 
   return (
     <>
-      <div className='h-20 fixed w-full flex items-center justify-between px-32 bg-white'>
+      <div className='h-20 fixed w-full flex items-center justify-between px-12 md:px-32 bg-white'>
         <div className='flex gap-8 items-center'>
           <Image src={Logo} alt="" width={132} />
         </div>
@@ -130,9 +146,25 @@ const Sidebar = () => {
                 <p>Logout</p>
               </div>
             </div>
-
           ) : (
             <div>
+              <button onClick={openMobileMenu} className="px-4 py-2 bg-red-500 text-white rounded-md">
+                {openMenu ? 'Close Menu' : 'Open Menu'}
+              </button>
+              <div className={`mobile-menu ${openMenu ? "open" : "close"}`}>
+                {filteredData.map((item, idx) => (
+                  <div key={idx} onClick={() => isActiveLink(item.title)}>
+                    <Link href={item.link} onClick={openMobileMenu} className="flex py-4 gap-4 hover:bg-gray-800">
+                      <div>{item.icon}</div>
+                      <div>{item.title}</div>
+                    </Link>
+                  </div>
+                ))}
+
+                <Button variant="outline" className="w-full mt-4" onClick={() => handleLogout()}>
+                  Logout
+                </Button>
+              </div>
             </div>
           )}
         </div>

@@ -53,7 +53,7 @@ export default function LoginPage() {
   }, [error])
 
   return (
-    <main className="grid grid-cols-2 min-h-screen items-center md:gap-12 bg-gray-100">
+    <main className="grid md:grid-cols-2 min-h-screen items-center md:gap-12 bg-gray-100">
       <div className='h-full hidden md:flex flex-col items-center justify-center bg-white shadow-lg'>
         <Image src={LoginLogo} alt="" width={320} />
         <div className='p-8'>
