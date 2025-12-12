@@ -3,6 +3,8 @@ import { Geist, Geist_Mono, Poppins, Bebas_Neue } from "next/font/google";
 import "./globals.scss";
 import { ToastProvider } from "@/components/Base/notification/ToastProvider";
 import ResponsiveInit from "./ResponsiveInit";
+import UseLenis from "@/lib/lenis";
+// import PageTransition from "@/components/PageTransition";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,14 +40,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <ToastProvider position="top-right">
-        <ResponsiveInit />
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} ${poppins.variable} antialiased`}
-        >
-          {children}
-        </body>
-      </ToastProvider>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} ${poppins.variable} antialiased`}
+      >
+        <ToastProvider position="top-right">
+          <ResponsiveInit />
+          <UseLenis />
+            {children}
+        </ToastProvider>
+      </body>
     </html>
   );
 }
