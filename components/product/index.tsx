@@ -8,6 +8,8 @@ import { useProductStore } from '@/store/useProductStore';
 import { Icon } from '@iconify/react';
 import Link from 'next/link';
 import Badge from '../Base/Badge';
+import LoaderTransition from '../LoaderTransition';
+import CTA from '../Base/cta';
 
 type User = {
   id: string;
@@ -17,12 +19,13 @@ type User = {
 };
 
 const Product = () => {
+  const [loader, setLoader] = useState<boolean>(false)
   const prdct = useProductStore((state) => state.products)
   let search = useProductStore((state) => state.search)
   const [count, setCount] = useState<number>(0)
 
   const addingToCart = () => {
-    setCount(count + 1 )
+    setCount(count + 1)
   }
 
   const details = (id: number) => {
@@ -30,31 +33,51 @@ const Product = () => {
   }
   return (
     <>
-    <div className='flex items-center justify-between'>
-        Product
-        <div className='flex items-center '>
-        
+      <LoaderTransition onFinish={() => setLoader(true)} />
+      {loader && (
         <div>
-          <Link href="/manage/product/add">Add Product</Link>
-        </div>
-        <div className='flex items-center'>
-            <div>
-              {count > 0 && <div>
-                <Badge text={count} color='red'/>
-                </div>}
-              <Icon icon="material-symbols-light:shopping-cart-rounded" width="52" height="52" />
+          <div>
+            <CTA title='Product Cta' />
+          </div>
+          <div className='bg-white rounded-lg my-8 py-4 px-8'>
+
+            <div className='flex items-center justify-between pb-4 border-b border-gray-300'>
+              Product
+              <div className='flex items-center '>
+
+                <div>
+                  <Link href="/manage/product/add">Add Product</Link>
+                </div>
+                <div className='flex items-center'>
+                  <div>
+                    {count > 0 && <div>
+                      <Badge text={count} color='red' />
+                    </div>}
+                    <Icon icon="material-symbols-light:shopping-cart-rounded" width="52" height="52" />
+                  </div>
+                </div>
+              </div>
             </div>
+            <div className='flex gap-12 py-8  flex-wrap overflow-y-auto'>
+              {prdct.map((item, idx) => (
+                <div key={idx}>
+                  <Card
+                    id={item.id}
+                    title={item.title}
+                    onAddToCart={addingToCart}
+                    sec_title={item.sec_title}
+                    desc={item.desc}
+                    image={item.image}
+                    width={32}
+                    height={32}
+                    price={item.price}
+                    onDetail={() => details(item.id)} />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-    <div className='flex gap-12 h-[30rem] flex-wrap overflow-y-auto'>
-      {prdct.map((item, idx) => (
-        <div key={idx}>
-          <Card id={item.id} title={item.title} onAddToCart={addingToCart} sec_title={item.sec_title} desc={item.desc} image={item.image} width={32} height={32} price={item.price} onDetail={() => details(item.id)}/>
-        </div>
-      ))}
-    </div>
-      {/* <Table columns={columns} data={users} /> */}
+      )}
     </>
   );
 };

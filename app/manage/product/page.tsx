@@ -1,11 +1,15 @@
 import Product from '@/components/product'
+import LoaderTransition from '@/components/LoaderTransition'
 import React from 'react'
 
 const page = () => {
   return (
-    <div>
-      <Product />
-    </div>
+    <>
+      <LoaderTransition />
+      <div>
+        <Product />
+      </div>
+    </>
   )
 }
 
