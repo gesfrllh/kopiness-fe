@@ -123,7 +123,7 @@ const Sidebar = () => {
 
   return (
     <>
-      <div className='h-20 fixed w-full flex items-center justify-between px-12 md:px-32 bg-white'>
+      <div className='h-20 fixed w-full flex border-b border-amber-800 items-center justify-between px-12 md:px-32 bg-white'>
         <div className='flex gap-8 items-center'>
           <Image src={Logo} alt="" width={132} />
         </div>

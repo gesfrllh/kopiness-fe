@@ -7,20 +7,22 @@ import { CardProps } from '@/types'
 const Card: React.FC<CardProps> = ({ id, title, desc, image, price, sec_title, onAddToCart, onDetail }) => {
   return (
     <>
-      <div className=" flex gap-8 bg-white p-4 shadow-[8px_6px_0px_1px_#422900] border rounded-lg" >
-        <div className="relative w-[240px] h-[240px]">
-          <Image
-            src={image}
-            alt=""
-            fill
-            style={{ objectFit: "cover" }}
-            className="rounded"
-          />
+      <div className=" flex flex-col gap-8 bg-white p-4 shadow-[8px_6px_0px_1px_#422900] border rounded-lg" >
+        <div className='flex items-center justify-center'>
+          <div className="relative size-[140px] md:w-[240px] md:h-[240px]">
+            <Image
+              src={image}
+              alt=""
+              fill
+              style={{ objectFit: "cover" }}
+              className="rounded"
+            />
+          </div>
         </div>
 
-        <div className="flex flex-col w-72 gap-4">
-          <span className="font-semibold text-xl text-center">{title}</span>
-          <span className='font-semibold'>{sec_title}</span>
+        <div className="flex flex-col w-[15rem] md:w-72 gap-2">
+          <span className="font-semibold text-xl">{title}</span>
+          <span className='font-semibold h-12'>{sec_title}</span>
           <div className='text-right'>
             <span className="font-bold text-green-600">{formatCurrency(price)}</span>
             <Button

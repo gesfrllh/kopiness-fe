@@ -64,10 +64,15 @@ const Form = () => {
             className="bg-white p-8 rounded-lg shadow-lg max-w-sm"
           >
             <div className='flex justify-center'>
-              <Image src={Logo} alt='Logo' width={92} />
+              <Image
+                src={Logo}
+                alt='Logo'
+                width={92} />
             </div>
             <div className='md:w-[320px]'>
-              <FormGroup label='name' required={true}>
+              <FormGroup
+                label='name'
+                required={true}>
                 <FormInput
                   name='name'
                   type='text'
@@ -86,14 +91,18 @@ const Form = () => {
                 { label: "Customer", value: "CUSTOMER" },
               ]}
             />
-            <FormGroup label='Email' required={true}>
+            <FormGroup
+              label='Email'
+              required={true}>
               <FormInput
                 name='email'
                 type='email'
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })} />
             </FormGroup>
-            <FormGroup label='Password' required={true}>
+            <FormGroup
+              label='Password'
+              required={true}>
               <FormInput
                 name='password'
                 value={form.password}

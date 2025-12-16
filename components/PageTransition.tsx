@@ -5,20 +5,18 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function PageTransitionBlock({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
   const [displayChildren, setDisplayChildren] = useState(children);
   const [showBlock, setShowBlock] = useState(false);
+  
+  const pathname = usePathname();
 
   useEffect(() => {
-    // 1. Mulai animasi block masuk (bottom → center)
     setShowBlock(true);
 
-    // 2. Setelah 0.6s block sudah FULL menutup layar -> ganti halaman
     const changePageTimer = setTimeout(() => {
       setDisplayChildren(children);
-    }, 600); // harus sama durasi animate masuk
+    }, 600); 
 
-    // 3. Setelah 1.2s block keluar dari layar
     const hideBlockTimer = setTimeout(() => {
       setShowBlock(false);
     }, 1200);
@@ -31,7 +29,6 @@ export default function PageTransitionBlock({ children }: { children: React.Reac
 
   return (
     <>
-      {/* Transisi Block */}
       <AnimatePresence>
         {showBlock && (
           <motion.div
@@ -48,7 +45,6 @@ export default function PageTransitionBlock({ children }: { children: React.Reac
         )}
       </AnimatePresence>
 
-      {/* Konten Page */}
       {displayChildren}
     </>
   );

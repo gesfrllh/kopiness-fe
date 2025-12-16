@@ -14,7 +14,7 @@ const sizeMap = {
 const CTA: React.FC<CTAProps> = ({ title, size = "sm" }) => {
   return (
     <div
-      className={`border-2 rounded-lg shadow-lg bg-gray-700 p-8`}
+      className={`rounded-lg shadow-lg bg-amber-800 p-8`}
     >
       <div
         className={`font-bold text-white text-center ${sizeMap[size]}`}

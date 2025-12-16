@@ -55,7 +55,10 @@ export default function LoginPage() {
   return (
     <main className="grid md:grid-cols-2 min-h-screen items-center md:gap-12 bg-gray-100">
       <div className='h-full hidden md:flex flex-col items-center justify-center bg-white shadow-lg'>
-        <Image src={LoginLogo} alt="" width={320} />
+        <Image
+          src={LoginLogo}
+          alt=""
+          width={320} />
         <div className='p-8'>
           <h1 className='font-semibold '>Ngopi? Jangan nanggung!</h1>
           <p className='pt-4'>
@@ -73,7 +76,10 @@ export default function LoginPage() {
           className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm"
         >
           <div className='flex justify-center'>
-            <Image src={Logo} alt='Logo' width={92} />
+            <Image
+              src={Logo}
+              alt='Logo'
+              width={92} />
           </div>
           <FormGroup label='Email' required={true}>
             <FormInput

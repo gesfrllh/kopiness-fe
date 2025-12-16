@@ -75,14 +75,21 @@ const Navbar = () => {
       <div className='border-b-2 fixed shadow-[4px_4px_0px_2px_#4E1F00] bg-white w-full p-8 flex items-center justify-between'>
         <div className='flex items-center gap-8'>
           <div className='h-0 relative -top-16'>
-            <Image src={Logo} alt="" width={132} />
+            <Image
+              src={Logo}
+              alt=""
+              width={132} />
           </div>
         </div>
         {!isMobile ? (
           <div className="flex gap-8">
             {dataItem.map((item, idx) => (
-              <div key={idx} onClick={() => isActiveLink(item.title)}>
-                <Link href={item.link} className={`animatedText ${isActive === item.title ? 'active' : ''}`} >
+              <div
+                key={idx}
+                onClick={() => isActiveLink(item.title)}>
+                <Link
+                  href={item.link}
+                  className={`animatedText ${isActive === item.title ? 'active' : ''}`} >
                   {item.title.split('').map((char, i) => (
                     <span
                       key={i}
@@ -104,11 +111,17 @@ const Navbar = () => {
           </div>
         )}
         <div className='flex gap-8'>
-          <div onClick={handleLogout} className='cursor-pointer'>
-            <Icon icon="fa6-solid:circle-user" width={24} />
+          <div
+            onClick={handleLogout}
+            className='cursor-pointer'>
+            <Icon
+              icon="fa6-solid:circle-user"
+              width={24} />
           </div>
           <div className='cursor-pointer'>
-            <Icon icon="fa6-solid:cart-arrow-down" width={24} />
+            <Icon
+              icon="fa6-solid:cart-arrow-down"
+              width={24} />
           </div>
         </div>
       </div>
