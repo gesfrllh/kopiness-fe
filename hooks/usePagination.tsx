@@ -1,5 +1,5 @@
 import { Range } from "@/utils/general";
-
+import { useResponsiveStore } from "@/store/useResponsiveStore";
 export const usePagination = ({
   page,
   totalPage,
@@ -11,6 +11,8 @@ export const usePagination = ({
   siblingCount?: number;
   boundaryCount?: number
 }) => {
+
+  const isMobile = useResponsiveStore((state) => state.isMobile)
   const totalPageNumbers = siblingCount * 2 + boundaryCount * 2 + 3;
 
   if(totalPageNumbers >= totalPage) {
@@ -30,17 +32,22 @@ export const usePagination = ({
   const lastPages = Range(totalPage - boundaryCount + 1, totalPage)
 
   if (!showLeftDots && showRightDots) {
-    const leftRange = Range(1, rightSiblingIndex + 1)
-    return [...leftRange, '...', ...lastPages]
+    let leftRange;
+    if (isMobile) {
+      leftRange = Range(1, rightSiblingIndex)
+    } else {
+      leftRange = Range(1, rightSiblingIndex + 1)
+    }
+    return isMobile ?  [...leftRange] : [...leftRange, '...', ...lastPages]
   }
 
   if(showLeftDots && !showRightDots) {
     const rightRange =  Range(leftSiblingIndex, totalPage)
-    return [...firstPages, '...', ...rightRange]
+    return isMobile ? [...rightRange] : [...firstPages, '...', ...rightRange]
   }
 
   if(showLeftDots && showRightDots) {
     const middleRange = Range(leftSiblingIndex, rightSiblingIndex)
-    return [...firstPages,  '...', ...middleRange, '...', ...lastPages]
+    return isMobile ? [...middleRange] : [...firstPages,  '...', ...middleRange, '...', ...lastPages]
   }
 }
