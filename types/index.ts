@@ -69,3 +69,22 @@ export type TableProps<T> = {
   columns: Column<T>[],
   data: T[]
 }
+
+export type ModalSize = "sm" | "md" | "lg" | "xl"
+
+export interface ModalProps {
+  open: boolean,
+  onClose: () => void;
+  title?: string,
+  description?: string,
+  size?: ModalSize,
+  closeOnOverlayClick?: boolean
+  closeOnEsc?: boolean
+  children: ReactNode
+  footer?: ReactNode
+  className?: string 
+}
+
+export interface ModalSelectionProps {
+  children: ReactNode
+}

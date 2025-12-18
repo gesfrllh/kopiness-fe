@@ -23,7 +23,7 @@ const Badge: React.FC<BadgeInterface> = ({ text, color }) => {
   return (
     <div>
       <span
-        className={`px-2 py-1 text-sm font-medium rounded-full ${generateColor()}`}
+        className={`px-2 -top-2 border shadow-lg left-[12px] text-sm font-medium absolute rounded-full ${generateColor()}`}
       >
         {text}
       </span>
