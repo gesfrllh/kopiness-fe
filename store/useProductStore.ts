@@ -110,7 +110,7 @@ export const useProductStore = create<ProductState>((set) => ({
     getProduct: async () => {
         try {
             const res = await getProduct()
-            set({ products: res.data })
+            // set({ products: res.data })
         } catch (err: unknown) {
             const message = formatError(err) || 'Error get Product'
             set({ error: message })

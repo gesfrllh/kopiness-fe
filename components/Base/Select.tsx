@@ -29,7 +29,7 @@ const Select: React.FC<SelectProps> = ({
 
   return (
     <FormGroup label={label} required={required} value={value}>
-      <div ref={ref} className="relative">
+      <div ref={ref} className="relative w-full">
         <button
           type="button"
           name={name}
@@ -49,23 +49,32 @@ const Select: React.FC<SelectProps> = ({
           </div>
         </button>
 
-        {open && (
-          <ul className="absolute z-10 mt-3 w-72 bg-white  rounded-md shadow-sm max-h-60 overflow-y-auto text-sm">
-            {options.map((opt) => (
-              <li
-                key={opt.value}
-                onClick={() => {
-                  onChange(opt.value);
-                  setOpen(false);
-                }}
-                className={`px-3 py-2 cursor-pointer hover:bg-blue-50 ${opt.value === value ? "bg-blue-100 font-medium" : ""
-                  }`}
-              >
-                {opt.label}
-              </li>
-            ))}
-          </ul>
-        )}
+        <ul
+          className={`
+            absolute left-0 z-12 top-10 mt-2 w-full
+            bg-white rounded-md shadow-sm
+            max-h-60 overflow-y-auto text-sm
+            transform origin-top transition-all duration-200 ease-out
+            ${open
+                      ? 'opacity-100 scale-y-100'
+                      : 'opacity-0 scale-y-0 pointer-events-none'}
+          `}
+        >
+          {options.map((opt) => (
+            <li
+              key={opt.value}
+              onClick={() => {
+                onChange(opt.value)
+                setOpen(false)
+              }}
+              className={`px-3 py-2 cursor-pointer hover:bg-amber-800 hover:text-white ${opt.value === value ? 'bg-amber-800 text-white font-medium' : ''
+                }`}
+            >
+              {opt.label}
+            </li>
+          ))}
+        </ul>
+
       </div>
     </FormGroup>
   );

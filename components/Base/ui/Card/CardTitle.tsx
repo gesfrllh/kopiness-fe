@@ -1,5 +1,5 @@
 interface CardTitleProps {
-  title: string;
+  title?: string;
   subtitle?: string;
 }
 
