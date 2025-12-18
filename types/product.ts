@@ -1,8 +1,19 @@
+export type RoastLevel = 'MEDIUM' | 'LIGHT' | 'DARK'
+
 export interface Product {
     id: number,
-    title: string,
-    desc: string,
-    sec_title: string,
+    name: string,
+    description: string,
+    roast_level: RoastLevel,
+    title?: string,
+    sec_title?: string,
     price: number,
-    image: string
+    image_url: string,
+    stock: number
+}
+
+export interface ProductRequest extends Product {
+    origin: string,
+    process: string,
+    flavor_notes: string
 }
