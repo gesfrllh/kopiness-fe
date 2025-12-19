@@ -83,7 +83,7 @@ const Product = () => {
                       </CardRoot.content>
                       <CardRoot.footer>
                         <Button onClick={addingToCart}>Keranjang</Button>
-                        <Button onClick={() => onDetail(id)}>Detail</Button>
+                        <Button onClick={() => details(item.id)}>Detail</Button>
                       </CardRoot.footer>
                     </CardRoot>
                   </div>
