@@ -8,6 +8,7 @@ import FormGroup from '@/components/Base/FormGroup'
 import Select from '@/components/Base/Select'
 import { roastLevelOptions } from '@/constants/roastLevelOptions'
 import DropzoneImage from '@/components/Base/Dropzone'
+import Button from '@/components/Base/Button'
 
 type FormState = {
   name: string
@@ -147,12 +148,12 @@ const AddProduct = () => {
 
         {/* Action */}
         <div className='flex justify-end'>
-          <button
+          <Button
+            variant='outline'
             onClick={handleSubmit}
-            className='bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800'
           >
             Save Product
-          </button>
+          </Button>
         </div>
       </div>
     </div>

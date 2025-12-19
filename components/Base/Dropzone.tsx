@@ -2,22 +2,25 @@
 
 import React, { useState, useRef } from 'react'
 import { Icon } from '@iconify/react'
+import Image from 'next/image'
 
 type DropzoneImageProps = {
   value?: string
   onChange: (url: string) => void
-  uploadUrl: string // endpoint BE untuk upload
+  uploadUrl: string
 }
 
 const DropzoneImage: React.FC<DropzoneImageProps> = ({ value, onChange, uploadUrl }) => {
   const [preview, setPreview] = useState<string>(value || '')
+  const [filename, setFilename] = useState<string>(value || '')
   const [loading, setLoading] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
-    setPreview(URL.createObjectURL(file)) // preview sementara
+    setPreview(URL.createObjectURL(file))
+    setFilename(file.name)
     setLoading(true)
 
     try {
@@ -36,7 +39,6 @@ const DropzoneImage: React.FC<DropzoneImageProps> = ({ value, onChange, uploadUr
       setPreview(data.url) // update preview ke URL backend
     } catch (err) {
       console.error(err)
-      alert('Upload gagal')
     } finally {
       setLoading(false)
     }
@@ -54,24 +56,27 @@ const DropzoneImage: React.FC<DropzoneImageProps> = ({ value, onChange, uploadUr
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => e.preventDefault()
 
   return (
-    <div>
+    <div className='flex flex-col gap-2'>
       <label className="block text-sm font-medium mb-1">Product Image</label>
 
       <div
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onClick={() => inputRef.current?.click()}
-        className="border-dashed border-2 border-gray-300 rounded-md p-6 flex flex-col items-center justify-center cursor-pointer hover:border-gray-400 transition"
+        className="border-dashed border-2 border-gray-300 rounded-md p-16 flex flex-col items-center justify-center cursor-pointer hover:border-amber-800 transition"
       >
-        {preview ? (
-          <img src={preview} alt="preview" className="w-40 h-40 object-cover rounded-md" />
-        ) : (
-          <div className="flex flex-col items-center justify-center text-gray-400">
-            <Icon icon="material-symbols:cloud-upload-outline" width={40} />
-            <span className="mt-2 text-sm">{loading ? 'Uploading...' : 'Drag & Drop or Click'}</span>
-          </div>
-        )}
+        <div className="flex flex-col items-center justify-center text-gray-400">
+          <Icon icon="material-symbols:cloud-download-outline-rounded" width={40} height={40}  />
+          <span className="mt-2 text-gray-400 text-sm">{loading ? 'Uploading...' : 'Drag & Drop or Click'}</span>
+        </div>
       </div>
+
+      {preview && (
+        <div>
+          <Image src={preview} alt="preview" width={40} height={40} className="w-40 h-40 object-cover rounded-md" />
+          <p>{filename}</p>
+        </div>
+      )}
 
       <input
         type="file"

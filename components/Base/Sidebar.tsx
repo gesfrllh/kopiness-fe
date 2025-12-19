@@ -148,13 +148,13 @@ const Sidebar = () => {
             </div>
           ) : (
             <div>
-              <button onClick={openMobileMenu} className="px-4 py-2 bg-red-500 text-white rounded-md">
+              <Button variant='outline' onClick={openMobileMenu}>
                 {openMenu ? 'Close Menu' : 'Open Menu'}
-              </button>
+              </Button>
               <div className={`mobile-menu ${openMenu ? "open" : "close"}`}>
                 {filteredData.map((item, idx) => (
                   <div key={idx} onClick={() => isActiveLink(item.title)}>
-                    <Link href={item.link} onClick={openMobileMenu} className="flex py-4 gap-4 hover:bg-gray-800">
+                    <Link href={item.link} onClick={openMobileMenu} className="flex py-4 gap-4 hover:bg-amber-800 hover:text-white px-4 rounded-lg">
                       <div>{item.icon}</div>
                       <div>{item.title}</div>
                     </Link>
