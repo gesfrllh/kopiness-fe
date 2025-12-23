@@ -12,6 +12,9 @@ const nextConfig: NextConfig = {
     config.resolve.extensions.push('.mjs')
     return config
   },
+  images: {
+    remotePatterns: [new URL("https://tdlbsxwhiusuobvszxvg.storage.supabase.co/**")]
+  },
   devIndicators: false,
 };
 
