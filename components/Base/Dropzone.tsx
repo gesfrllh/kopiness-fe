@@ -3,6 +3,7 @@
 import React, { useState, useRef } from 'react'
 import { Icon } from '@iconify/react'
 import Image from 'next/image'
+import { UploadFileApi } from '@/pages/api/uploads'
 
 type DropzoneImageProps = {
   value?: string
@@ -27,16 +28,11 @@ const DropzoneImage: React.FC<DropzoneImageProps> = ({ value, onChange, uploadUr
       const formData = new FormData()
       formData.append('file', file)
 
-      const res = await fetch(uploadUrl, {
-        method: 'POST',
-        body: formData,
-      })
+      const res = await UploadFileApi(formData)
 
-      if (!res.ok) throw new Error('Upload failed')
-      const data = await res.json()
-      // asumsikan backend balikin { url: string }
+      if (!res) throw new Error('Upload failed')
+      const data = await res
       onChange(data.url)
-      setPreview(data.url) // update preview ke URL backend
     } catch (err) {
       console.error(err)
     } finally {
@@ -66,7 +62,7 @@ const DropzoneImage: React.FC<DropzoneImageProps> = ({ value, onChange, uploadUr
         className="border-dashed border-2 border-gray-300 rounded-md p-16 flex flex-col items-center justify-center cursor-pointer hover:border-amber-800 transition"
       >
         <div className="flex flex-col items-center justify-center text-gray-400">
-          <Icon icon="material-symbols:cloud-download-outline-rounded" width={40} height={40}  />
+          <Icon icon="material-symbols:cloud-download-outline-rounded" width={40} height={40} />
           <span className="mt-2 text-gray-400 text-sm">{loading ? 'Uploading...' : 'Drag & Drop or Click'}</span>
         </div>
       </div>

@@ -1,50 +1,75 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import Cookie from 'js-cookie';
+import type { AxiosRequestConfig } from 'axios';
+
+interface RetryAxiosRequestConfig extends AxiosRequestConfig {
+  _retry?: boolean;
+}
 
 const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL + '/api/',
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  withCredentials: true,
 });
 
-apiClient.interceptors.request.use(async config => {
-  const token = Cookie.get('token');
-  if (token && config.headers) {
-    config.headers['Authorization'] = `Bearer ${token}`;
-  }
-  return config;
-}, error => {
-  return Promise.reject(error);
-});
+apiClient.interceptors.request.use(
+  (config) => {
+    const token = Cookie.get('token');
+
+    if (token) {
+      config.headers = config.headers ?? {};
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    if (config.data instanceof FormData) {
+      delete config.headers?.['Content-Type'];
+    } else {
+      config.headers = config.headers ?? {};
+      config.headers['Content-Type'] = 'application/json';
+    }
+
+    return config;
+  },
+  (error) => Promise.reject(error),
+);
 
 apiClient.interceptors.response.use(
   (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
-    if (error.response.status === 401 && !originalRequest._retry) {
+  async (error: AxiosError) => {
+    const originalRequest = error.config as RetryAxiosRequestConfig | undefined;
+
+    if (
+      error.response?.status === 401 &&
+      originalRequest &&
+      !originalRequest._retry
+    ) {
       originalRequest._retry = true;
 
       try {
-        const data = await axios.post(
+        const refreshResponse = await axios.post<{ token: string }>(
           process.env.NEXT_PUBLIC_API_BASE_URL + '/api/refresh-token',
           null,
-          { headers: { 'Content-Type': 'application/json' }, withCredentials: true }
+          {
+            headers: { 'Content-Type': 'application/json' },
+            withCredentials: true,
+          },
         );
 
-        Cookie.set('token', data.data.token, { expires: 1 });
+        const newToken = refreshResponse.data.token;
+        Cookie.set('token', newToken, { expires: 1 });
 
-        originalRequest.headers['Authorization'] = `Bearer ${data.data.token}`;
+        originalRequest.headers = originalRequest.headers ?? {};
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+
         return apiClient(originalRequest);
-      } catch (err) {
-        console.error('Token refresh failed:', err);
+      } catch (refreshError) {
         Cookie.remove('token');
         window.location.href = '/login';
-        return Promise.reject(err);
+        return Promise.reject(refreshError);
       }
     }
+
     return Promise.reject(error);
-  }
+  },
 );
 
 export default apiClient;

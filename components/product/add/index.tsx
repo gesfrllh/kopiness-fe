@@ -144,7 +144,7 @@ const AddProduct = () => {
         </FormGroup>
 
         {/* Image */}
-        <DropzoneImage uploadUrl='/api/uploads' value='' onChange={(url) => updateForm('imageUrl', url)}/>
+      <DropzoneImage uploadUrl='/api/uploads' value='' onChange={(url) => updateForm('imageUrl', url)}/>
 
         {/* Action */}
         <div className='flex justify-end'>
