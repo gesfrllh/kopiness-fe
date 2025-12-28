@@ -6,33 +6,55 @@ import Image from 'next/image'
 import { UploadFileApi } from '@/pages/api/uploads'
 
 type DropzoneImageProps = {
-  value?: string
-  onChange: (url: string) => void
+  value?: string[]
+  onChange: (urls: string[]) => void
   uploadUrl: string
 }
 
-const DropzoneImage: React.FC<DropzoneImageProps> = ({ value, onChange, uploadUrl }) => {
-  const [preview, setPreview] = useState<string>(value || '')
-  const [filename, setFilename] = useState<string>(value || '')
+type PreviewFile = {
+  preview: string
+  name: string
+  size: string
+}
+
+const DropzoneImage: React.FC<DropzoneImageProps> = ({ value = [], onChange }) => {
+  const [files, setFiles] = useState<PreviewFile[]>([])
   const [loading, setLoading] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-    setPreview(URL.createObjectURL(file))
-    setFilename(file.name)
+  const uploadFile = async (file: File) => {
+    const formData = new FormData()
+    formData.append('file', file)
+
+    const res = await UploadFileApi(formData)
+    if (!res) throw new Error('Upload failed')
+
+    const data = await res
+    return data.url as string
+  }
+
+  const handleFiles = async (fileList: FileList | File[]) => {
     setLoading(true)
 
     try {
-      const formData = new FormData()
-      formData.append('file', file)
+      const newFiles: PreviewFile[] = []
+      const uploadedUrls: string[] = []
 
-      const res = await UploadFileApi(formData)
+      for (const file of Array.from(fileList)) {
+        const sizeKB = (file.size / 1024).toFixed(2)
 
-      if (!res) throw new Error('Upload failed')
-      const data = await res
-      onChange(data.url)
+        newFiles.push({
+          preview: URL.createObjectURL(file),
+          name: file.name,
+          size: sizeKB,
+        })
+
+        const url = await uploadFile(file)
+        uploadedUrls.push(url)
+      }
+
+      setFiles(prev => [...prev, ...newFiles])
+      onChange([...value, ...uploadedUrls])
     } catch (err) {
       console.error(err)
     } finally {
@@ -40,37 +62,57 @@ const DropzoneImage: React.FC<DropzoneImageProps> = ({ value, onChange, uploadUr
     }
   }
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return
+    handleFiles(e.target.files)
+  }
+
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      const file = e.dataTransfer.files[0]
-      const dt = { target: { files: [file] } } as unknown as React.ChangeEvent<HTMLInputElement>
-      handleFileChange(dt)
+    if (e.dataTransfer.files) {
+      handleFiles(e.dataTransfer.files)
     }
   }
 
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => e.preventDefault()
-
   return (
-    <div className='flex flex-col gap-2'>
-      <label className="block text-sm font-medium mb-1">Product Image</label>
+    <div className="flex flex-col gap-2">
+      <label className="block text-sm font-medium mb-1">Product Images</label>
 
       <div
         onDrop={handleDrop}
-        onDragOver={handleDragOver}
+        onDragOver={(e) => e.preventDefault()}
         onClick={() => inputRef.current?.click()}
         className="border-dashed border-2 border-gray-300 rounded-md p-16 flex flex-col items-center justify-center cursor-pointer hover:border-amber-800 transition"
       >
-        <div className="flex flex-col items-center justify-center text-gray-400">
-          <Icon icon="material-symbols:cloud-download-outline-rounded" width={40} height={40} />
-          <span className="mt-2 text-gray-400 text-sm">{loading ? 'Uploading...' : 'Drag & Drop or Click'}</span>
-        </div>
+        <Icon icon="material-symbols:cloud-download-outline-rounded" width={40} height={40} />
+        <span className="mt-2 text-sm text-gray-400">
+          {loading ? 'Uploading...' : 'Drag & Drop or Click'}
+        </span>
       </div>
 
-      {preview && (
-        <div>
-          <Image src={preview} alt="preview" width={40} height={40} className="w-40 h-40 object-cover rounded-md" />
-          <p>{filename}</p>
+      {files.length > 0 && (
+        <div className="flex flex-wrap gap-4 py-4">
+          {files.map((file, index) => (
+            <div
+              key={index}
+              className="flex w-[320px] border border-amber-800 gap-4 p-3 shadow rounded-lg"
+            >
+              <Image
+                src={file.preview}
+                alt="preview"
+                width={72}
+                height={72}
+                className="object-cover rounded-md"
+              />
+              <div className="flex flex-col gap-1">
+                <p className="text-xs text-gray-500">{file.name}</p>
+                <p className="text-xs text-gray-800">{file.size} KB</p>
+              </div>
+              <div>
+                <Icon icon="material-symbols:cloud-download-outline-rounded" width={40} height={40} />
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
@@ -80,6 +122,7 @@ const DropzoneImage: React.FC<DropzoneImageProps> = ({ value, onChange, uploadUr
         onChange={handleFileChange}
         className="hidden"
         accept="image/*"
+        multiple
       />
     </div>
   )

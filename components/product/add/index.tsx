@@ -19,7 +19,7 @@ type FormState = {
   roastLevel: string
   process: string
   flavorNotes: string
-  imageUrl: string
+  imageUrls: string[]
 }
 
 const initialState: FormState = {
@@ -31,13 +31,16 @@ const initialState: FormState = {
   roastLevel: '',
   process: '',
   flavorNotes: '',
-  imageUrl: '',
+  imageUrls: [],
 }
 
 const AddProduct = () => {
   const [form, setForm] = useState<FormState>(initialState)
 
-  const updateForm = (key: keyof FormState, value: string) => {
+  const updateForm = <K extends keyof FormState>(
+    key: K,
+    value: FormState[K]
+  ) => {
     setForm((prev) => ({ ...prev, [key]: value }))
   }
 
@@ -48,7 +51,6 @@ const AddProduct = () => {
       stock: Number(form.stock),
     }
 
-    // console.log(payload)
     // hit API here
   }
 
@@ -66,7 +68,7 @@ const AddProduct = () => {
       <div className='bg-white p-8 rounded-lg shadow-md mt-8 flex flex-col gap-6'>
 
         {/* Row 1 */}
-        <div className='grid grid-cols-2 gap-8'>
+        <div className='grid md:grid-cols-2 gap-8'>
           <FormGroup label="Product Name" required>
             <input
               value={form.name}
@@ -86,7 +88,7 @@ const AddProduct = () => {
         </div>
 
         {/* Row 2 */}
-        <div className='grid grid-cols-2 gap-8'>
+        <div className='grid md:grid-cols-2 gap-8'>
           <FormGroup label="Stock" required>
             <input
               type="number"
@@ -144,7 +146,11 @@ const AddProduct = () => {
         </FormGroup>
 
         {/* Image */}
-      <DropzoneImage uploadUrl='/api/uploads' value='' onChange={(url) => updateForm('imageUrl', url)}/>
+        <DropzoneImage
+          uploadUrl="/api/uploads"
+          value={form.imageUrls}
+          onChange={(urls) => updateForm('imageUrls', urls)}
+        />
 
         {/* Action */}
         <div className='flex justify-end'>

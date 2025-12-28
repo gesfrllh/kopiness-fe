@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-import Card from '../Base/ui/Card/Card';
 import { useProductStore } from '@/store/useProductStore';
 // import FormInput from '../Base/FormInput';
 // import FormGroup from '../Base/FormGroup';
@@ -37,7 +36,7 @@ const Product = () => {
 
   useEffect(() => {
     getProduct()
-  }, [error])
+  }, [getProduct, error])
 
   return (
     <>
@@ -67,7 +66,7 @@ const Product = () => {
                       style={{ color: '#92400E' }}
                       height="32" />
                   </div>
-
+                      {search}
                 </div>
               </div>
             </div>
@@ -77,7 +76,7 @@ const Product = () => {
                   <div key={idx}>
                     <CardRoot>
                       <CardRoot.image src={item.image_url} />
-                      <CardRoot.content>
+                      <CardRoot.content> 
                         <CardRoot.title title={item.title} subtitle={item.sec_title} />
                         <CardRoot.price value={item.price} />
                       </CardRoot.content>
