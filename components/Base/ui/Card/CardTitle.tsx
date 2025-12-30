@@ -1,6 +1,6 @@
 interface CardTitleProps {
   title?: string;
-  subtitle?: string;
+  subtitle?: string | number;
 }
 
 const CardTitle: React.FC<CardTitleProps> = ({ title, subtitle }) => {

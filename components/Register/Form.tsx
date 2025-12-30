@@ -66,6 +66,7 @@ const Form = () => {
             <div className='flex justify-center'>
               <Image
                 src={Logo}
+                fill
                 alt='Logo'
                 width={92} />
             </div>

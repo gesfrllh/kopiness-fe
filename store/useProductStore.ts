@@ -1,139 +1,108 @@
-import { getProduct } from '@/pages/api/product/productApi';
-import { Product } from '@/types/product';
+import { showNotify } from '@/components/Base/notification/notify-controllers';
+import { addProduct, getProduct } from '@/pages/api/product/productApi';
+import { Product, ProductRequest, ProductResponse } from '@/types/product';
 import { formatError } from '@/utils/formatError';
 import { create } from 'zustand';
 
 interface ProductState {
-    products: Product[];
-    addProduct: (product: Product) => void;
+    products: ProductResponse[];
+
+    // pagination state
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+
+    setPage: (page: number) => void;
+    setLimit: (limit: number) => void;
+
+    search: string;
+    error: string | null;
+    loading: boolean;
+
+    getProduct: () => Promise<void>;
+    addProducts: (product: ProductRequest) => Promise<void>;
     removeProduct: (index: number) => void;
-    updateProduct: (index: number, updateProduct: Product) => void;
-    search: string,
-    error: string | null,
-    getProduct: () => void;
+    updateProduct: (index: number, updateProduct: ProductResponse) => void;
 }
 
-export const useProductStore = create<ProductState>((set) => ({
+export const useProductStore = create<ProductState>((set, get) => ({
     search: '',
-    products: [
-        {
-            id: 1,
-            title: 'Arabican Coffee Beans',
-            sec_title: 'Smooth, Refined, and Naturally Aromatic',
-            description: 'Known for their smooth taste and delicate aroma, Arabica coffee beans are among the most cherished coffee varieties in the world. Grown at high altitudes and nurtured in cool climates, Arabica offers a naturally mild flavor with subtle sweetness, floral notes, and a gentle fruitiness. Perfect for those who enjoy a clean, balanced cup, Arabica delivers a refined and aromatic coffee experience like no other.',
-            image_url: '/assets/image/beans1.jpg',
-            price: 100000,
-            name: '',
-            roast_level: 'MEDIUM',
-            stock: 0
-        },
-        {
-            id: 2,
-            title: 'Robusta Coffee Beans',
-            sec_title: 'Bold, Strong, and Full of Character',
-            description: "Renowned for their intense flavor and high caffeine content, Robusta coffee beans deliver a bold and powerful coffee experience. With a naturally earthy, nutty taste and a rich crema when brewed as espresso, Robusta is perfect for those who prefer a strong, full-bodied cup with a pleasantly bitter kick. These beans thrive in lowland tropical climates and are ideal for blends, instant coffee, and traditional brews that pack a punch.",
-            image_url: '/assets/image/beans2.jpg',
-            price: 100000,
-            name: '',
-            roast_level: 'MEDIUM',
-            stock: 0
-        },
-        {
-            id: 3,
-            title: 'Liberica Coffee Beans',
-            sec_title: 'Rare, Exotic, and Uniquely Aromatic',
-            description: "Liberica coffee offers a one-of-a-kind profile cherished by adventurous coffee lovers. Known for its large, irregular beans and distinct flavor, Liberica presents a smoky, woody aroma with hints of floral and fruity undertones. The taste is bold and complex — sometimes even wine-like — making it a true departure from conventional coffee. Ideal for those seeking something different, Liberica is a hidden gem waiting to be discovered.",
-            image_url: '/assets/image/beans3.jpg',
-            price: 100000,
-            name: '',
-            roast_level: 'MEDIUM',
-            stock: 0
-        },
-        {
-            id: 4,
-            title: 'Excelsa Coffee Beans',
-            sec_title: 'Complex, Fruity, and Intriguingly Layered',
-            description: "Once classified as its own species, now recognized as a variety of Liberica, Excelsa coffee stands out with its unique combination of light body and tart, fruity notes. It brings a mysterious depth to any cup — often described as a blend between light, bright acidity and dark, roasted flavors. Frequently used in specialty blends to add complexity and lift, Excelsa is a rare bean that appeals to those who appreciate dynamic, evolving flavors in their coffee.",
-            image_url: '/assets/image/beans4.jpg',
-            price: 100000,
-            name: '',
-            roast_level: 'MEDIUM',
-            stock: 0
-        },
-        {
-            id: 1,
-            title: 'Arabican Coffee Beans',
-            sec_title: 'Smooth, Refined, and Naturally Aromatic',
-            description: 'Known for their smooth taste and delicate aroma, Arabica coffee beans are among the most cherished coffee varieties in the world. Grown at high altitudes and nurtured in cool climates, Arabica offers a naturally mild flavor with subtle sweetness, floral notes, and a gentle fruitiness. Perfect for those who enjoy a clean, balanced cup, Arabica delivers a refined and aromatic coffee experience like no other.',
-            image_url: '/assets/image/beans1.jpg',
-            price: 100000,
-            name: '',
-            roast_level: 'MEDIUM',
-            stock: 0
-        },
-        {
-            id: 2,
-            title: 'Robusta Coffee Beans',
-            sec_title: 'Bold, Strong, and Full of Character',
-            description: "Renowned for their intense flavor and high caffeine content, Robusta coffee beans deliver a bold and powerful coffee experience. With a naturally earthy, nutty taste and a rich crema when brewed as espresso, Robusta is perfect for those who prefer a strong, full-bodied cup with a pleasantly bitter kick. These beans thrive in lowland tropical climates and are ideal for blends, instant coffee, and traditional brews that pack a punch.",
-            image_url: '/assets/image/beans2.jpg',
-            price: 100000,
-            name: '',
-            roast_level: 'MEDIUM',
-            stock: 0
-        },
-        {
-            id: 3,
-            title: 'Liberica Coffee Beans',
-            sec_title: 'Rare, Exotic, and Uniquely Aromatic',
-            description: "Liberica coffee offers a one-of-a-kind profile cherished by adventurous coffee lovers. Known for its large, irregular beans and distinct flavor, Liberica presents a smoky, woody aroma with hints of floral and fruity undertones. The taste is bold and complex — sometimes even wine-like — making it a true departure from conventional coffee. Ideal for those seeking something different, Liberica is a hidden gem waiting to be discovered.",
-            image_url: '/assets/image/beans3.jpg',
-            price: 100000,
-            name: '',
-            roast_level: 'MEDIUM',
-            stock: 0
-        },
-        {
-            id: 4,
-            title: 'Excelsa Coffee Beans',
-            sec_title: 'Complex, Fruity, and Intriguingly Layered',
-            description: "Once classified as its own species, now recognized as a variety of Liberica, Excelsa coffee stands out with its unique combination of light body and tart, fruity notes. It brings a mysterious depth to any cup — often described as a blend between light, bright acidity and dark, roasted flavors. Frequently used in specialty blends to add complexity and lift, Excelsa is a rare bean that appeals to those who appreciate dynamic, evolving flavors in their coffee.",
-            image_url: '/assets/image/beans4.jpg',
-            price: 100000,
-            name: '',
-            roast_level: 'MEDIUM',
-            stock: 0
-        }
-    ],
+    products: [],
     error: null,
 
+    // pagination default
+    page: 1,
+    limit: 10,
+    total: 0,
+    totalPages: 0,
+    loading: false,
+
+    setPage: (page) => set({ page }),
+    setLimit: (limit) => set({ limit, page: 1 }),
+
     getProduct: async () => {
+        const { page, limit } = get();
+        set({loading: true})
         try {
-            const res = await getProduct()
-            // set({ products: res.data })
+            const res = await getProduct({
+                page,
+                limit,
+            });
+            const pagination = res.data.meta
+            set({loading: false})
+            set({
+                products: res.data.data,
+                total: pagination.total,
+                totalPages: pagination.totalPages,
+            }); 
         } catch (err: unknown) {
-            const message = formatError(err) || 'Error get Product'
-            set({ error: message })
-            throw new Error(message)
+            const message = formatError(err) || 'Error get Product';
+            set({ error: message });
+            set({loading: false})
+            throw new Error(message);
         }
     },
-    addProduct: (prd) => {
-        set((state) => ({
-            products: [...state.products, prd]
-        }))
+
+    addProducts: async (prd) => {
+        set({loading: true})
+
+        try {
+            await addProduct(prd);
+
+            await get().getProduct();
+
+            set({loading: false})
+            showNotify({
+                type: 'success',
+                title: 'Sukses',
+                text: 'Tambah Produk Berhasil',
+            });
+        } catch (err: unknown) {
+            const message = formatError(err) || 'Error Add Product';
+            set({ error: message });
+            set({loading: false})
+            showNotify({
+                type: 'error',
+                title: 'Gagal',
+                text: message,
+            });
+
+            throw new Error(message);
+        }
     },
 
     removeProduct: (idx) => {
         set((state) => ({
-            products: state.products.filter((_, i) => i !== idx)
-        }))
+            products: state.products.filter((_, i) => i !== idx),
+        }));
     },
 
     updateProduct: (idx, updt) => {
         set((state) => ({
             products: state.products.map((item, i) =>
-                i === idx ? updt : item
-            )
-        }))
-    }
-}))
+                i === idx ? (updt as ProductResponse) : item
+            ),
+        }));
+    },
+}));

@@ -25,7 +25,7 @@ const Pagination: React.FC<PaginationsProps> = ({
     boundaryCount
   })
 
-  if (totalPage <= 1) { return null }
+  if (totalPage <= 0) { return null }
 
   return (
     <div className={`flex items-center justify-between gap-4 ${classNames}`}>

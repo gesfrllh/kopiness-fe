@@ -1,7 +1,7 @@
 import Image from 'next/image';
 
 interface CardImageProps {
-  src: string;
+  src?: string[] | string;
   alt?: string;
 }
 
@@ -11,8 +11,10 @@ const CardImage: React.FC<CardImageProps> = ({ src, alt = '' }) => {
       <div className="relative size-[140px] md:size-[240px]">
         <Image
           src={src}
+          sizes="(max-width: 768px) 100vw, 33vw"
           alt={alt}
           fill
+          priority
           className="rounded object-cover"
         />
       </div>
