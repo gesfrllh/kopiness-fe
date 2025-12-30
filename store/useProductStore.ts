@@ -1,6 +1,6 @@
 import { showNotify } from '@/components/Base/notification/notify-controllers';
 import { addProduct, getProduct } from '@/pages/api/product/productApi';
-import { Product, ProductRequest, ProductResponse } from '@/types/product';
+import { ProductRequest, ProductResponse } from '@/types/product';
 import { formatError } from '@/utils/formatError';
 import { create } from 'zustand';
 
@@ -12,9 +12,11 @@ interface ProductState {
     limit: number;
     total: number;
     totalPages: number;
+    productsId?: string;
 
     setPage: (page: number) => void;
     setLimit: (limit: number) => void;
+    setProductsId: (id?: string) => void;
 
     search: string;
     error: string | null;
@@ -37,8 +39,10 @@ export const useProductStore = create<ProductState>((set, get) => ({
     total: 0,
     totalPages: 0,
     loading: false,
+    productsId: '',
 
     setPage: (page) => set({ page }),
+    setProductsId: (productsId) => set({ productsId }),
     setLimit: (limit) => set({ limit, page: 1 }),
 
     getProduct: async () => {

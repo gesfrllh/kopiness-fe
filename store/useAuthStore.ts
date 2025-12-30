@@ -11,6 +11,7 @@ export const useAuthStore = create<AuthState>((set: SetStateFn) => ({
   token: null,
   loading: false,
   error: null,
+  role: null,
 
   login: async (email: string, password: string) => {
     set({ loading: true, error: null })
@@ -25,6 +26,8 @@ export const useAuthStore = create<AuthState>((set: SetStateFn) => ({
         token: res.token,
         loading: false
       })
+
+      set({ role: res.user.role })
     } catch (error: unknown) {
       const message = formatError(error) || 'Login Failed'
       set({ error: message, loading: false })

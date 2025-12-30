@@ -4,6 +4,8 @@ import React, { useState, useRef } from 'react'
 import { Icon } from '@iconify/react'
 import Image from 'next/image'
 import { UploadFileApi } from '@/pages/api/uploads'
+import AnimationLogin from '../animation/AnimationLogin'
+import { showNotify } from './notification/notify-controllers'
 
 type DropzoneImageProps = {
   value?: string[]
@@ -53,6 +55,11 @@ const DropzoneImage: React.FC<DropzoneImageProps> = ({ value = [], onChange }) =
         uploadedUrls.push(url)
       }
 
+      showNotify({
+        type: 'success',
+        title: 'Sukses',
+        text: 'Gambar berhasil diunggah',
+      });
       setFiles(prev => [...prev, ...newFiles])
       onChange([...value, ...uploadedUrls])
     } catch (err) {
@@ -124,6 +131,9 @@ const DropzoneImage: React.FC<DropzoneImageProps> = ({ value = [], onChange }) =
         accept="image/*"
         multiple
       />
+
+      {loading ? <AnimationLogin /> : ''}
+
     </div>
   )
 }
