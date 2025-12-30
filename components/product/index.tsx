@@ -13,23 +13,28 @@ import { Modal } from '../Base/ui/Modal/Modal'
 import { ModalHeader, ModalBody, ModalFooter } from '../Base/ui/Modal/ModalCompunds'
 import CardRoot from '../Base/ui/Card'
 import AnimationLogin from '../animation/AnimationLogin'
+import Cookies from 'js-cookie'
+import Tooltip from '../Base/ui/Tooltip'
 
 const Product = () => {
   const [loader, setLoader] = useState(false)
   const [count, setCount] = useState(0)
   const [open, setOpen] = useState(false)
-
+  const [openDetail, setOpenDetail] = useState(false)
   const {
     products,
     page,
     limit,
     total,
     loading,
+    totalPages,
     setPage,
     setLimit,
-    totalPages,
+    setProductsId,
     getProduct,
   } = useProductStore()
+
+  const role = Cookies.get('role')
 
   useEffect(() => {
     getProduct()
@@ -46,12 +51,10 @@ const Product = () => {
       {loader && (
         <div>
           <CTA title="Product Cta" />
-
           <div className="bg-white rounded-lg my-8 py-4 px-8">
             {/* Header */}
             <div className="flex items-center justify-between pb-4 border-b border-gray-300">
               <span>Product</span>
-
               <div className="flex items-center gap-8">
                 <Button variant="outline">
                   <Link href="/manage/product/add">Add Product</Link>
@@ -91,8 +94,35 @@ const Product = () => {
                     </CardRoot.content>
 
                     <CardRoot.footer>
+
+                      {role === 'ADMIN' && (
+                        <div className='flex items-center justify-between'>
+                          <div>
+                            <Tooltip content="edit">
+                              <Icon
+                                icon="material-symbols:edit-square-outline"
+                                width={24}
+                                height={24}
+                                style={{ color: '#3291B6' }} />
+                            </Tooltip>
+                          </div>
+                          <div>
+                            <Tooltip content="Hapus">
+                              <Icon
+                                icon="material-symbols:delete-outline"
+                                width={26}
+                                height={26}
+                                style={{ color: '#DC0000' }} />
+                            </Tooltip>
+                          </div>
+                        </div>
+                      )}
+
                       <Button onClick={addingToCart}>Keranjang</Button>
-                      <Button>Detail</Button>
+                      <Button onClick={() => {
+                        setProductsId(item.id)
+                        setOpenDetail(true)
+                      }}>Detail</Button>
                     </CardRoot.footer>
                   </CardRoot>
                 ))}
@@ -131,6 +161,13 @@ const Product = () => {
                 Delete
               </button>
             </ModalFooter>
+          </Modal>
+          <Modal open={openDetail} onClose={() => setOpenDetail} size='xl'>
+            <ModalHeader>
+              <div onClick={() => (setOpenDetail(false))}>
+                Close modal
+              </div>
+            </ModalHeader>
           </Modal>
         </div>
       )}
