@@ -3,8 +3,13 @@
 import apiClient from "@/lib/api";
 import { ProductRequest } from "@/types/product";
 
-export const getProduct = async () => {
-  const response  =  await apiClient.get('/products')
+interface ParamsGetProduct {
+  page: number,
+  limit: number
+}
+
+export const getProduct = async (params: ParamsGetProduct) => {
+  const response  =  await apiClient.get('/products', {params})
   return response.data
 } 
 

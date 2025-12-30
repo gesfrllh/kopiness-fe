@@ -9,6 +9,9 @@ import Select from '@/components/Base/Select'
 import { roastLevelOptions } from '@/constants/roastLevelOptions'
 import DropzoneImage from '@/components/Base/Dropzone'
 import Button from '@/components/Base/Button'
+import { useProductStore } from '@/store/useProductStore'
+import { ProductRequest } from '@/types/product'
+import { useRouter } from 'next/navigation'
 
 type FormState = {
   name: string
@@ -19,7 +22,7 @@ type FormState = {
   roastLevel: string
   process: string
   flavorNotes: string
-  imageUrls: string[]
+  imageUrl: string[]
 }
 
 const initialState: FormState = {
@@ -31,7 +34,7 @@ const initialState: FormState = {
   roastLevel: '',
   process: '',
   flavorNotes: '',
-  imageUrls: [],
+  imageUrl: [],
 }
 
 const AddProduct = () => {
@@ -44,14 +47,20 @@ const AddProduct = () => {
     setForm((prev) => ({ ...prev, [key]: value }))
   }
 
-  const handleSubmit = () => {
-    const payload = {
+  const { addProducts, error } = useProductStore()
+  const router = useRouter()
+
+  const handleSubmit = async () => {
+    const payload: ProductRequest = {
       ...form,
       price: Number(form.price),
       stock: Number(form.stock),
     }
 
-    // hit API here
+    addProducts(payload)
+    if(!error) {
+      router.push('/manage/product')
+    }
   }
 
   return (
@@ -148,8 +157,8 @@ const AddProduct = () => {
         {/* Image */}
         <DropzoneImage
           uploadUrl="/api/uploads"
-          value={form.imageUrls}
-          onChange={(urls) => updateForm('imageUrls', urls)}
+          value={form.imageUrl}
+          onChange={(urls) => updateForm('imageUrl', urls)}
         />
 
         {/* Action */}
