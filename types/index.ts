@@ -88,3 +88,10 @@ export interface ModalProps {
 export interface ModalSelectionProps {
   children: ReactNode
 }
+
+export interface ModalConfirm extends Pick<ModalProps, 'open' | 'onClose' | 'title' | 'description'>{
+  data?: null | string
+  onConfirm: () => void,
+  confirmText: string,
+  cancelText: string,
+}

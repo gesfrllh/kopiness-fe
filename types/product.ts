@@ -26,3 +26,19 @@ export interface ProductResponse extends Omit<Product, 'image_url' | 'sec_title'
     process: string,
     flavorNotes: string
 }
+
+export type ProductResponseById = Pick<ProductResponse, 'id'> & Partial<Omit<ProductResponse, 'id'>>
+
+export interface CartItem extends ProductResponse {
+    qty: number
+}
+
+export interface CartState {
+    items: CartItem[]
+    totalQty: number
+
+    addToCart: (product: ProductResponse) => void;
+    removeFromCart: (id: string) => void
+    clearCart: () => void
+}
+

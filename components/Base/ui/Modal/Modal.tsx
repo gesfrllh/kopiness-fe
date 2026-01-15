@@ -8,8 +8,8 @@ import { createPortal } from "react-dom";
 const sizeMap = {
   sm: 'max-w-sm',
   md: 'max-w-md',
-  lg: 'max-w-lg',
-  xl: 'max-w-xl'
+  lg: 'max-w-3xl',
+  xl: 'max-w-5xl'
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -37,7 +37,7 @@ export const Modal: React.FC<ModalProps> = ({
 
   if (!open) return null;
 
-   return createPortal(
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Overlay */}
       <div
@@ -47,6 +47,8 @@ export const Modal: React.FC<ModalProps> = ({
 
       {/* Modal */}
       <div
+        role="dialog" 
+        aria-modal="true"
         className={clsx(
           "relative z-10 w-full rounded-2xl bg-white shadow-xl",
           "animate-in fade-in zoom-in-95 duration-200",

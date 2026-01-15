@@ -18,16 +18,16 @@ export const useAuthStore = create<AuthState>((set: SetStateFn) => ({
     try {
       const res = await login(email, password)
 
-      Cookies.set("token", res.token, { path: "/" })
-      Cookies.set("role", res.user.role, { path: "/" })
+      Cookies.set("token", res.data.token, { path: "/" })
+      Cookies.set("role", res.data.user.role, { path: "/" })
 
       set({
-        user: res.user,
-        token: res.token,
+        user: res.data.user,
+        token: res.data.token,
         loading: false
       })
 
-      set({ role: res.user.role })
+      set({ role: res.data.user.role })
     } catch (error: unknown) {
       const message = formatError(error) || 'Login Failed'
       set({ error: message, loading: false })
