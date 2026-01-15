@@ -1,11 +1,12 @@
 'use client'
 
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Icon } from '@iconify/react'
 import Image from 'next/image'
 import { UploadFileApi } from '@/pages/api/uploads'
 import AnimationLogin from '../animation/AnimationLogin'
 import { showNotify } from './notification/notify-controllers'
+import { getImageSize } from '@/utils/general'
 
 type DropzoneImageProps = {
   value?: string[]
@@ -14,7 +15,7 @@ type DropzoneImageProps = {
 }
 
 type PreviewFile = {
-  preview: string
+  url: string
   name: string
   size: string
 }
@@ -22,6 +23,7 @@ type PreviewFile = {
 const DropzoneImage: React.FC<DropzoneImageProps> = ({ value = [], onChange }) => {
   const [files, setFiles] = useState<PreviewFile[]>([])
   const [loading, setLoading] = useState(false)
+  const [previews, setPreviews] = useState<PreviewFile[]>([])
   const inputRef = useRef<HTMLInputElement>(null)
 
   const uploadFile = async (file: File) => {
@@ -46,7 +48,7 @@ const DropzoneImage: React.FC<DropzoneImageProps> = ({ value = [], onChange }) =
         const sizeKB = (file.size / 1024).toFixed(2)
 
         newFiles.push({
-          preview: URL.createObjectURL(file),
+          url: URL.createObjectURL(file),
           name: file.name,
           size: sizeKB,
         })
@@ -68,6 +70,22 @@ const DropzoneImage: React.FC<DropzoneImageProps> = ({ value = [], onChange }) =
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    const loadFromValue = async () => {
+      const list = await Promise.all(
+        value.map(async(url) => ({
+          url,
+          name: url.split('/').pop() ?? 'image',
+          size: await getImageSize(url)
+        }))
+      )
+
+      setPreviews(list)
+    }
+    if(value.length) loadFromValue()
+    else setPreviews([])
+  }, [value])
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return
@@ -96,16 +114,15 @@ const DropzoneImage: React.FC<DropzoneImageProps> = ({ value = [], onChange }) =
           {loading ? 'Uploading...' : 'Drag & Drop or Click'}
         </span>
       </div>
-
-      {files.length > 0 && (
+      {previews.length > 0 && (
         <div className="flex flex-wrap gap-4 py-4">
-          {files.map((file, index) => (
+          {previews.map((file, index) => (
             <div
               key={index}
               className="flex w-[320px] border border-amber-800 gap-4 p-3 shadow rounded-lg"
             >
               <Image
-                src={file.preview}
+                src={file.url}
                 alt="preview"
                 width={72}
                 height={72}

@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import Image from 'next/image'
 import { useProductStore } from '@/store/useProductStore'
 import { Icon } from '@iconify/react'
 import Link from 'next/link'
@@ -15,10 +16,13 @@ import CardRoot from '../Base/ui/Card'
 import AnimationLogin from '../animation/AnimationLogin'
 import Cookies from 'js-cookie'
 import Tooltip from '../Base/ui/Tooltip'
+import { ConfirmModal } from '../Base/ui/Modal/ConfirmModal'
+import { useCartStore } from '@/store/useCartStore'
+import { ProductResponse } from '@/types/product'
+import { useRouter } from 'next/navigation'
 
 const Product = () => {
   const [loader, setLoader] = useState(false)
-  const [count, setCount] = useState(0)
   const [open, setOpen] = useState(false)
   const [openDetail, setOpenDetail] = useState(false)
   const {
@@ -27,21 +31,39 @@ const Product = () => {
     limit,
     total,
     loading,
+    productsById,
     totalPages,
     setPage,
     setLimit,
     setProductsId,
     getProduct,
+    getProductByIds
   } = useProductStore()
 
+  const { totalQty, addToCart } = useCartStore()
+
   const role = Cookies.get('role')
+  const router = useRouter()
 
   useEffect(() => {
     getProduct()
   }, [page, limit])
 
-  const addingToCart = () => {
-    setCount((prev) => prev + 1)
+  const addingToCart = (product: ProductResponse) => {
+    if (product.stock <= 0) return
+
+    addToCart(product)
+  }
+  const openDetails = (id: string) => {
+    if (!productsById) return
+
+    setProductsId(id)
+    getProductByIds()
+    setOpenDetail(true)
+  }
+
+  const editProduct = (id: string) => {
+    router.push(`/manage/product/edit/${id}`)
   }
 
   return (
@@ -64,8 +86,8 @@ const Product = () => {
                   className="relative cursor-pointer"
                   onClick={() => setOpen(true)}
                 >
-                  {count > 0 && (
-                    <Badge text={count} color="red" />
+                  {totalQty > 0 && (
+                    <Badge text={totalQty} color="red" />
                   )}
 
                   <Icon
@@ -97,7 +119,9 @@ const Product = () => {
 
                       {role === 'ADMIN' && (
                         <div className='flex items-center justify-between'>
-                          <div>
+                          <div 
+                          className='cursor-pointer'
+                          onClick={() => editProduct(item.id as string)}>
                             <Tooltip content="edit">
                               <Icon
                                 icon="material-symbols:edit-square-outline"
@@ -106,7 +130,7 @@ const Product = () => {
                                 style={{ color: '#3291B6' }} />
                             </Tooltip>
                           </div>
-                          <div>
+                          <div className='cursor-pointer'>
                             <Tooltip content="Hapus">
                               <Icon
                                 icon="material-symbols:delete-outline"
@@ -118,11 +142,8 @@ const Product = () => {
                         </div>
                       )}
 
-                      <Button onClick={addingToCart}>Keranjang</Button>
-                      <Button onClick={() => {
-                        setProductsId(item.id)
-                        setOpenDetail(true)
-                      }}>Detail</Button>
+                      <Button onClick={() => addingToCart(item)}>Keranjang</Button>
+                      <Button onClick={() => openDetails(item.id as string)}>Detail</Button>
                     </CardRoot.footer>
                   </CardRoot>
                 ))}
@@ -143,31 +164,50 @@ const Product = () => {
           </div>
 
           {/* Modal */}
-          <Modal open={open} onClose={() => setOpen(false)} size="lg">
-            <ModalHeader>
-              <h3 className="text-xl font-bold">Delete Product</h3>
-              <p className="text-sm text-gray-500">
-                This action cannot be undone
-              </p>
-            </ModalHeader>
+          <ConfirmModal
+            open={open}
+            onClose={() => setOpen(false)}
+            onConfirm={() => setOpen(false)}
+            title='Apakah?'
+            data='testing'
+            description='Mau dihapus?'
+            confirmText='Hapus'
+            cancelText='Batal'
+          />
 
+          <Modal open={openDetail} onClose={() => setOpenDetail} size='xl'>
+            <ModalHeader>
+              <div className='flex justify-between items-center'>
+                <p className='text-lg font-semibold'>Detail</p>
+                <div onClick={() => (setOpenDetail(false))} className='cursor-pointer'>
+                  <Tooltip content="Tutup">
+                    <Icon
+                      icon="material-symbols:close-small-outline-rounded"
+                      width={36}
+                      height={36}
+                      style={{ color: '#b63232ff' }} />
+                  </Tooltip>
+                </div>
+              </div>
+            </ModalHeader>
             <ModalBody>
-              <p>Are you sure you want to delete this product?</p>
+              <div>
+                {productsById && productsById.imageUrl && (
+                  <Image src={productsById.imageUrl[0]} alt="Product image" width={400} height={400} />
+                )}
+                {productsById && productsById.imageUrl?.map((item, k) => (
+                  <div key={k}>
+                    {item}
+                  </div>
+                ))}
+              </div>
             </ModalBody>
 
             <ModalFooter>
-              <button onClick={() => setOpen(false)}>Cancel</button>
-              <button className="bg-red-600 text-white px-4 py-2 rounded">
-                Delete
-              </button>
-            </ModalFooter>
-          </Modal>
-          <Modal open={openDetail} onClose={() => setOpenDetail} size='xl'>
-            <ModalHeader>
-              <div onClick={() => (setOpenDetail(false))}>
-                Close modal
+              <div>
+
               </div>
-            </ModalHeader>
+            </ModalFooter>
           </Modal>
         </div>
       )}

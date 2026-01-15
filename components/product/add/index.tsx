@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Icon } from '@iconify/react'
 
@@ -12,6 +12,8 @@ import Button from '@/components/Base/Button'
 import { useProductStore } from '@/store/useProductStore'
 import { ProductRequest } from '@/types/product'
 import { useRouter } from 'next/navigation'
+import { getProductById } from '@/pages/api/product/productApi'
+import AnimationLogin from '@/components/animation/AnimationLogin'
 
 type FormState = {
   name: string
@@ -37,7 +39,12 @@ const initialState: FormState = {
   imageUrl: [],
 }
 
-const AddProduct = () => {
+type Props = {
+  id?: string,
+}
+
+const AddProduct = ({id}: Props) => {
+  const isEdit = Boolean(id)
   const [form, setForm] = useState<FormState>(initialState)
 
   const updateForm = <K extends keyof FormState>(
@@ -47,8 +54,50 @@ const AddProduct = () => {
     setForm((prev) => ({ ...prev, [key]: value }))
   }
 
-  const { addProducts, error } = useProductStore()
+  const { 
+    productsById,
+    error, 
+    loading,
+    resetProductById,
+    addProducts, 
+    updateProduct, 
+    getProductByIds, 
+    setProductsId,
+  } = useProductStore()
+
   const router = useRouter()
+
+  useEffect(() => {
+    if(!id) {
+      setForm(initialState)
+      setProductsId(undefined)
+      resetProductById()
+    }
+  }, [id])
+  
+  useEffect(() => {
+    if(!id) return
+
+    setProductsId(id)
+    getProductByIds()
+  }, [id])
+
+  useEffect(() => {
+    if (!isEdit) return
+    if (!productsById?.id) return
+
+    setForm({
+      name: productsById.name ?? '',
+      price: String(productsById.price ?? ''),
+      stock: String(productsById.stock ?? ''),
+      description: productsById.description ?? '',
+      origin: productsById.origin ?? '',
+      roastLevel: productsById.roastLevel ?? '',
+      process: productsById.process ?? '',
+      flavorNotes: productsById.flavorNotes ?? '',
+      imageUrl: productsById.imageUrl ?? [],
+    })
+  }, [productsById, isEdit])
 
   const handleSubmit = async () => {
     const payload: ProductRequest = {
@@ -57,7 +106,11 @@ const AddProduct = () => {
       stock: Number(form.stock),
     }
 
-    addProducts(payload)
+    if(isEdit) { 
+      updateProduct(id as string, payload)
+    } else {
+      addProducts(payload)
+    }
     if(!error) {
       router.push('/manage/product')
     }
@@ -171,6 +224,7 @@ const AddProduct = () => {
           </Button>
         </div>
       </div>
+      {loading ? <AnimationLogin /> : ''}
     </div>
   )
 }

@@ -28,11 +28,13 @@ const FormGroup: React.FC<Group> = ({ children, label, required, value }) => {
     isName ? s.isVisible(isName) : false
   )
 
+  const childValue = isValid && 'value' in children.props ? children.props.value : value
+
   const toggleVisibility = usePasswordStore((s) => s.toggleVisibility)
 
   useEffect(() => {
-    setHasValue(!!value)
-  }, [value])
+    setHasValue(childValue !== undefined && childValue !== null && String(childValue).length > 0)
+  }, [childValue])
 
   return (
     <div className="relative w-full bg-white mt-4">
@@ -59,7 +61,7 @@ const FormGroup: React.FC<Group> = ({ children, label, required, value }) => {
               type: showPassword ? 'text' : 'password'
             })
           })}
-        {isPasswordInput && isName && (
+        {isPasswordInput && isName && hasValue && (
           <span
             className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500"
             onClick={() => toggleVisibility(isName)}
