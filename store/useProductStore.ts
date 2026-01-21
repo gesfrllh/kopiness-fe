@@ -1,5 +1,5 @@
 import { showNotify } from '@/components/Base/notification/notify-controllers';
-import { addProduct, getProduct, getProductById } from '@/pages/api/product/productApi';
+import { addProduct, deleteProduct, editProduct, getProduct, getProductById } from '@/pages/api/product/productApi';
 import { ProductRequest, ProductResponse, ProductResponseById } from '@/types/product';
 import { formatError } from '@/utils/formatError';
 import { create } from 'zustand';
@@ -13,6 +13,7 @@ interface ProductState {
     total: number;
     totalPages: number;
     productsId?: string;
+    modalDetail: boolean;
 
     setPage: (page: number) => void;
     setLimit: (limit: number) => void;
@@ -25,7 +26,7 @@ interface ProductState {
     getProduct: () => Promise<void>;
     getProductByIds: (id?: string) => Promise<void>
     addProducts: (product: ProductRequest) => Promise<void>;
-    removeProduct: (index: number) => void;
+    removeProduct: (id: string) => void;
     updateProduct: (index: string, updateProduct: ProductRequest) => void;
     decreaseStock: (id: string) => void;
     resetProductById: () => void;
@@ -44,6 +45,7 @@ export const useProductStore = create<ProductState>((set, get) => ({
     totalPages: 0,
     loading: false,
     productsId: '',
+    modalDetail: false,
 
     setPage: (page) => set({ page }),
     setProductsId: (productsId) => set({ productsId }),
@@ -81,6 +83,8 @@ export const useProductStore = create<ProductState>((set, get) => ({
         try {
             const res = await getProductById(productsId as string)
             set({ productsById: res.data})
+            set({ loading: false })
+            return res
         } catch (err: unknown) {
             const message = formatError(err) || 'Error get product by id'
             set({ error: message })
@@ -120,20 +124,57 @@ export const useProductStore = create<ProductState>((set, get) => ({
         }
     },
 
-    removeProduct: (idx) => {
-        set((state) => ({
-            products: state.products.filter((_, i) => i !== idx),
-        }));
+    removeProduct: async (id: string) => {
+        set({loading: true})
+
+        try {
+            await deleteProduct(id)
+
+            set({ loading: false })
+            showNotify({
+                type: 'success',
+                title: 'Sukses',
+                text: 'Data Berhasi dihapus'
+            })
+
+            await get().getProduct()
+        } catch(err) {
+            const message = formatError(err) || 'Error Menghapus data'
+            set({ error: message})
+            showNotify({
+                type: 'error',
+                title: 'Gagal',
+                text: message
+            })
+        } finally {
+            set({loading: false})
+        }
     },
 
-    updateProduct: (id: string, updt) => {
-        // set((state) => ({
-        //     products: state.products.map((item, i) =>
-        //         i === idx ? (updt as ProductResponse) : item
-        //     ),
-        // }));
-    },
+    updateProduct: async (id: string, updt) => {
+        set({loading: true})
 
+        try {
+            await editProduct(id, updt)
+            
+            set({ loading: false})
+            showNotify({
+                type: 'success',
+                title: 'Sukses',
+                text: 'Data Berhasil diperbarui'
+            })
+        } catch(err) {
+            const message = formatError(err) || 'Error Edit Product'
+            set({error: message})
+            showNotify({
+                type: 'error',
+                title: 'Gagal',
+                text: message
+            })
+        } finally {
+            set({ loading: false})
+        }
+    },
     decreaseStock(id) {
         set((state) => ({
             products: state.products.map((p) =>

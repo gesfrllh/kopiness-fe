@@ -23,6 +23,11 @@ export const addProduct = async (req: ProductRequest) => {
   return response.data
 }
 
+export const editProduct = async (id: string, req: ProductRequest) => {
+  const response = await apiClient.patch<ProductRequest>(`/products/${id}`, req)
+  return response.data
+}
+
 export const deleteProduct = async (id: string) => {
   const response = await apiClient.delete(`/products/${id}`)
   return response.data
