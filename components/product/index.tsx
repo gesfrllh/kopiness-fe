@@ -11,7 +11,7 @@ import CTA from '../Base/cta'
 import Pagination from '../Base/Pagination'
 import Button from '../Base/Button'
 import { Modal } from '../Base/ui/Modal/Modal'
-import { ModalHeader, ModalBody, ModalFooter } from '../Base/ui/Modal/ModalCompunds'
+import { ModalHeader, ModalBody } from '../Base/ui/Modal/ModalCompunds'
 import CardRoot from '../Base/ui/Card'
 import AnimationLogin from '../animation/AnimationLogin'
 import Cookies from 'js-cookie'
@@ -20,11 +20,15 @@ import { ConfirmModal } from '../Base/ui/Modal/ConfirmModal'
 import { useCartStore } from '@/store/useCartStore'
 import { ProductResponse } from '@/types/product'
 import { useRouter } from 'next/navigation'
+import { formatCurrency } from '@/utils/general'
+import TextLabel from '../Base/TextLabel'
 
 const Product = () => {
   const [loader, setLoader] = useState(false)
   const [open, setOpen] = useState(false)
   const [openDetail, setOpenDetail] = useState(false)
+  const [openModal, setOpenModal] = useState(false)
+  const [selectedId, setSelectedId] = useState<string>('')
   const {
     products,
     page,
@@ -37,7 +41,8 @@ const Product = () => {
     setLimit,
     setProductsId,
     getProduct,
-    getProductByIds
+    getProductByIds,
+    removeProduct
   } = useProductStore()
 
   const { totalQty, addToCart } = useCartStore()
@@ -54,12 +59,14 @@ const Product = () => {
 
     addToCart(product)
   }
-  const openDetails = (id: string) => {
+  const openDetails = async (id: string) => {
     if (!productsById) return
-
     setProductsId(id)
-    getProductByIds()
-    setOpenDetail(true)
+    const res = await getProductByIds()
+    if(res !== undefined) {
+      setOpenDetail(true)
+    }
+    
   }
 
   const editProduct = (id: string) => {
@@ -120,8 +127,8 @@ const Product = () => {
                       {role === 'ADMIN' && (
                         <div className='flex items-center justify-between'>
                           <div 
-                          className='cursor-pointer'
-                          onClick={() => editProduct(item.id as string)}>
+                            className='cursor-pointer'
+                            onClick={() => editProduct(item.id as string)}>
                             <Tooltip content="edit">
                               <Icon
                                 icon="material-symbols:edit-square-outline"
@@ -130,7 +137,14 @@ const Product = () => {
                                 style={{ color: '#3291B6' }} />
                             </Tooltip>
                           </div>
-                          <div className='cursor-pointer'>
+                          <div 
+                            className='cursor-pointer'
+                            onClick={() => {
+                              // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                              setOpenModal(true),
+                              setSelectedId(item.id as string)
+                            }}
+                            >
                             <Tooltip content="Hapus">
                               <Icon
                                 icon="material-symbols:delete-outline"
@@ -142,8 +156,10 @@ const Product = () => {
                         </div>
                       )}
 
-                      <Button onClick={() => addingToCart(item)}>Keranjang</Button>
-                      <Button onClick={() => openDetails(item.id as string)}>Detail</Button>
+                      <Button 
+                        onClick={() => addingToCart(item)}>Keranjang</Button>
+                      <Button 
+                        onClick={() => openDetails(item.id as string)}>Detail</Button>
                     </CardRoot.footer>
                   </CardRoot>
                 ))}
@@ -165,10 +181,13 @@ const Product = () => {
 
           {/* Modal */}
           <ConfirmModal
-            open={open}
-            onClose={() => setOpen(false)}
-            onConfirm={() => setOpen(false)}
-            title='Apakah?'
+            open={openModal}
+            onClose={() => setOpenModal(false)}
+            onConfirm={() => {
+              removeProduct(selectedId)
+              setOpenModal(false)
+            }}
+            title='Apakah Data ini?'
             data='testing'
             description='Mau dihapus?'
             confirmText='Hapus'
@@ -191,23 +210,52 @@ const Product = () => {
               </div>
             </ModalHeader>
             <ModalBody>
-              <div>
-                {productsById && productsById.imageUrl && (
-                  <Image src={productsById.imageUrl[0]} alt="Product image" width={400} height={400} />
-                )}
-                {productsById && productsById.imageUrl?.map((item, k) => (
-                  <div key={k}>
-                    {item}
+              <div className='grid gap-8 grid-cols-3'>
+                <div className='col-span-2'>
+                  {productsById && productsById.imageUrl && (
+                    <Image src={productsById.imageUrl[0]} alt="Product image" width={600} height={800} className='rounded-lg shadow-lg'/>
+                  )}
+                </div>
+                <div className='border rounded-lg shadow-[8px_6px_0px_1px_#422900] px-8 py-4 w-auto'>
+                  <div className='w-full'>
+                    <p className='text-xl font-semibold'>{productsById.name}</p>
+                    <div className='flex justify-between items-center py-4'>
+                      <div>
+                        <TextLabel 
+                          dot 
+                          size='md'
+                          title={productsById.flavorNotes as string} 
+                          />
+                        <TextLabel 
+                          dot 
+                          size='md'
+                          title={productsById.roastLevel as string} 
+                          />
+                      </div>
+                      <div>
+                        <TextLabel 
+                          dot 
+                          size='md'
+                          title={productsById.process as string}/>
+                        <TextLabel 
+                          dot 
+                          size='md'
+                          title={productsById.origin as string}/>
+                      </div>
+                    </div>
+                    <div>
+                      <TextLabel 
+                        size='xl' 
+                        dot={false} 
+                        title={formatCurrency(productsById.price as number)}/>
+                    </div>
                   </div>
-                ))}
+                  <div>
+
+                  </div>
+                </div>
               </div>
             </ModalBody>
-
-            <ModalFooter>
-              <div>
-
-              </div>
-            </ModalFooter>
           </Modal>
         </div>
       )}

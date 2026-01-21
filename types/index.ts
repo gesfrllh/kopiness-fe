@@ -95,3 +95,11 @@ export interface ModalConfirm extends Pick<ModalProps, 'open' | 'onClose' | 'tit
   confirmText: string,
   cancelText: string,
 }
+
+export interface TextLabel {
+  dot: boolean,
+  title: string,
+  size: 'xs' | 'sm' | 'md' | 'lg' | 'xl',
+  // classNames?: string,
+  // wieght: 'font-thin' | 'font-extralight  ' | 'font-light' | 'font-normal' | 'font-medium' | 'font-semibold' | 'font-bold' | 'font-extrabold'
+}

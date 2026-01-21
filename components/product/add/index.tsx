@@ -12,7 +12,6 @@ import Button from '@/components/Base/Button'
 import { useProductStore } from '@/store/useProductStore'
 import { ProductRequest } from '@/types/product'
 import { useRouter } from 'next/navigation'
-import { getProductById } from '@/pages/api/product/productApi'
 import AnimationLogin from '@/components/animation/AnimationLogin'
 
 type FormState = {
@@ -167,6 +166,7 @@ const AddProduct = ({id}: Props) => {
               className='border border-gray-300 rounded-md px-3 py-2 w-full'
             />
           </FormGroup>
+          
         </div>
 
         {/* Roast Level */}
@@ -220,7 +220,7 @@ const AddProduct = ({id}: Props) => {
             variant='outline'
             onClick={handleSubmit}
           >
-            Save Product
+           {isEdit ? 'Edit Product' : 'Save Product'}
           </Button>
         </div>
       </div>
