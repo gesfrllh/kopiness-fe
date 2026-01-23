@@ -1,14 +1,16 @@
+@use "sass:color";
+
 .notify-item {
   // Color Variables
-  $n-notify-color-info: lighten(#2563eb, 15%);
-  $n-notify-color-success: lighten(#22c55e, 15%);
-  $n-notify-color-warning: lighten(#facc15, 15%);
-  $n-notify-color-error: lighten(#ef4444, 5%);
+ $n-notify-color-info: color.adjust(#2563eb, $lightness: 15%);
+$n-notify-color-success: color.adjust(#22c55e, $lightness: 15%);
+$n-notify-color-warning: color.adjust(#facc15, $lightness: 15%);
+$n-notify-color-error: color.adjust(#ef4444, $lightness: 5%);
 
-  $n-notify-color-info-icon: lighten(#2563eb, 20%);
-  $n-notify-color-success-icon: lighten(#22c55e, 20%);
-  $n-notify-color-warning-icon: lighten(#facc15, 20%);
-  $n-notify-color-error-icon: lighten(#cb2f2f, 5%);
+$n-notify-color-info-icon: color.adjust(#2563eb, $lightness: 20%);
+$n-notify-color-success-icon: color.adjust(#22c55e, $lightness: 20%);
+$n-notify-color-warning-icon: color.adjust(#facc15, $lightness: 20%);
+$n-notify-color-error-icon: color.adjust(#cb2f2f, $lightness: 5%);
 
   $text-default: #252525;
   $text-secondary: #b5b5b5;

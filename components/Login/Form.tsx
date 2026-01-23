@@ -81,20 +81,22 @@ export default function LoginPage() {
               alt='Logo'
               width={92} />
           </div>
-          <FormGroup label='Email' required={true}>
-            <FormInput
-              name='email'
-              type='email'
-              value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })} />
-          </FormGroup>
-          <FormGroup label='Password' required={true}>
-            <FormInput
-              name='password'
-              value={form.password}
-              type='password'
-              onChange={(e) => setForm({ ...form, password: e.target.value })} />
-          </FormGroup>
+          <div className='flex flex-col gap-4'>
+            <FormGroup label='Email' required={true}>
+              <FormInput
+                name='email'
+                type='email'
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })} />
+            </FormGroup>
+            <FormGroup label='Password' required={true}>
+              <FormInput
+                name='password'
+                value={form.password}
+                type='password'
+                onChange={(e) => setForm({ ...form, password: e.target.value })} />
+            </FormGroup>
+          </div>
           <Button
             type="submit"
             disabled={!form.email || !form.password}
