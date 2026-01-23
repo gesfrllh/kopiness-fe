@@ -1,6 +1,7 @@
 import { usePagination } from '@/hooks/usePagination'
 import { PaginationsProps } from '@/types/pagination'
 import React from 'react'
+import Select from './Select'
 
 const Pagination: React.FC<PaginationsProps> = ({
   page,
@@ -39,7 +40,7 @@ const Pagination: React.FC<PaginationsProps> = ({
         <button
           disabled={disabled || page === 1}
           onClick={() => onPageChange(1)}
-          className="px-3 py-1 rounded border disabled:opacity-50"
+          className="px-3 py-2 rounded border disabled:opacity-50"
         >
           «
         </button>
@@ -47,7 +48,7 @@ const Pagination: React.FC<PaginationsProps> = ({
         <button
           disabled={disabled || page === 1}
           onClick={() => onPageChange(page - 1)}
-          className="px-3 py-1 rounded border disabled:opacity-50"
+          className="px-3 py-2 rounded border disabled:opacity-50"
         >
           ‹
         </button>
@@ -69,7 +70,7 @@ const Pagination: React.FC<PaginationsProps> = ({
               key={idx}
               disabled={disabled}
               onClick={() => onPageChange(pageNumber)}
-              className={`px-3 py-1 rounded border text-sm ${isActive
+              className={`px-3 py-2 rounded border text-sm ${isActive
                   ? 'bg-black text-white'
                   : 'hover:bg-gray-100'
                 } disabled:opacity-50`}
@@ -82,7 +83,7 @@ const Pagination: React.FC<PaginationsProps> = ({
         <button
           disabled={disabled || page === totalPage}
           onClick={() => onPageChange(page + 1)}
-          className="px-3 py-1 rounded border disabled:opacity-50"
+          className="px-3 py-2 rounded border disabled:opacity-50"
         >
           ›
         </button>
@@ -90,23 +91,23 @@ const Pagination: React.FC<PaginationsProps> = ({
         <button
           disabled={disabled || page === totalPage}
           onClick={() => onPageChange(totalPage)}
-          className="px-3 py-1 rounded border disabled:opacity-50"
+          className="px-3 py-2 rounded border disabled:opacity-50"
         >
           »
         </button>
 
         {onLimitChange && (
-          <select
-            value={limit}
-            onChange={(e) => onLimitChange(Number(e.target.value))}
-            className="ml-2 border rounded px-2 py-1 text-sm"
-          >
-            {limitOptions.map((opt) => (
-              <option key={opt} value={opt}>
-                {opt} / page
-              </option>
-            ))}
-          </select>
+          <Select 
+            label='limit'
+            name='pagination'
+            value={String(limit)}
+            options={limitOptions.map((opt) => ({
+              label: `${opt} / page`,
+              value: `${String(opt)}`
+            }))}
+            onChange={(val) => onLimitChange(Number(val))}
+            disabled={disabled}
+          />
         )}
       </div>
     </div>

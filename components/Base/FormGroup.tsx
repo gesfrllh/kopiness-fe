@@ -37,7 +37,7 @@ const FormGroup: React.FC<Group> = ({ children, label, required, value }) => {
   }, [childValue])
 
   return (
-    <div className="relative w-full bg-white mt-4">
+    <div className="relative w-full bg-white">
       <label
         className={clsx(
           'absolute left-3 bg-white transition-all px-1',
@@ -48,7 +48,7 @@ const FormGroup: React.FC<Group> = ({ children, label, required, value }) => {
       </label>
       <div
         className={clsx(
-          'border rounded px-3 pt-5 pb-2 transition-colors',
+          'border rounded px-3 pt-4 pb-2 transition-colors',
           focus ? 'border-amber-800' : 'border-gray-300'
         )}
       >

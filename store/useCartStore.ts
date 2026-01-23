@@ -7,21 +7,15 @@ export const useCartStore = create<CartState>((set, get) => ({
 
   addToCart: (product) => {
     const items = get().items
-    const exist = items.find((i) => i.id === product.id)
+    const exist = items.some((i) => i.id === product.id)
 
-    let newItems: CartItem[]
+    if (exist) return
 
-    if (exist) {
-      newItems = items.map((i) =>
-        i.id === product.id ? { ...i, qty: i.qty + 1 } : i
-      )
-    } else {
-      newItems = [...items, { ...product, qty: 1 }]
-    }
+    const newItems: CartItem[] = [...items, { ...product, qty: 1 }]
 
     set({
       items: newItems,
-      totalQty: newItems.reduce((a, b) => a + b.qty, 0)
+      totalQty: newItems.length 
     })
   },
 
@@ -30,7 +24,7 @@ export const useCartStore = create<CartState>((set, get) => ({
 
     set({
       items: newItems,
-      totalQty: newItems.reduce((a, b) => a + b.qty, 0)
+      totalQty: newItems.length
     })
   },
 

@@ -29,6 +29,7 @@ const Product = () => {
   const [openDetail, setOpenDetail] = useState(false)
   const [openModal, setOpenModal] = useState(false)
   const [selectedId, setSelectedId] = useState<string>('')
+  const [selectToCart, setSelectToCart] = useState<ProductResponse>()
   const {
     products,
     page,
@@ -45,7 +46,7 @@ const Product = () => {
     removeProduct
   } = useProductStore()
 
-  const { totalQty, addToCart } = useCartStore()
+  const { totalQty, addToCart, items } = useCartStore()
 
   const role = Cookies.get('role')
   const router = useRouter()
@@ -66,7 +67,6 @@ const Product = () => {
     if(res !== undefined) {
       setOpenDetail(true)
     }
-    
   }
 
   const editProduct = (id: string) => {
@@ -155,16 +155,23 @@ const Product = () => {
                           </div>
                         </div>
                       )}
-
-                      <Button 
-                        onClick={() => addingToCart(item)}>Keranjang</Button>
+                        <Button 
+                          onClick={() => addingToCart(item)}>
+                            Keranjang                            
+                          </Button>
                       <Button 
                         onClick={() => openDetails(item.id as string)}>Detail</Button>
                     </CardRoot.footer>
                   </CardRoot>
                 ))}
               </div>
-
+              <div>
+                {items.map((data) => (
+                  <div key={data.id}>
+                    {data.description}
+                  </div>
+                ))}
+              </div>
               {/* Pagination */}
               <Pagination
                 page={page}
@@ -243,17 +250,36 @@ const Product = () => {
                           title={productsById.origin as string}/>
                       </div>
                     </div>
-                    <div>
+                    <div className='flex items-end justify-end font-semibold border-b py-4'>
                       <TextLabel 
                         size='xl' 
                         dot={false} 
                         title={formatCurrency(productsById.price as number)}/>
+                    </div>
+                    <div className='py-4'>
+                      <p>{productsById.description}</p>
                     </div>
                   </div>
                   <div>
 
                   </div>
                 </div>
+              </div>
+            </ModalBody>
+          </Modal>
+
+          <Modal open={open} onClose={() => setOpen(false)} size='xl'>
+            <ModalHeader>
+              <div></div>
+            </ModalHeader>
+            <ModalBody>
+              {totalQty}
+              <div>
+                {items.map((data) => (
+                  <div key={data.id}>
+                    {data.description} 
+                  </div>
+                ))}
               </div>
             </ModalBody>
           </Modal>
