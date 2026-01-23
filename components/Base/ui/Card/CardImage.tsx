@@ -10,7 +10,7 @@ const CardImage: React.FC<CardImageProps> = ({ src, alt = '' }) => {
     <div className="flex justify-center">
       <div className="relative size-[140px] md:size-[240px]">
         <Image
-          src={src}
+          src={src as string}
           sizes="(max-width: 768px) 100vw, 33vw"
           alt={alt}
           fill

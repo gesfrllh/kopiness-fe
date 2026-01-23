@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import FormGroup from "./FormGroup";
 import { FiChevronDown } from "react-icons/fi";
-import { Option, SelectProps } from "@/types";
+import { SelectProps } from "@/types";
 
 const Select: React.FC<SelectProps> = ({
   label,

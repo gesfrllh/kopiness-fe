@@ -163,7 +163,7 @@ const AddProduct = ({id}: Props) => {
             <input
               value={form.origin}
               onChange={(e) => updateForm('origin', e.target.value)}
-              className='border border-gray-300 rounded-md px-3 py-2 w-full'
+              className='border border-gray-300 rounded-md px-3 py-2 w-full'  
             />
           </FormGroup>
           
