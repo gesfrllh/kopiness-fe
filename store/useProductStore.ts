@@ -6,6 +6,7 @@ import { create } from 'zustand';
 
 interface ProductState {
     products: ProductResponse[];
+    draftQty: Record<string, number>,
     productsById: ProductResponseById,
     // pagination state
     page: number;
@@ -23,10 +24,14 @@ interface ProductState {
     error: string | null;
     loading: boolean;
 
+    updateDraftStock: (id: string, delta: number) => void;
+    getDisplayQty: (product: ProductResponse) => number;
+    commitStockChanges: () => Promise<void>;
     getProduct: () => Promise<void>;
     getProductByIds: (id?: string) => Promise<void>
     addProducts: (product: ProductRequest) => Promise<void>;
     removeProduct: (id: string) => void;
+    getDisplayStock: (product: ProductResponse) => number;
     updateProduct: (index: string, updateProduct: ProductRequest) => void;
     decreaseStock: (id: string) => void;
     resetProductById: () => void;
@@ -35,8 +40,9 @@ interface ProductState {
 export const useProductStore = create<ProductState>((set, get) => ({
     search: '',
     products: [],
-    productsById: {},
+    productsById: { id: '' },
     error: null,
+    draftQty: {},
 
     // pagination default
     page: 1,
@@ -50,6 +56,45 @@ export const useProductStore = create<ProductState>((set, get) => ({
     setPage: (page) => set({ page }),
     setProductsId: (productsId) => set({ productsId }),
     setLimit: (limit) => set({ limit, page: 1 }),
+
+    updateDraftStock: (id, delta) => {
+        set((state) => {
+            const current = state.draftQty[id] ?? 0
+            const product = state.products.find((p) => p.id === id)
+
+            if (!product) return state
+
+            const nextQty = Math.max(
+                0,
+                Math.min(current + delta, product.stock)
+            )
+
+            return {
+                draftQty: {
+                    ...state.draftQty,
+                    [id]: nextQty,
+                },
+            }
+        })
+    },
+
+    getDisplayQty: (product: ProductResponse) => {
+        return get().draftQty[product.id] ?? 0
+    },
+
+    getDisplayStock: (product) => {
+        const draft = get().draftQty[product.id] ?? 0
+        return Math.max(product.stock - draft, 0)
+    },
+
+    commitStockChanges: async () => {
+        const { draftQty } = get()
+        const payload = Object.entries(draftQty).filter(([, qty]) => qty > 0).map(([productId, qty]) => ({
+            productId,
+            qty
+        }))
+        set({ draftQty: {} })
+    },
 
     getProduct: async () => {
         const { page, limit } = get();
@@ -79,10 +124,10 @@ export const useProductStore = create<ProductState>((set, get) => ({
         if (!productsId) return
 
         set({ loading: true })
-        
+
         try {
             const res = await getProductById(productsId as string)
-            set({ productsById: res.data})
+            set({ productsById: res.data })
             set({ loading: false })
             return res
         } catch (err: unknown) {
@@ -125,7 +170,7 @@ export const useProductStore = create<ProductState>((set, get) => ({
     },
 
     removeProduct: async (id: string) => {
-        set({loading: true})
+        set({ loading: true })
 
         try {
             await deleteProduct(id)
@@ -138,50 +183,50 @@ export const useProductStore = create<ProductState>((set, get) => ({
             })
 
             await get().getProduct()
-        } catch(err) {
+        } catch (err) {
             const message = formatError(err) || 'Error Menghapus data'
-            set({ error: message})
+            set({ error: message })
             showNotify({
                 type: 'error',
                 title: 'Gagal',
                 text: message
             })
         } finally {
-            set({loading: false})
+            set({ loading: false })
         }
     },
 
     updateProduct: async (id: string, updt) => {
-        set({loading: true})
+        set({ loading: true })
 
         try {
             await editProduct(id, updt)
-            
-            set({ loading: false})
+
+            set({ loading: false })
             showNotify({
                 type: 'success',
                 title: 'Sukses',
                 text: 'Data Berhasil diperbarui'
             })
-        } catch(err) {
+        } catch (err) {
             const message = formatError(err) || 'Error Edit Product'
-            set({error: message})
+            set({ error: message })
             showNotify({
                 type: 'error',
                 title: 'Gagal',
                 text: message
             })
         } finally {
-            set({ loading: false})
+            set({ loading: false })
         }
     },
     decreaseStock(id) {
         set((state) => ({
             products: state.products.map((p) =>
-                p.id === id ? {...p, stock: p.stock - 1}: p
+                p.id === id ? { ...p, stock: p.stock - 1 } : p
             )
         }))
     },
-    
-    resetProductById: () => set({productsById: {}})
+
+    resetProductById: () => set({ productsById: { id: '' } }),
 }));

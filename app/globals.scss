@@ -26,3 +26,7 @@ body {
   scrollbar-width: none; /* sembunyikan */
   -ms-overflow-style: none; /* IE 10+ */
 }
+
+html {
+  scroll-behavior: smooth;
+}

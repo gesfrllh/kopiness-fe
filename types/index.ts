@@ -3,9 +3,10 @@ import { UUIDTypes } from 'uuid'
 
 export type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement>;
 export interface BaseInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  value: string | number;
+  value?: string | number;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   name: string;
+  checked?: boolean;
 }
 
 export interface Group {
@@ -20,8 +21,8 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 export interface BadgeInterface {
-    text: number,
-    color: 'green' | 'red' | 'blue' | 'yellow' | 'gray' 
+  text: number,
+  color: 'green' | 'red' | 'blue' | 'yellow' | 'gray'
 }
 
 export interface CardProps {
@@ -59,9 +60,10 @@ export interface SelectProps {
   disabled?: boolean;
 }
 
-export type Column<T> = {
-  header: string,
-  key: keyof T,
+export interface Column<T> {
+  id: string
+  header: string
+  accessor?: keyof T
   render?: (value: unknown, row: T) => React.ReactNode
 }
 
@@ -82,14 +84,14 @@ export interface ModalProps {
   closeOnEsc?: boolean
   children: ReactNode
   footer?: ReactNode
-  className?: string 
+  className?: string
 }
 
 export interface ModalSelectionProps {
   children: ReactNode
 }
 
-export interface ModalConfirm extends Pick<ModalProps, 'open' | 'onClose' | 'title' | 'description'>{
+export interface ModalConfirm extends Pick<ModalProps, 'open' | 'onClose' | 'title' | 'description'> {
   data?: null | string
   onConfirm: () => void,
   confirmText: string,

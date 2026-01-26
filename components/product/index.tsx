@@ -22,6 +22,8 @@ import { ProductResponse } from '@/types/product'
 import { useRouter } from 'next/navigation'
 import { formatCurrency } from '@/utils/general'
 import TextLabel from '../Base/TextLabel'
+import { Column } from '@/types'
+import FormInput from '../Base/FormInput'
 
 const Product = () => {
   const [loader, setLoader] = useState(false)
@@ -30,6 +32,7 @@ const Product = () => {
   const [openModal, setOpenModal] = useState(false)
   const [selectedId, setSelectedId] = useState<string>('')
   const [selectToCart, setSelectToCart] = useState<ProductResponse>()
+  const [checkedItems, setCheckedItems] = React.useState<Record<string, boolean>>({})
   const {
     products,
     page,
@@ -41,6 +44,9 @@ const Product = () => {
     setPage,
     setLimit,
     setProductsId,
+    updateDraftStock,
+    getDisplayQty,
+    getDisplayStock,
     getProduct,
     getProductByIds,
     removeProduct
@@ -50,6 +56,13 @@ const Product = () => {
 
   const role = Cookies.get('role')
   const router = useRouter()
+
+  const toggleItem = (id: string) => {
+    setCheckedItems((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }))
+  }
 
   useEffect(() => {
     getProduct()
@@ -64,7 +77,7 @@ const Product = () => {
     if (!productsById) return
     setProductsId(id)
     const res = await getProductByIds()
-    if(res !== undefined) {
+    if (res !== undefined) {
       setOpenDetail(true)
     }
   }
@@ -91,7 +104,9 @@ const Product = () => {
 
                 <div
                   className="relative cursor-pointer"
-                  onClick={() => setOpen(true)}
+                  onClick={() => {
+                    setOpen(true)
+                  }}
                 >
                   {totalQty > 0 && (
                     <Badge text={totalQty} color="red" />
@@ -108,82 +123,85 @@ const Product = () => {
             </div>
 
             {/* Product List */}
-            <div className="flex flex-col gap-8">
-              <div className="flex gap-12 py-8 justify-center flex-wrap">
-                {products.map((item) => (
-                  <CardRoot key={item.id}>
-                    <CardRoot.image src={item.imageUrl?.[0]} />
+            {products.length > 0 ? (
 
-                    <CardRoot.content>
-                      <CardRoot.title
-                        title={item.name}
-                        subtitle={`Stock: ${item.stock}`}
-                      />
-                      <CardRoot.price value={item.price} />
-                    </CardRoot.content>
+              <div className="flex flex-col gap-8">
+                <div className="flex gap-12 py-8 justify-center flex-wrap">
+                  {products.map((item) => (
+                    <CardRoot key={item.id}>
+                      <CardRoot.image src={item.imageUrl?.[0]} />
 
-                    <CardRoot.footer>
+                      <CardRoot.content>
+                        <CardRoot.title
+                          title={item.name}
+                          subtitle={`Stock: ${item.stock}`}
+                        />
+                        <CardRoot.price value={item.price} />
+                      </CardRoot.content>
 
-                      {role === 'ADMIN' && (
-                        <div className='flex items-center justify-between'>
-                          <div 
-                            className='cursor-pointer'
-                            onClick={() => editProduct(item.id as string)}>
-                            <Tooltip content="edit">
-                              <Icon
-                                icon="material-symbols:edit-square-outline"
-                                width={24}
-                                height={24}
-                                style={{ color: '#3291B6' }} />
-                            </Tooltip>
-                          </div>
-                          <div 
-                            className='cursor-pointer'
-                            onClick={() => {
-                              // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                              setOpenModal(true),
-                              setSelectedId(item.id as string)
-                            }}
+                      <CardRoot.footer>
+
+                        {role === 'ADMIN' && (
+                          <div className='flex items-center justify-between'>
+                            <div
+                              className='cursor-pointer'
+                              onClick={() => editProduct(item.id as string)}>
+                              <Tooltip content="edit">
+                                <Icon
+                                  icon="material-symbols:edit-square-outline"
+                                  width={24}
+                                  height={24}
+                                  style={{ color: '#3291B6' }} />
+                              </Tooltip>
+                            </div>
+                            <div
+                              className='cursor-pointer'
+                              onClick={() => {
+                                // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                                setOpenModal(true),
+                                  setSelectedId(item.id as string)
+                                setSelectToCart(item)
+                              }}
                             >
-                            <Tooltip content="Hapus">
-                              <Icon
-                                icon="material-symbols:delete-outline"
-                                width={26}
-                                height={26}
-                                style={{ color: '#DC0000' }} />
-                            </Tooltip>
+                              <Tooltip content="Hapus">
+                                <Icon
+                                  icon="material-symbols:delete-outline"
+                                  width={26}
+                                  height={26}
+                                  style={{ color: '#DC0000' }} />
+                              </Tooltip>
+                            </div>
                           </div>
-                        </div>
-                      )}
-                        <Button 
+                        )}
+                        <Button
                           onClick={() => addingToCart(item)}>
-                            Keranjang                            
-                          </Button>
-                      <Button 
-                        onClick={() => openDetails(item.id as string)}>Detail</Button>
-                    </CardRoot.footer>
-                  </CardRoot>
-                ))}
+                          Keranjang
+                        </Button>
+                        <Button
+                          onClick={() => openDetails(item.id as string)}>Detail</Button>
+                      </CardRoot.footer>
+                    </CardRoot>
+                  ))}
+                </div>
+                {/* Pagination */}
+                <Pagination
+                  page={page}
+                  limit={limit}
+                  totalPages={totalPages}
+                  totalData={total}
+                  siblingCount={1}
+                  boundaryCount={1}
+                  onPageChange={setPage}
+                  onLimitChange={setLimit}
+                />
               </div>
-              <div>
-                {items.map((data) => (
-                  <div key={data.id}>
-                    {data.description}
-                  </div>
-                ))}
+            ) : (
+              <div className='h-full flex items-center justify-center py-8'>
+                <p>
+                  Belum Ada Produk
+                </p>
               </div>
-              {/* Pagination */}
-              <Pagination
-                page={page}
-                limit={limit}
-                totalPages={totalPages}
-                totalData={total}
-                siblingCount={1}
-                boundaryCount={1}
-                onPageChange={setPage}
-                onLimitChange={setLimit}
-              />
-            </div>
+            )}
           </div>
 
           {/* Modal */}
@@ -194,9 +212,9 @@ const Product = () => {
               removeProduct(selectedId)
               setOpenModal(false)
             }}
-            title='Apakah Data ini?'
-            data='testing'
-            description='Mau dihapus?'
+            title='Apakah anda yakin?'
+            data={selectToCart?.name}
+            description={`${selectToCart?.name}`}
             confirmText='Hapus'
             cancelText='Batal'
           />
@@ -220,41 +238,48 @@ const Product = () => {
               <div className='grid gap-8 grid-cols-3'>
                 <div className='col-span-2'>
                   {productsById && productsById.imageUrl && (
-                    <Image src={productsById.imageUrl[0]} alt="Product image" width={600} height={800} className='rounded-lg shadow-lg'/>
+                    <div className="relative  h-[400px] overflow-hidden rounded-lg shadow-lg">
+                      <Image
+                        src={productsById.imageUrl[0]}
+                        alt="Product image"
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
                   )}
                 </div>
                 <div className='border rounded-lg shadow-[8px_6px_0px_1px_#422900] px-8 py-4 w-auto'>
                   <div className='w-full'>
                     <p className='text-xl font-semibold'>{productsById.name}</p>
                     <div className='flex justify-between items-center py-4'>
-                      <div>
-                        <TextLabel 
-                          dot 
-                          size='md'
-                          title={productsById.flavorNotes as string} 
-                          />
-                        <TextLabel 
-                          dot 
-                          size='md'
-                          title={productsById.roastLevel as string} 
-                          />
+                      <div className='flex flex-col gap-2'>
+                        <TextLabel
+                          dot
+                          size='xs'
+                          title={productsById.flavorNotes as string}
+                        />
+                        <TextLabel
+                          dot
+                          size='xs'
+                          title={productsById.roastLevel as string}
+                        />
                       </div>
-                      <div>
-                        <TextLabel 
-                          dot 
-                          size='md'
-                          title={productsById.process as string}/>
-                        <TextLabel 
-                          dot 
-                          size='md'
-                          title={productsById.origin as string}/>
+                      <div className='flex flex-col gap-2'>
+                        <TextLabel
+                          dot
+                          size='xs'
+                          title={productsById.process as string} />
+                        <TextLabel
+                          dot
+                          size='xs'
+                          title={productsById.origin as string} />
                       </div>
                     </div>
                     <div className='flex items-end justify-end font-semibold border-b py-4'>
-                      <TextLabel 
-                        size='xl' 
-                        dot={false} 
-                        title={formatCurrency(productsById.price as number)}/>
+                      <TextLabel
+                        size='xl'
+                        dot={false}
+                        title={formatCurrency(productsById.price as number)} />
                     </div>
                     <div className='py-4'>
                       <p>{productsById.description}</p>
@@ -273,14 +298,42 @@ const Product = () => {
               <div></div>
             </ModalHeader>
             <ModalBody>
-              {totalQty}
-              <div>
-                {items.map((data) => (
-                  <div key={data.id}>
-                    {data.description} 
+              <div className='flex flex-col gap-4'>
+                {items.map((item) => (
+                  <div
+                    key={item.id}
+                    className='shadow-[8px_6px_0px_1px_#422900] border-amber-800 border rounded-lg flex gap-4 p-8 items-center'
+                  >
+                    <FormInput
+                      type="checkbox"
+                      name={`item-${item.id}`}
+                      checked={checkedItems[item.id] as boolean ?? false}
+                      onChange={() => toggleItem(item.id)}
+                      className="w-5 h-5"
+                    />
+
+                    <div className='w-32 rounded-lg'>
+                      <Image
+                        className='w-[200px] rounded-lg h-[100px] object-cover'
+                        src={item.imageUrl[0]}
+                        width={400}
+                        height={400}
+                        alt={item.name}
+                      />
+                    </div>
+
+                    <div className='flex flex-col'>
+                      <TextLabel size='xl' title={item.name} dot />
+                      {checkedItems[item.id] && (
+                        <span className="text-sm text-green-600">Dipilih</span>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
+
+              {/* <Table<ProductResponse> columns={columns} data={items} /> */}
+
             </ModalBody>
           </Modal>
         </div>

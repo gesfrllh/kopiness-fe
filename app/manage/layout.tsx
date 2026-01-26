@@ -7,18 +7,17 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <>
-    <div className='flex'>
-      <div className='relative z-50'>
+    <div className="flex h-screen overflow-auto">
+      <div className="relative z-50">
         <Sidebar />
-      </div>
-      <div className='relative h-full w-full flex flex-col gap-8'>
-        <div className='bg-gray-200 relative px-4 md:px-16 z-0  py-24'>
+    </div>
+
+      <div className="relative w-full flex flex-col min-h-0">
+        <div className="bg-gray-200 flex-1 overflow-auto px-4 md:px-16 py-24">
           {children}
         </div>
       </div>
     </div>
-    </>
   )
 }
 

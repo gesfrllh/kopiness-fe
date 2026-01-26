@@ -91,9 +91,9 @@ export const ToastProvider = ({
             className={`fixed z-[9999] flex gap-2 ${getContainerPosition()}`}
           >
             <AnimatePresence>
-              {items.map((item) => (
+              {items.map((item, idx) => (
                 <motion.div
-                  key={item._id.toString()}
+                  key={idx}
                   initial={{ opacity: 0, x: 50 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 50 }}
