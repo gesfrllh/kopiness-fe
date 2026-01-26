@@ -3,7 +3,7 @@ import { Geist, Geist_Mono, Poppins, Bebas_Neue } from "next/font/google";
 import "./globals.scss";
 import { ToastProvider } from "@/components/Base/notification/ToastProvider";
 import ResponsiveInit from "./ResponsiveInit";
-import UseLenis from "@/lib/lenis";
+// import UseLenis from "@/lib/lenis";
 // import PageTransition from "@/components/PageTransition";
 
 const geistSans = Geist({
@@ -45,7 +45,7 @@ export default function RootLayout({
       >
         <ToastProvider position="top-right">
           <ResponsiveInit />
-          <UseLenis />
+          {/* <UseLenis /> */}
             {children}
         </ToastProvider>
       </body>

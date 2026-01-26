@@ -224,7 +224,7 @@ const AddProduct = ({id}: Props) => {
           </Button>
         </div>
       </div>
-      {loading ? <AnimationLogin /> : ''}
+      {/* {loading ? <AnimationLogin /> : ''} */}
     </div>
   )
 }

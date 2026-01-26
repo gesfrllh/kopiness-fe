@@ -10,8 +10,9 @@ import Logo from '@/public/assets/logo.svg'
 import Select from '../Base/Select'
 import { register } from '@/pages/api/auth/api'
 import { showNotify } from '../Base/notification/notify-controllers'
-import router from 'next/router'
+import { useRouter } from 'next/navigation'
 import { formatError } from '@/utils/formatError'
+import AnimationLogin from '../animation/AnimationLogin'
 
 interface RegisterInput {
   name: string,
@@ -30,6 +31,8 @@ const Form = () => {
     role: 'CUSTOMER',
     password: ''
   })
+
+  const router = useRouter()
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -66,50 +69,51 @@ const Form = () => {
             <div className='flex justify-center'>
               <Image
                 src={Logo}
-                fill
                 alt='Logo'
                 width={92} />
             </div>
-            <div className='md:w-[320px]'>
+            <div className='flex flex-col gap-4'>
+              <div className='md:w-[320px]'>
+                <FormGroup
+                  label='name'
+                  required={true}>
+                  <FormInput
+                    name='name'
+                    type='text'
+                    value={form.name}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })} />
+                </FormGroup>
+              </div>
+              <Select
+                label="Role"
+                name="role"
+                required={true}
+                value={form.role}
+                onChange={(value) => setForm({ ...form, role: value as UserRole })}
+                options={[
+                  { label: "Admin", value: "ADMIN" },
+                  { label: "Customer", value: "CUSTOMER" },
+                ]}
+              />
               <FormGroup
-                label='name'
+                label='Email'
                 required={true}>
                 <FormInput
-                  name='name'
-                  type='text'
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })} />
+                  name='email'
+                  type='email'
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })} />
+              </FormGroup>
+              <FormGroup
+                label='Password'
+                required={true}>
+                <FormInput
+                  name='password'
+                  value={form.password}
+                  type='password'
+                  onChange={(e) => setForm({ ...form, password: e.target.value })} />
               </FormGroup>
             </div>
-            <Select
-              label="Role"
-              name="role"
-              required={true}
-              value={form.role}
-              onChange={(value) => setForm({ ...form, role: value as UserRole })}
-              options={[
-                { label: "Admin", value: "ADMIN" },
-                { label: "Customer", value: "CUSTOMER" },
-              ]}
-            />
-            <FormGroup
-              label='Email'
-              required={true}>
-              <FormInput
-                name='email'
-                type='email'
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })} />
-            </FormGroup>
-            <FormGroup
-              label='Password'
-              required={true}>
-              <FormInput
-                name='password'
-                value={form.password}
-                type='password'
-                onChange={(e) => setForm({ ...form, password: e.target.value })} />
-            </FormGroup>
             <Button
               type="submit"
               disabled={!form.email || !form.password || !form.role || !form.name}
@@ -121,6 +125,7 @@ const Form = () => {
               <Link href={'/login'} className='text-amber-800'>Login</Link>
             </div>
           </form>
+          {loading ? <AnimationLogin /> : ''}
         </div>
       </main>
     </>

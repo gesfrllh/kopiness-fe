@@ -13,7 +13,14 @@ const nextConfig: NextConfig = {
     return config
   },
   images: {
-    remotePatterns: [new URL("https://tdlbsxwhiusuobvszxvg.storage.supabase.co/**")]
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'example.com',
+        pathname: '/**',
+      },
+      new URL("https://tdlbsxwhiusuobvszxvg.storage.supabase.co/**")
+    ]
   },
   devIndicators: false,
 };

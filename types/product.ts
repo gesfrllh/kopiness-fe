@@ -1,7 +1,7 @@
 export type RoastLevel = 'MEDIUM' | 'LIGHT' | 'DARK'
 
 export interface Product {
-    id?: string,
+    id: string,
     name: string,
     description: string,
     roast_level?: RoastLevel,
