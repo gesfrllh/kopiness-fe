@@ -15,6 +15,7 @@ import { useRouter } from 'next/navigation'
 import AnimationLogin from '@/components/animation/AnimationLogin'
 
 type FormState = {
+  id?: unknown,
   name: string
   price: string
   stock: string
@@ -42,7 +43,7 @@ type Props = {
   id?: string,
 }
 
-const AddProduct = ({id}: Props) => {
+const AddProduct = ({ id }: Props) => {
   const isEdit = Boolean(id)
   const [form, setForm] = useState<FormState>(initialState)
 
@@ -53,29 +54,29 @@ const AddProduct = ({id}: Props) => {
     setForm((prev) => ({ ...prev, [key]: value }))
   }
 
-  const { 
+  const {
     productsById,
-    error, 
+    error,
     loading,
     resetProductById,
-    addProducts, 
-    updateProduct, 
-    getProductByIds, 
+    addProducts,
+    updateProduct,
+    getProductByIds,
     setProductsId,
   } = useProductStore()
 
   const router = useRouter()
 
   useEffect(() => {
-    if(!id) {
+    if (!id) {
       setForm(initialState)
       setProductsId(undefined)
       resetProductById()
     }
   }, [id])
-  
+
   useEffect(() => {
-    if(!id) return
+    if (!id) return
 
     setProductsId(id)
     getProductByIds()
@@ -86,6 +87,7 @@ const AddProduct = ({id}: Props) => {
     if (!productsById?.id) return
 
     setForm({
+      id: '',
       name: productsById.name ?? '',
       price: String(productsById.price ?? ''),
       stock: String(productsById.stock ?? ''),
@@ -101,16 +103,17 @@ const AddProduct = ({id}: Props) => {
   const handleSubmit = async () => {
     const payload: ProductRequest = {
       ...form,
+      id: '',
       price: Number(form.price),
       stock: Number(form.stock),
     }
 
-    if(isEdit) { 
+    if (isEdit) {
       updateProduct(id as string, payload)
     } else {
       addProducts(payload)
     }
-    if(!error) {
+    if (!error) {
       router.push('/manage/product')
     }
   }
@@ -163,10 +166,10 @@ const AddProduct = ({id}: Props) => {
             <input
               value={form.origin}
               onChange={(e) => updateForm('origin', e.target.value)}
-              className='border border-gray-300 rounded-md px-3 py-2 w-full'  
+              className='border border-gray-300 rounded-md px-3 py-2 w-full'
             />
           </FormGroup>
-          
+
         </div>
 
         {/* Roast Level */}
@@ -220,7 +223,7 @@ const AddProduct = ({id}: Props) => {
             variant='outline'
             onClick={handleSubmit}
           >
-           {isEdit ? 'Edit Product' : 'Save Product'}
+            {isEdit ? 'Edit Product' : 'Save Product'}
           </Button>
         </div>
       </div>
