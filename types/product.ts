@@ -1,7 +1,7 @@
 export type RoastLevel = 'MEDIUM' | 'LIGHT' | 'DARK'
 
 export interface Product {
-    id: string,
+    id?: string,
     name: string,
     description: string,
     roast_level?: RoastLevel,
@@ -32,13 +32,12 @@ export type ProductResponseById = Pick<ProductResponse, 'id'> & Partial<Omit<Pro
 export interface CartItem extends ProductResponse {
     qty: number
 }
-
 export interface CartState {
     items: CartItem[]
     totalQty: number
 
     addToCart: (product: ProductResponse) => void;
-    removeFromCart: (id: string) => void
+    removeFromCart: (ids: string | string[]) => void
     clearCart: () => void
 }
 

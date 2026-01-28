@@ -78,8 +78,8 @@ const DropzoneImage: React.FC<DropzoneImageProps> = ({
     [value, onChange]
   )
 
-  const handleEditImage = async (file: File) =>{
-    if(editIndex === null) return
+  const handleEditImage = async (file: File) => {
+    if (editIndex === null) return
     setLoading(true)
 
     try {
@@ -95,7 +95,7 @@ const DropzoneImage: React.FC<DropzoneImageProps> = ({
         title: 'Sukses',
         text: 'Gambar berhasil diperbarui'
       })
-    } catch(err) {
+    } catch (err) {
       showNotify({
         type: 'error',
         title: 'Gagal',
@@ -170,9 +170,9 @@ const DropzoneImage: React.FC<DropzoneImageProps> = ({
       {previews.length > 0 && (
         <div className="flex flex-wrap gap-4 py-4">
           {previews.map((file, index) => (
-            <PreviewItem 
-              key={index} 
-              file={file} 
+            <PreviewItem
+              key={index}
+              file={file}
               onDelete={() => {
                 handleDelete(index)
               }}
@@ -184,7 +184,7 @@ const DropzoneImage: React.FC<DropzoneImageProps> = ({
                 setPreviewImg(file.url)
                 setOpenModal(true)
               }}
-             /> 
+            />
           ))}
         </div>
       )}
@@ -211,7 +211,7 @@ const DropzoneImage: React.FC<DropzoneImageProps> = ({
           }
         }}
       />
-      <Modal onClose={() => setOpenModal(false)} open={openModal} size='xl' closeOnOverlayClick={false}>
+      <Modal onClose={() => setOpenModal(false)} open={openModal} size='md' closeOnOverlayClick={false}>
         <ModalHeader>
           <div className='flex justify-between items-center'>
             <h3>Preview Image</h3>
@@ -229,12 +229,12 @@ const DropzoneImage: React.FC<DropzoneImageProps> = ({
 
         <ModalBody>
           {previewImg && (
-            <Image 
+            <Image
               src={previewImg}
               width={800}
               height={800}
               alt='image'
-              className="w-full h-auto rounded-lg object-contain"
+              className="w-96 h-auto rounded-lg object-contain"
             />
           )}
         </ModalBody>
@@ -245,15 +245,16 @@ const DropzoneImage: React.FC<DropzoneImageProps> = ({
 
 export default DropzoneImage
 
-const PreviewItem = ({ 
-  file, 
-  onEdit, 
+const PreviewItem = ({
+  file,
+  onEdit,
   onView,
-  onDelete } : { 
-  file: PreviewFile, 
-  onEdit: () => void, 
-  onView: () => void,
-  onDelete: () => void, }) => (
+  onDelete }: {
+    file: PreviewFile,
+    onEdit: () => void,
+    onView: () => void,
+    onDelete: () => void,
+  }) => (
   <div className="flex max-w-[720px] items-center gap-4 p-3
                   border border-amber-800 rounded-lg shadow">
     <Image
@@ -270,15 +271,15 @@ const PreviewItem = ({
     </div>
 
     <div className="flex gap-2">
-      <ActionIcon 
-        icon="ic:sharp-remove-red-eye" 
-        label="Lihat" 
-        onClick={onView}/>
-      <ActionIcon 
-        icon="material-symbols:edit-outline-sharp" 
+      <ActionIcon
+        icon="ic:sharp-remove-red-eye"
+        label="Lihat"
+        onClick={onView} />
+      <ActionIcon
+        icon="material-symbols:edit-outline-sharp"
         label="Edit"
         onClick={onEdit}
-        />
+      />
       <ActionIcon
         icon="material-symbols:delete-outline"
         label="Hapus"
@@ -311,4 +312,3 @@ const ActionIcon = ({
     />
   </Tooltip>
 )
- 

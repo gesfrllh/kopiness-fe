@@ -35,7 +35,7 @@ const Select: React.FC<SelectProps> = ({
           name={name}
           disabled={disabled}
           onClick={() => setOpen((prev) => !prev)}
-          className={`w-full flex justify-between items-center rounded-md text-sm ${disabled ? "bg-gray-100 cursor-not-allowed" : "bg-white"
+          className={`w-full flex justify-between items-center rounded-md text-sm ${disabled ? "bg-gray-100 cursor-not-allowed" : "bg-colors-var"
             }`}
         >
           <div className="w-full flex justify-between items-center px-1">
@@ -52,12 +52,12 @@ const Select: React.FC<SelectProps> = ({
         <ul
           className={`
             absolute left-0 z-12 top-10 mt-2 w-full
-            bg-white rounded-md shadow-sm
+            bg-colors-var rounded-md shadow-sm
             max-h-60 overflow-y-auto text-sm
             transform origin-top transition-all duration-200 ease-out
             ${open
-                      ? 'opacity-100 scale-y-100'
-                      : 'opacity-0 scale-y-0 pointer-events-none'}
+              ? 'opacity-100 scale-y-100'
+              : 'opacity-0 scale-y-0 pointer-events-none'}
           `}
         >
           {options.map((opt) => (
