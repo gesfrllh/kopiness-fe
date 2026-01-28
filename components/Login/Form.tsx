@@ -1,18 +1,17 @@
 "use client"
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { showNotify } from '../Base/notification/notify-controllers'
+import { useAuthStore } from '@/store/useAuthStore'
 import FormGroup from '../../components/Base/FormGroup'
 import FormInput from '../../components/Base/FormInput'
-import { useRouter } from 'next/navigation'
 import LoginLogo from '@/public/assets/login-logo.svg'
 import Image from 'next/image'
 import Logo from '@/public/assets/logo.svg'
 import Button from '../Base/Button'
-import { showNotify } from '../Base/notification/notify-controllers'
 import Link from 'next/link'
-import { useAuthStore } from '@/store/useAuthStore'
 import AnimationLogin from '../animation/AnimationLogin'
-
 interface loginPage {
   email: string,
   password: string,
@@ -25,7 +24,6 @@ export default function LoginPage() {
   })
 
   const { login, loading, error } = useAuthStore()
-
   const router = useRouter()
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -53,8 +51,10 @@ export default function LoginPage() {
   }, [error])
 
   return (
-    <main className="grid md:grid-cols-2 min-h-screen items-center md:gap-12 bg-gray-100">
-      <div className='h-full hidden md:flex flex-col items-center justify-center bg-white shadow-lg'>
+    <main className="grid md:grid-cols-2 min-h-screen items-center md:gap-12 bg-inside">
+
+      <div className='h-full hidden relative md:flex flex-col items-center justify-center bg-colors-var shadow-lg'>
+
         <Image
           src={LoginLogo}
           alt=""
@@ -73,7 +73,7 @@ export default function LoginPage() {
       <div className='h-screen items-center justify-center flex'>
         <form
           onSubmit={handleLogin}
-          className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm"
+          className="bg-colors-var p-8 rounded-lg shadow-lg w-full max-w-sm"
         >
           <div className='flex justify-center'>
             <Image

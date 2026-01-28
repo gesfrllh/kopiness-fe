@@ -1,20 +1,80 @@
 @use "tailwindcss";
 
-@font-face {
-  font-family: 'Akira';
-  src: url('/public/font/akira/Akira.otf') format('opentype');
-  font-weight: normal;
-  font-size: normal;
+/* =====================
+   THEME TOKENS
+===================== */
+
+$light-theme: (
+  bg: #ffffff,
+  bgs: #E5E7EB,
+  text: #0f172a,
+  card: #f8fafc,
+  border: 1px solid #92400E
+);
+
+$dark-theme: (
+  bg: #020617,
+  bgs: #0d1434,
+  text: #e5e7eb,
+  card: #020617,
+  border: 1px solid #92400E
+);
+
+@mixin theme-vars($theme) {
+  @each $key, $value in $theme {
+    --#{$key}: #{$value};
+  }
 }
+
+/* =====================
+   FONTS
+===================== */
+
+// @font-face {
+//   font-family: 'Akira';
+//   src: url('/font/akira/Akira.otf') format('opentype');
+//   font-weight: normal;
+//   font-style: normal;
+// }
+
+/* =====================
+   ROOT THEME
+===================== */
 
 :root {
   --font-akira: 'Akira', sans-serif;
+  @include theme-vars($light-theme);
 }
 
-body {
-  font-family: var(--font-poppins);
+[data-theme='dark'] {
+  @include theme-vars($dark-theme);
 }
-/* Hide scrollbar tapi tetap bisa scroll */
+
+/* =====================
+   BASE
+===================== */
+
+body {
+  color: var(--text);
+  background-color: var(--bg);
+  // font-family: var(--font-akira);
+}
+
+.bg-colors-var {
+  background-color: var(--bg);
+}
+
+.border-var {
+  border: var(--border);
+}
+
+.bg-inside {
+  background-color: var(--bgs);
+}
+
+/* =====================
+   SCROLLBAR
+===================== */
 
 /* Chrome, Safari, Edge */
 ::-webkit-scrollbar {
@@ -23,8 +83,8 @@ body {
 
 /* Firefox */
 * {
-  scrollbar-width: none; /* sembunyikan */
-  -ms-overflow-style: none; /* IE 10+ */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 html {

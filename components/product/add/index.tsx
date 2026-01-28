@@ -15,7 +15,6 @@ import { useRouter } from 'next/navigation'
 import AnimationLogin from '@/components/animation/AnimationLogin'
 
 type FormState = {
-  id?: unknown,
   name: string
   price: string
   stock: string
@@ -87,7 +86,6 @@ const AddProduct = ({ id }: Props) => {
     if (!productsById?.id) return
 
     setForm({
-      id: '',
       name: productsById.name ?? '',
       price: String(productsById.price ?? ''),
       stock: String(productsById.stock ?? ''),
@@ -103,7 +101,6 @@ const AddProduct = ({ id }: Props) => {
   const handleSubmit = async () => {
     const payload: ProductRequest = {
       ...form,
-      id: '',
       price: Number(form.price),
       stock: Number(form.stock),
     }
@@ -121,7 +118,7 @@ const AddProduct = ({ id }: Props) => {
   return (
     <div>
       {/* Back */}
-      <div className='px-8 rounded-lg shadow-md w-72 py-4 mt-4 bg-white'>
+      <div className='px-8 rounded-lg shadow-md w-72 py-4 mt-4 bg-colors-var'>
         <Link href="/manage/product" className='flex gap-2 items-center'>
           <Icon icon="material-symbols:arrow-circle-left" width={24} />
           Product Page
@@ -129,7 +126,7 @@ const AddProduct = ({ id }: Props) => {
       </div>
 
       {/* Form */}
-      <div className='bg-white p-8 rounded-lg shadow-md mt-8 flex flex-col gap-6'>
+      <div className='bg-colors-var p-8 rounded-lg shadow-md mt-8 flex flex-col gap-6'>
 
         {/* Row 1 */}
         <div className='grid md:grid-cols-2 gap-8'>
@@ -227,7 +224,7 @@ const AddProduct = ({ id }: Props) => {
           </Button>
         </div>
       </div>
-      {/* {loading ? <AnimationLogin /> : ''} */}
+      {loading ? <AnimationLogin /> : ''}
     </div>
   )
 }

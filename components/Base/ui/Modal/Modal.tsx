@@ -47,10 +47,10 @@ export const Modal: React.FC<ModalProps> = ({
 
       {/* Modal */}
       <div
-        role="dialog" 
+        role="dialog"
         aria-modal="true"
         className={clsx(
-          "relative z-10 w-full rounded-2xl bg-white shadow-xl",
+          "relative z-10 w-full rounded-2xl bg-colors-var shadow-xl",
           "animate-in fade-in zoom-in-95 duration-200",
           sizeMap[size],
           className

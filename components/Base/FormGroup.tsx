@@ -19,12 +19,12 @@ const FormGroup: React.FC<Group> = ({ children, label, required, value }) => {
     setFocus(false);
     setHasValue(!!e.target.value);
   };
-  
+
   const isValid = isValidElement(children);
   const isPasswordInput = isValid && isPasswordElement(children);
   const isName = isValid ? children.props.name : undefined;
 
-  const showPassword = usePasswordStore((s) => 
+  const showPassword = usePasswordStore((s) =>
     isName ? s.isVisible(isName) : false
   )
 
@@ -37,11 +37,11 @@ const FormGroup: React.FC<Group> = ({ children, label, required, value }) => {
   }, [childValue])
 
   return (
-    <div className="relative w-full bg-white">
+    <div className="relative w-full bg-colors-var">
       <label
         className={clsx(
-          'absolute left-3 bg-white transition-all px-1',
-          focus || hasValue ? 'text-xs -top-2 bg-white text-amber-800' : 'text-gray-500 top-2.5'
+          'absolute left-3 bg-colors-var transition-all px-1',
+          focus || hasValue ? 'text-xs -top-2 bg-colors-var' : ' top-2.5'
         )}
       >
         {label} {required && <span className="text-red-500">*</span>}
@@ -49,7 +49,7 @@ const FormGroup: React.FC<Group> = ({ children, label, required, value }) => {
       <div
         className={clsx(
           'border rounded px-3 pt-4 pb-2 transition-colors',
-          focus ? 'border-amber-800' : 'border-gray-300'
+          focus ? 'border-var' : 'border-gray-300'
         )}
       >
         {isValid &&
@@ -57,7 +57,7 @@ const FormGroup: React.FC<Group> = ({ children, label, required, value }) => {
             className: 'w-full outline-none bg-transparent',
             onFocus: handleFocus,
             onBlur: handleBlur,
-            ...(isPasswordInput &&  {
+            ...(isPasswordInput && {
               type: showPassword ? 'text' : 'password'
             })
           })}

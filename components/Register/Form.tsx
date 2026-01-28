@@ -60,11 +60,11 @@ const Form = () => {
 
   return (
     <>
-      <main className='h-screen flex justify-center items-center bg-gray-200'>
+      <main className='h-screen flex justify-center items-center bg-inside'>
         <div>
           <form
             onSubmit={handleRegister}
-            className="bg-white p-8 rounded-lg shadow-lg max-w-sm"
+            className="bg-colors-var p-8 rounded-lg shadow-lg max-w-sm"
           >
             <div className='flex justify-center'>
               <Image

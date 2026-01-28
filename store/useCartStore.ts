@@ -15,16 +15,16 @@ export const useCartStore = create<CartState>((set, get) => ({
 
     set({
       items: newItems,
-      totalQty: newItems.length 
+      totalQty: newItems.length
     })
   },
 
-  removeFromCart: (id) => {
-    const newItems = get().items.filter((i) => i.id !== id)
+  removeFromCart: (ids) => {
+    const list = Array.isArray(ids) ? ids : [ids]
 
     set({
-      items: newItems,
-      totalQty: newItems.length
+      items: get().items.filter(i => !list.includes(i.id as string)),
+      totalQty: get().items.length - list.length
     })
   },
 

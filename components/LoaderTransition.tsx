@@ -21,7 +21,7 @@ export default function LoaderTransition({ onFinish }: { onFinish?: () => void }
     const timer3 = setTimeout(() => {
       setFinished(true);
       onFinish?.();
-    }, 2500); 
+    }, 2500);
 
     return () => {
       clearTimeout(timer1);
@@ -41,7 +41,7 @@ export default function LoaderTransition({ onFinish }: { onFinish?: () => void }
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
-            className="fixed inset-0 z-[9999] bg-white flex items-center justify-center"
+            className="fixed inset-0 z-[9999] bg-colors-var flex items-center justify-center"
           >
             <div className="text-4xl font-bold">Kopiness</div>
           </motion.div>

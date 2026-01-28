@@ -22,8 +22,8 @@ import { ProductResponse } from '@/types/product'
 import { useRouter } from 'next/navigation'
 import { formatCurrency } from '@/utils/general'
 import TextLabel from '../Base/TextLabel'
-import { Column } from '@/types'
 import FormInput from '../Base/FormInput'
+import { showNotify } from '../Base/notification/notify-controllers'
 
 const Product = () => {
   const [loader, setLoader] = useState(false)
@@ -48,11 +48,15 @@ const Product = () => {
     getDisplayQty,
     getDisplayStock,
     getProduct,
+    commitStockChanges,
     getProductByIds,
     removeProduct
   } = useProductStore()
 
-  const { totalQty, addToCart, items } = useCartStore()
+  const { totalQty, addToCart, items, removeFromCart } = useCartStore()
+  const selectedIds = Object.keys(checkedItems).filter(
+    id => checkedItems[id]
+  )
 
   const role = Cookies.get('role')
   const router = useRouter()
@@ -73,6 +77,9 @@ const Product = () => {
 
     addToCart(product)
   }
+
+  const hasChecked = Object.values(checkedItems).some(Boolean)
+
   const openDetails = async (id: string) => {
     if (!productsById) return
     setProductsId(id)
@@ -93,7 +100,7 @@ const Product = () => {
       {loader && (
         <div>
           <CTA title="Product Cta" />
-          <div className="bg-white rounded-lg my-8 py-4 px-8">
+          <div className="bg-colors-var rounded-lg my-8 py-4 px-8">
             {/* Header */}
             <div className="flex items-center justify-between pb-4 border-b border-gray-300">
               <span>Product</span>
@@ -248,7 +255,7 @@ const Product = () => {
                     </div>
                   )}
                 </div>
-                <div className='border rounded-lg shadow-[8px_6px_0px_1px_#422900] px-8 py-4 w-auto'>
+                <div className='border-var rounded-lg shadow-[8px_6px_0px_1px_#422900] px-8 py-4 w-auto'>
                   <div className='w-full'>
                     <p className='text-xl font-semibold'>{productsById.name}</p>
                     <div className='flex justify-between items-center py-4'>
@@ -275,7 +282,7 @@ const Product = () => {
                           title={productsById.origin as string} />
                       </div>
                     </div>
-                    <div className='flex items-end justify-end font-semibold border-b py-4'>
+                    <div className='flex items-end justify-end font-semibold bg-colors-var-b py-4'>
                       <TextLabel
                         size='xl'
                         dot={false}
@@ -295,46 +302,114 @@ const Product = () => {
 
           <Modal open={open} onClose={() => setOpen(false)} size='xl'>
             <ModalHeader>
-              <div></div>
+              <div className='flex justify-between items-center'>
+                <p className='text-lg font-semibold'>Keranjang</p>
+                <div onClick={() => (setOpen(false))} className='cursor-pointer p-2'>
+                  <Tooltip content="Tutup">
+                    <Icon
+                      onClick={() => (setOpen(false))}
+                      icon="material-symbols:close-small-outline-rounded"
+                      width={36}
+                      height={36}
+                      style={{ color: '#b63232ff' }} />
+                  </Tooltip>
+                </div>
+              </div>
             </ModalHeader>
             <ModalBody>
-              <div className='flex flex-col gap-4'>
-                {items.map((item) => (
-                  <div
-                    key={item.id}
-                    className='shadow-[8px_6px_0px_1px_#422900] border-amber-800 border rounded-lg flex gap-4 p-8 items-center'
-                  >
-                    <FormInput
-                      type="checkbox"
-                      name={`item-${item.id}`}
-                      checked={checkedItems[item.id] as boolean ?? false}
-                      onChange={() => toggleItem(item.id)}
-                      className="w-5 h-5"
-                    />
+              {items.length > 0 ? (
+                <div>
+                  <div className='max-h-96 p-4 overflow-auto flex flex-col gap-4 relative'>
+                    {items.map((item) => (
+                      <div
+                        key={item.id}
+                        className='shadow-[8px_6px_0px_1px_#422900] border-var rounded-lg flex gap-4 p-8 items-center'
+                      >
+                        <FormInput
+                          type="checkbox"
+                          name={`item-${item.id}`}
+                          checked={checkedItems[item.id as string] as boolean ?? false}
+                          onChange={() => toggleItem(item.id as string)}
+                          className="w-5 h-5"
+                        />
 
-                    <div className='w-32 rounded-lg'>
-                      <Image
-                        className='w-[200px] rounded-lg h-[100px] object-cover'
-                        src={item.imageUrl[0]}
-                        width={400}
-                        height={400}
-                        alt={item.name}
-                      />
-                    </div>
+                        <div className='w-32 rounded-lg'>
+                          <Image
+                            className='w-[200px] rounded-lg h-[100px] object-cover'
+                            src={item.imageUrl[0]}
+                            width={400}
+                            height={400}
+                            alt={item.name}
+                          />
+                        </div>
 
-                    <div className='flex flex-col'>
-                      <TextLabel size='xl' title={item.name} dot />
-                      {checkedItems[item.id] && (
-                        <span className="text-sm text-green-600">Dipilih</span>
-                      )}
-                    </div>
+                        <div className='flex justify-between w-full'>
+                          <div className='flex flex-col gap-8'>
+                            <div className='flex flex-col'>
+                              <TextLabel size='xl' title={item.name} dot />
+                              <p className='text-xs px-6'>
+                                {item.description}
+                              </p>
+                            </div>
+                            <div className='px-6'>
+                              <p className='font-semibold'>
+                                {formatCurrency(item.price)}
+                              </p>
+                              <p className='text-xs text-gray-600'>
+                                {item.flavorNotes}
+                              </p>
+                            </div>
+                          </div>
+                          <div className='flex gap-4 items-center'>
+                            <Button
+                              variant='outline'
+                              onClick={() => updateDraftStock(item.id as string, -1)}
+                              disabled={!checkedItems[item.id as string]}>
+                              <p>-</p>
+                            </Button>
+
+                            <div className='flex gap-2 w-18 justify-center px-4'>
+                              <p>{getDisplayQty(item)}</p>
+                              <span>/</span>
+                              <p className='text-gray-400'>{getDisplayStock(item)}</p>
+                            </div>
+
+                            <Button
+                              variant='outline'
+                              onClick={() => updateDraftStock(item.id as string, 1)}
+                              disabled={!checkedItems[item.id as string]}>
+                              <p>+</p>
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-
-              {/* <Table<ProductResponse> columns={columns} data={items} /> */}
-
+                  <div className='pt-6 text-end'>
+                    <Button variant='outline'
+                      disabled={!hasChecked}
+                      onClick={() => {
+                        commitStockChanges()
+                        setOpen(false)
+                        showNotify({
+                          type: 'success',
+                          title: 'Sukses',
+                          text: 'Sukses deh lu semua'
+                        })
+                        removeFromCart(selectedIds)
+                      }}>
+                      Submit
+                    </Button>
+                  </div>
+                  {/* <Table<ProductResponse> columns={columns} data={items} /> */}
+                </div>
+              ) : (
+                <div>
+                  Data Tidak ditemukan.
+                </div>
+              )}
             </ModalBody>
+
           </Modal>
         </div>
       )}

@@ -28,13 +28,13 @@ const FormInput: React.FC<BaseInputProps> = ({
         <div
           className="
             w-5 h-5
-            border-2 border-amber-800
+            border border-gray-500 peer-checked:border-amber-800
             rounded-md
             flex items-center justify-center
             peer-checked:bg-amber-800
           "
         >
-          <span className="hidden peer-checked:block text-white text-xs">
+          <span className="peer-checked:block text-white text-xs">
             ✓
           </span>
         </div>
@@ -53,7 +53,7 @@ const FormInput: React.FC<BaseInputProps> = ({
       value={value}
       onChange={onChange}
       placeholder={placeholder}
-      className={`outline-none bg-white ${className}`}
+      className={`outline-none bg-colors-var ${className}`}
       {...rest}
     />
   );

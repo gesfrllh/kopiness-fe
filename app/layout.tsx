@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Poppins, Bebas_Neue } from "next/font/google";
 import "./globals.scss";
-import { ToastProvider } from "@/components/Base/notification/ToastProvider";
-import ResponsiveInit from "./ResponsiveInit";
+import Providers from "./Providers";
 // import UseLenis from "@/lib/lenis";
 // import PageTransition from "@/components/PageTransition";
 
@@ -43,12 +42,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} ${poppins.variable} antialiased`}
       >
-        <ToastProvider position="top-right">
-          <ResponsiveInit />
-          {/* <UseLenis /> */}
-            {children}
-        </ToastProvider>
+        <Providers>
+          {children}
+        </Providers>
       </body>
-    </html>
+    </html >
   );
 }

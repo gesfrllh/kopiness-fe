@@ -1,8 +1,18 @@
 import { showNotify } from '@/components/Base/notification/notify-controllers';
-import { addProduct, deleteProduct, editProduct, getProduct, getProductById } from '@/pages/api/product/productApi';
-import { ProductRequest, ProductResponse, ProductResponseById } from '@/types/product';
-import { formatError } from '@/utils/formatError';
 import { create } from 'zustand';
+import { formatError } from '@/utils/formatError';
+import {
+    ProductRequest,
+    ProductResponse,
+    ProductResponseById
+} from '@/types/product';
+import {
+    addProduct,
+    deleteProduct,
+    editProduct,
+    getProduct,
+    getProductById
+} from '@/pages/api/product/productApi';
 
 interface ProductState {
     products: ProductResponse[];
@@ -79,11 +89,11 @@ export const useProductStore = create<ProductState>((set, get) => ({
     },
 
     getDisplayQty: (product: ProductResponse) => {
-        return get().draftQty[product.id] ?? 0
+        return get().draftQty[product.id as string] ?? 0
     },
 
     getDisplayStock: (product) => {
-        const draft = get().draftQty[product.id] ?? 0
+        const draft = get().draftQty[product.id as string] ?? 0
         return Math.max(product.stock - draft, 0)
     },
 
@@ -93,6 +103,9 @@ export const useProductStore = create<ProductState>((set, get) => ({
             productId,
             qty
         }))
+
+        // console.log(payload)
+
         set({ draftQty: {} })
     },
 
@@ -119,7 +132,7 @@ export const useProductStore = create<ProductState>((set, get) => ({
         }
     },
 
-    getProductByIds: async (id?: string) => {
+    getProductByIds: async () => {
         const { productsId } = get()
         if (!productsId) return
 

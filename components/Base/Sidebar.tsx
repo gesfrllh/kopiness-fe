@@ -21,7 +21,6 @@ const Sidebar = () => {
   const [isActive, setIsActive] = useState<string>('')
   const [userData, setUserData] = useState<{ role?: string } | null>(null);
   const logout = useAuthStore(state => state.logout)
-  const loading = useAuthStore(state => state.loading)
   const route = useRouter()
   const [openMenu, setOpenMenu] = useState(false)
 
@@ -123,7 +122,7 @@ const Sidebar = () => {
 
   return (
     <>
-      <div className='h-20 fixed w-full flex border-b border-amber-800 items-center justify-between px-12 md:px-32 bg-white'>
+      <div className='h-20 fixed w-full flex border-b border-amber-800 items-center justify-between px-12 md:px-32 bg-colors-var'>
         <div className='flex gap-8 items-center'>
           <Image src={Logo} alt="" priority width={132} />
         </div>
