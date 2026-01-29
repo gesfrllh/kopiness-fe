@@ -115,7 +115,7 @@ const Product = () => {
                     setOpen(true)
                   }}
                 >
-                  {totalQty > 0 && (
+                  {items.length > 0 && (
                     <Badge text={totalQty} color="red" />
                   )}
 

@@ -2,12 +2,15 @@ import { showNotify } from '@/components/Base/notification/notify-controllers';
 import { create } from 'zustand';
 import { formatError } from '@/utils/formatError';
 import {
+    CartPayload,
+    CartRequest,
     ProductRequest,
     ProductResponse,
     ProductResponseById
 } from '@/types/product';
 import {
     addProduct,
+    confirmCart,
     deleteProduct,
     editProduct,
     getProduct,
@@ -98,13 +101,40 @@ export const useProductStore = create<ProductState>((set, get) => ({
     },
 
     commitStockChanges: async () => {
+        set({ loading: true })
         const { draftQty } = get()
-        const payload = Object.entries(draftQty).filter(([, qty]) => qty > 0).map(([productId, qty]) => ({
+        const items = Object.entries(draftQty).filter(([, quantity]) => quantity > 0).map(([productId, quantity]) => ({
             productId,
-            qty
+            quantity
         }))
 
-        // console.log(payload)
+        const payload: CartRequest = {
+            items,
+        }
+
+        try {
+            await confirmCart(payload)
+            set({ loading: false })
+            await get().getProduct()
+            showNotify({
+                type: 'success',
+                title: 'Sukses',
+                text: 'Submit Produk Berhasil',
+            });
+
+            // return res
+        } catch (err) {
+            const message = formatError(err) || 'Error submit data';
+            set({ error: message });
+            set({ loading: false })
+            showNotify({
+                type: 'error',
+                title: 'Gagal',
+                text: message,
+            });
+
+            throw new Error(message);
+        }
 
         set({ draftQty: {} })
     },
