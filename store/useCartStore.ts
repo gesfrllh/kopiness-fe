@@ -21,7 +21,6 @@ export const useCartStore = create<CartState>((set, get) => ({
 
   removeFromCart: (ids) => {
     const list = Array.isArray(ids) ? ids : [ids]
-
     set({
       items: get().items.filter(i => !list.includes(i.id as string)),
       totalQty: get().items.length - list.length

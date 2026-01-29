@@ -1,7 +1,7 @@
 'use client'
 
 import apiClient from "@/lib/api";
-import { ProductRequest } from "@/types/product";
+import { CartPayload, CartRequest, ProductRequest } from "@/types/product";
 
 interface ParamsGetProduct {
   page: number,
@@ -9,9 +9,9 @@ interface ParamsGetProduct {
 }
 
 export const getProduct = async (params: ParamsGetProduct) => {
-  const response  =  await apiClient.get('/products', {params})
+  const response = await apiClient.get('/products', { params })
   return response.data
-} 
+}
 
 export const getProductById = async (id: string) => {
   const response = await apiClient.get(`/products/${id}`)
@@ -30,5 +30,10 @@ export const editProduct = async (id: string, req: ProductRequest) => {
 
 export const deleteProduct = async (id: string) => {
   const response = await apiClient.delete(`/products/${id}`)
+  return response.data
+}
+
+export const confirmCart = async (req: CartRequest) => {
+  const response = await apiClient.post<CartRequest>('/transactions', req)
   return response.data
 }

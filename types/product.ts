@@ -41,3 +41,10 @@ export interface CartState {
     clearCart: () => void
 }
 
+export type CartPayload = {
+    productId: string,
+    quantity: number
+}
+export interface CartRequest {
+    items: CartPayload[]
+}   
