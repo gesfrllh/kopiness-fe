@@ -1,7 +1,7 @@
 'use client'
 
 import apiClient from "@/lib/api";
-import { CartPayload, CartRequest, ProductRequest } from "@/types/product";
+import { CartRequest, ProductRequest } from "@/types/product";
 
 interface ParamsGetProduct {
   page: number,

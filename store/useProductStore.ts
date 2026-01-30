@@ -2,7 +2,6 @@ import { showNotify } from '@/components/Base/notification/notify-controllers';
 import { create } from 'zustand';
 import { formatError } from '@/utils/formatError';
 import {
-    CartPayload,
     CartRequest,
     ProductRequest,
     ProductResponse,

@@ -70,6 +70,7 @@ const Product = () => {
 
   useEffect(() => {
     getProduct()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, limit])
 
   const addingToCart = (product: ProductResponse) => {
