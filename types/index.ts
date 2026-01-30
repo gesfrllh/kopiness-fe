@@ -105,3 +105,40 @@ export interface TextLabel {
   // classNames?: string,
   // wieght: 'font-thin' | 'font-extralight  ' | 'font-light' | 'font-normal' | 'font-medium' | 'font-semibold' | 'font-bold' | 'font-extrabold'
 }
+
+export type AccordionItem = {
+  id: string
+  title: React.ReactNode
+  content: React.ReactNode
+  subTotal: number
+}
+
+type BasePropsAccordion = {
+  items: AccordionItem[]
+  multiple?: boolean
+  title: string,
+}
+
+/* 🔹 SINGLE SELECT */
+type SingleSelectProps = {
+  selectable: 'single'
+  value: AccordionItem | null
+  onChange: (value: AccordionItem | null) => void
+}
+
+/* 🔹 MULTI SELECT */
+type MultiSelectProps = {
+  selectable: 'multiple'
+  value: AccordionItem[]
+  onChange: (value: AccordionItem[]) => void
+}
+
+/* 🔹 NON SELECTABLE */
+type NoSelectProps = {
+  selectable?: false
+}
+
+export type AccordionProps =
+  | (BasePropsAccordion & SingleSelectProps)
+  | (BasePropsAccordion & MultiSelectProps)
+  | (BasePropsAccordion & NoSelectProps)
