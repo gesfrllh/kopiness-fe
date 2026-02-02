@@ -23,7 +23,7 @@ export const ConfirmModal: React.FC<ModalConfirm> = ({
       </ModalHeader>
 
       <ModalBody>
-        <p>Are you sure you want to delete this {data}?</p>
+        <p className="text-xl font-semibold">{data}</p>
       </ModalBody>
 
       <ModalFooter>

@@ -5,3 +5,13 @@ export const getCashier = async () => {
   const response = await apiClient.get('/transactions')
   return response.data
 }
+
+export const deleteProduct = async (id: string) => {
+  const response = await apiClient.post(`/transactions/${id}/cancel`)
+  return response.data
+}
+
+export const payment = async (id: string) => {
+  const response = await apiClient.post(`/transactions/${id}/payment`)
+  return response.data
+}
