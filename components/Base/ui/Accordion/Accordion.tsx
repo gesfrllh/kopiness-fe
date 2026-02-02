@@ -43,6 +43,18 @@ const Accordion: React.FC<AccordionProps> = (props) => {
     }
   }
 
+  const toggleDelete = (id: string) => {
+    const item = findItem(id)
+    if (!item) return
+
+    if (props.selectable === 'single' || props.selectable === 'multiple') {
+      props.onClick?.(
+        props.deleteValue?.id === id ? null : item
+      )
+    }
+
+  }
+
   const toggleOpen = (id: string) => {
     setOpenIds((prev) =>
       multiple
@@ -67,6 +79,7 @@ const Accordion: React.FC<AccordionProps> = (props) => {
           selectable={props.selectable ?? false}
           onToggleOpen={() => toggleOpen(item.id)}
           onSelect={() => toggleSelect(item.id)}
+          onDelete={() => toggleDelete(item.id)}
         />
       ))}
     </div>

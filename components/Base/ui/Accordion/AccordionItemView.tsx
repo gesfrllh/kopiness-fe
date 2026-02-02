@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
+import Tooltip from '../Tooltip'
+import { Icon } from '@iconify/react/dist/iconify.js'
 
 type Props = {
   title: React.ReactNode
@@ -10,6 +12,7 @@ type Props = {
   selectable: 'single' | 'multiple' | false
   onToggleOpen: () => void
   onSelect: () => void
+  onDelete: () => void
 }
 
 const AccordionItemView: React.FC<Props> = ({
@@ -20,6 +23,7 @@ const AccordionItemView: React.FC<Props> = ({
   selectable,
   onToggleOpen,
   onSelect,
+  onDelete
 }) => {
   const contentRef = useRef<HTMLDivElement>(null)
   const [maxHeight, setMaxHeight] = useState<number>(0)
@@ -53,6 +57,17 @@ const AccordionItemView: React.FC<Props> = ({
         >
           {title}
         </button>
+
+        <div
+          onClick={onDelete}>
+          <Tooltip content="Hapus">
+            <Icon
+              icon="material-symbols:delete-outline"
+              width={26}
+              height={26}
+              style={{ color: '#DC0000' }} />
+          </Tooltip>
+        </div>
       </div>
 
       {/* CONTENT */}

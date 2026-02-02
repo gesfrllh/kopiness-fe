@@ -23,7 +23,6 @@ import { useRouter } from 'next/navigation'
 import { formatCurrency } from '@/utils/general'
 import TextLabel from '../Base/TextLabel'
 import FormInput from '../Base/FormInput'
-import { showNotify } from '../Base/notification/notify-controllers'
 
 const Product = () => {
   const [loader, setLoader] = useState(false)
@@ -392,11 +391,6 @@ const Product = () => {
                       onClick={() => {
                         commitStockChanges()
                         setOpen(false)
-                        showNotify({
-                          type: 'success',
-                          title: 'Sukses',
-                          text: 'Sukses deh lu semua'
-                        })
                         removeFromCart(selectedIds)
                       }}>
                       Submit

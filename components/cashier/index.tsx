@@ -7,14 +7,20 @@ import TextLabel from "../Base/TextLabel";
 import AnimationLogin from "../animation/AnimationLogin";
 import { formatCurrency } from "@/utils/general";
 import { AccordionItem } from "@/types";
+import { ConfirmModal } from "../Base/ui/Modal/ConfirmModal";
+import Button from "../Base/Button";
 
 const Cashier = () => {
   const [selected, setSelected] = useState<AccordionItem[]>([])
+  const [deleted, setDeleted] = useState<AccordionItem | null>(null)
+  const [openModal, setOpenModal] = useState<boolean>(false)
+  const [choosePayment, setChoosePayment] = useState<boolean>(false)
 
   const {
     getCashier,
     Cashier,
-    loading
+    loading,
+    removeProduct,
   } = useCashierStore()
 
   const total = selected.reduce(
@@ -30,6 +36,7 @@ const Cashier = () => {
     return {
       id: trx.id,
       title: trx.status,
+      name: trx.items.map((item) => item.productName).join(','),
       subTotal: subtotal,
       content: (
         <div className="space-y-1">
@@ -42,7 +49,10 @@ const Cashier = () => {
                     {formatCurrency(item.price)}
                   </p>
                 </div>
-                <div>{item.quantity}</div>
+                <div>
+                  <span className="px-1 text-gray-500">
+                    stok: {item.stock} /</span>
+                  {item.quantity}</div>
               </div>
               <div className="border-b px-4 text-end py-2 font-semibold">
                 {formatCurrency(item.subtotal)}
@@ -62,29 +72,69 @@ const Cashier = () => {
     <>
       <div className="grid grid-cols-4 gap-8">
         <div className="col-span-3 rounded-lg">
+
           <div className="p-4">
-            <Accordion
-              items={accordionItems}
-              selectable="multiple"
-              title="Transaksi"
-              multiple
-              value={selected}
-              onChange={setSelected}
-            />
+            {accordionItems.length > 0 ? (
+              <div>
+                <Accordion
+                  items={accordionItems}
+                  selectable="multiple"
+                  title="Transaksi"
+                  multiple
+                  value={selected}
+                  onChange={setSelected}
+                  deleteValue={deleted}
+                  onClick={(item) => {
+                    setDeleted(item)
+                    setOpenModal(!!item)
+                  }}
+                />
+              </div>
+            ) : (
+              <div className="w-full p-8 rounded-lg bg-colors-var shadow-[8px_6px_0px_1px_#422900] border">
+                Data Tidak Tersedia
+              </div>)}
           </div>
         </div>
         <div className="border shadow-[8px_6px_0px_1px_#422900] bg-colors-var rounded-lg p-4 overflow-auto sticky top-5 h-fit">
           <span className="text-lg font-semibold">Payment</span>
-          <div className="overflow-auto max-h-[280px]">
+          <div className="overflow-auto max-h-[420px]">
             {selected.map((item) => item.content)}
           </div>
-          {selected.length > 0 ? (
-            <div>
+          <div className="py-4 flex justify-between items-center">
+            <p className="text-gray-500">Total:</p>
+            <p className="font-semibold">
               {formatCurrency(total)}
-            </div>
-          ) : null}
+            </p>
+          </div>
+          <div>
+            <Button variant='outline' className="w-full" onClick={() => setChoosePayment(true)}>
+              Submit
+            </Button>
+          </div>
         </div>
       </div >
+
+      <ConfirmModal
+        open={openModal}
+        onClose={() => {
+          setOpenModal(false)
+          setDeleted(null)
+        }}
+        onConfirm={() => {
+          if (!deleted) return
+
+          removeProduct(deleted.id)
+          setOpenModal(false)
+          setDeleted(null)
+        }}
+        title="Apakah anda yakin?"
+        description={`Ingin Menghapus`}
+        data={deleted?.name}
+        confirmText="Hapus"
+        cancelText="Batal"
+      />
+
       {loading ? <AnimationLogin /> : ''}
     </>
   )

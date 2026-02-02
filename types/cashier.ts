@@ -11,7 +11,8 @@ export interface itemsCashier {
   productName: string,
   price: number,
   quantity: number,
-  subtotal: number
+  subtotal: number,
+  stock: number,
 }
 
 export interface CashierResponse {

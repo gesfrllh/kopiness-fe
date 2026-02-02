@@ -108,6 +108,7 @@ export interface TextLabel {
 
 export type AccordionItem = {
   id: string
+  name?: string
   title: React.ReactNode
   content: React.ReactNode
   subTotal: number
@@ -124,6 +125,8 @@ type SingleSelectProps = {
   selectable: 'single'
   value: AccordionItem | null
   onChange: (value: AccordionItem | null) => void
+  deleteValue?: AccordionItem | null
+  onClick: (value: AccordionItem | null) => void
 }
 
 /* 🔹 MULTI SELECT */
@@ -131,6 +134,8 @@ type MultiSelectProps = {
   selectable: 'multiple'
   value: AccordionItem[]
   onChange: (value: AccordionItem[]) => void
+  deleteValue?: AccordionItem | null
+  onClick: (value: AccordionItem | null) => void
 }
 
 /* 🔹 NON SELECTABLE */
