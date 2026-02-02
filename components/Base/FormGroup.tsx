@@ -1,14 +1,8 @@
-import React, { useState, ReactElement, isValidElement, cloneElement, useEffect } from 'react';
+import React, { useState, isValidElement, cloneElement, useEffect } from 'react';
 import clsx from 'clsx';
 import { usePasswordStore } from '@/store/usePasswordStore';
 import { Icon } from '@iconify/react';
-import { BaseInputProps, TextareaProps, Group } from '@/types';
-
-const isPasswordElement = (
-  el: ReactElement<BaseInputProps | TextareaProps>
-): el is ReactElement<BaseInputProps> => {
-  return 'type' in el.props && el.props.type === 'password';
-};
+import { Group } from '@/types';
 
 const FormGroup: React.FC<Group> = ({ children, label, required, value }) => {
   const [focus, setFocus] = useState<boolean>(false);
@@ -21,7 +15,9 @@ const FormGroup: React.FC<Group> = ({ children, label, required, value }) => {
   };
 
   const isValid = isValidElement(children);
-  const isPasswordInput = isValid && isPasswordElement(children);
+
+  const initialType = isValid && 'type' in children.props ? children.props.type : undefined;
+  const isPasswordInput = initialType === 'password';
   const isName = isValid ? children.props.name : undefined;
 
   const showPassword = usePasswordStore((s) =>
@@ -61,7 +57,7 @@ const FormGroup: React.FC<Group> = ({ children, label, required, value }) => {
               type: showPassword ? 'text' : 'password'
             })
           })}
-        {isPasswordInput && isName && hasValue && (
+        {isPasswordInput && isName && (
           <span
             className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500"
             onClick={() => toggleVisibility(isName)}

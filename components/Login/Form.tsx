@@ -12,6 +12,7 @@ import Logo from '@/public/assets/logo.svg'
 import Button from '../Base/Button'
 import Link from 'next/link'
 import AnimationLogin from '../animation/AnimationLogin'
+import { Icon } from '@iconify/react/dist/iconify.js'
 interface loginPage {
   email: string,
   password: string,
@@ -49,6 +50,10 @@ export default function LoginPage() {
       })
     }
   }, [error])
+
+  const handleWithGoogle = () => {
+    window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/google`;
+  }
 
   return (
     <main className="grid md:grid-cols-2 min-h-screen items-center md:gap-12 bg-inside">
@@ -104,9 +109,22 @@ export default function LoginPage() {
             {loading ? 'Logging in...' : 'Login'}
           </Button>
           {loading ? <AnimationLogin /> : ''}
-          <div className='flex gap-2 py-4 justify-end'>
-            Belum punya akun ?
-            <Link href={'/registrations'} className='text-red-500'>Register</Link>
+          <div className='flex flex-col gap-2 py-4 items-center'>
+            <div className='flex gap-2'>
+            Belum punya akun ? 
+            <Link href={'/registrations'} className='text-red-500'>Register</Link> 
+             </div>
+             <div className="divider">
+                <span>or</span>
+             </div>
+           <Button
+            type="submit"
+            variant='outline'
+            className='w-full flex items-center justify-center gap-2'
+            onClick={handleWithGoogle}>
+          <Icon icon="material-icon-theme:google" width={28} />
+            Sign in with Google
+          </Button> 
           </div>
         </form>
       </div>
