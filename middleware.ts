@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
   const token = request.cookies.get('token')?.value;
-  const role = request.cookies.get('role')?.value;   
+  const role = request.cookies.get('role')?.value;
   const path = request.nextUrl.pathname;
 
   const isLoggedIn = !!token;
@@ -23,5 +23,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', '/login',  '/manage/:path*'],
+  matcher: ['/', '/login', '/manage/:path*'],
 };

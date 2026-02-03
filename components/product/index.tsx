@@ -32,6 +32,7 @@ const Product = () => {
   const [selectedId, setSelectedId] = useState<string>('')
   const [selectToCart, setSelectToCart] = useState<ProductResponse>()
   const [checkedItems, setCheckedItems] = React.useState<Record<string, boolean>>({})
+
   const {
     products,
     page,
@@ -52,7 +53,13 @@ const Product = () => {
     removeProduct
   } = useProductStore()
 
-  const { totalQty, addToCart, items, removeFromCart } = useCartStore()
+  const {
+    totalQty,
+    addToCart,
+    items,
+    removeFromCart
+  } = useCartStore()
+
   const selectedIds = Object.keys(checkedItems).filter(
     id => checkedItems[id]
   )
@@ -131,7 +138,6 @@ const Product = () => {
 
             {/* Product List */}
             {products.length > 0 ? (
-
               <div className="flex flex-col gap-8">
                 <div className="flex gap-12 py-8 justify-center flex-wrap">
                   {products.map((item) => (

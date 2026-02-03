@@ -8,13 +8,13 @@ import AnimationLogin from "../animation/AnimationLogin";
 import { formatCurrency } from "@/utils/general";
 import { AccordionItem } from "@/types";
 import { ConfirmModal } from "../Base/ui/Modal/ConfirmModal";
-import Button from "../Base/Button";
+// import Button from "../Base/Button";
 
 const Cashier = () => {
   const [selected, setSelected] = useState<AccordionItem[]>([])
   const [deleted, setDeleted] = useState<AccordionItem | null>(null)
   const [openModal, setOpenModal] = useState<boolean>(false)
-  const [choosePayment, setChoosePayment] = useState<boolean>(false)
+  // const [choosePayment, setChoosePayment] = useState<boolean>(false)
 
   const {
     getCashier,
@@ -70,9 +70,8 @@ const Cashier = () => {
 
   return (
     <>
-      <div className="grid grid-cols-4 gap-8">
-        <div className="col-span-3 rounded-lg">
-
+      <div className="grid md:grid-cols-4 gap-8">
+        <div className="md:col-span-3 rounded-lg">
           <div className="p-4">
             {accordionItems.length > 0 ? (
               <div>
@@ -96,7 +95,7 @@ const Cashier = () => {
               </div>)}
           </div>
         </div>
-        <div className="border shadow-[8px_6px_0px_1px_#422900] bg-colors-var rounded-lg p-4 overflow-auto sticky top-5 h-fit">
+        <div className="border m-4 md:m-0 p-4 shadow-[8px_6px_0px_1px_#422900] bg-colors-var rounded-lg overflow-auto sticky top-5 h-fit">
           <span className="text-lg font-semibold">Payment</span>
           <div className="overflow-auto max-h-[420px]">
             {selected.map((item) => item.content)}
@@ -108,9 +107,9 @@ const Cashier = () => {
             </p>
           </div>
           <div>
-            <Button variant='outline' className="w-full" onClick={() => setChoosePayment(true)}>
-              Submit
-            </Button>
+            {/* <Button variant='outline' className="w-full" onClick={() => setChoosePayment(true)}> */}
+              {/* Submit */}
+            {/* </Button> */}
           </div>
         </div>
       </div >
