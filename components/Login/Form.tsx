@@ -52,14 +52,12 @@ export default function LoginPage() {
   }, [error])
 
   const handleWithGoogle = () => {
-    window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/google`;
+    window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/google`;
   }
 
   return (
     <main className="grid md:grid-cols-2 min-h-screen items-center md:gap-12 bg-inside">
-
       <div className='h-full hidden relative md:flex flex-col items-center justify-center bg-colors-var shadow-lg'>
-
         <Image
           src={LoginLogo}
           alt=""
@@ -111,20 +109,20 @@ export default function LoginPage() {
           {loading ? <AnimationLogin /> : ''}
           <div className='flex flex-col gap-2 py-4 items-center'>
             <div className='flex gap-2'>
-            Belum punya akun ? 
-            <Link href={'/registrations'} className='text-red-500'>Register</Link> 
-             </div>
-             <div className="divider">
-                <span>or</span>
-             </div>
-           <Button
-            type="submit"
-            variant='outline'
-            className='w-full flex items-center justify-center gap-2'
-            onClick={handleWithGoogle}>
-          <Icon icon="material-icon-theme:google" width={28} />
-            Sign in with Google
-          </Button> 
+              Belum punya akun ?
+              <Link href={'/registrations'} className='text-red-500'>Register</Link>
+            </div>
+            <div className="divider">
+              <span>or</span>
+            </div>
+            <Button
+              type="submit"
+              variant='outline'
+              className='w-full flex items-center justify-center gap-2'
+              onClick={handleWithGoogle}>
+              <Icon icon="material-icon-theme:google" width={28} />
+              Sign up with Google
+            </Button>
           </div>
         </form>
       </div>
