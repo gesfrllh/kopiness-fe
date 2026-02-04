@@ -10,14 +10,12 @@ export interface AuthPayload {
 
 export interface AuthState {
   user: User | null;
-  token: string | null;
   loading: boolean;
   error: string | null;
   role: string | null;
 
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  setUserFromCookie: () => void;
   setError: (error: string | null) => void
 }
 

@@ -8,7 +8,6 @@ export const login = async (email: string, password: string) => {
     password,
   });
 
-  Cookies.set('token', response.data.token, { expires: 1 });
   return response.data;
 };
 
@@ -25,4 +24,5 @@ export const logout = async () => {
     }
   });
   Cookies.remove('token');
+  Cookies.remove('is_logged_in')
 } 
