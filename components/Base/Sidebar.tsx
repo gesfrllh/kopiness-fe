@@ -141,9 +141,9 @@ const Sidebar = () => {
                   </Link>
                 </div>
               ))}
-              <div onClick={() => handleLogout()}>
-                <p>Logout</p>
-              </div>
+              <Button variant='outline' onClick={handleLogout}>
+                Logout
+              </Button>
             </div>
           ) : (
             <div>

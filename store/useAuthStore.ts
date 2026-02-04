@@ -18,12 +18,12 @@ export const useAuthStore = create<AuthState>((set: SetStateFn) => ({
     try {
       const res = await login(email, password)
 
-      Cookies.set("token", res.data.token, { path: "/" })
       Cookies.set("role", res.data.user.role, { path: "/" })
+      Cookies.set("status", res.status)
+      Cookies.set("is_logged_in", res.data.isLoggedIn)
 
       set({
         user: res.data.user,
-        token: res.data.token,
         loading: false
       })
 
@@ -39,25 +39,17 @@ export const useAuthStore = create<AuthState>((set: SetStateFn) => ({
     set({ loading: true })
     try {
       await logout()
-
       set({
         user: null,
-        token: null,
         loading: false
       })
+      Cookies.remove('status')
+      Cookies.remove('role')
     } catch (error: unknown) {
       const message = formatError(error) || 'Logout Failed'
       set({ error: message, loading: false })
       throw new Error(message)
     }
   },
-
-  setUserFromCookie: () => {
-    const token = Cookies.get('token');
-    if (token) {
-      set({ token });
-    }
-  },
-
   setError: (error: string | null) => set({ error })
 }))
