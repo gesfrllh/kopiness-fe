@@ -73,7 +73,6 @@ const Accordion: React.FC<AccordionProps> = (props) => {
         <AccordionItemView
           key={item.id}
           item={item}
-          title={props.title}
           isOpen={openIds.includes(item.id)}
           isSelected={isSelected(item.id)}
           selectable={props.selectable ?? false}

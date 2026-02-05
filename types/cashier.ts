@@ -18,6 +18,7 @@ export interface itemsCashier {
 export interface CashierResponse {
   id: string,
   status: TransactionStatus,
+  orderNumber: string,
   createdAt: string,
   user: userCashier,
   items: itemsCashier[],
