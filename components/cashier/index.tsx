@@ -35,30 +35,33 @@ const Cashier = () => {
 
     return {
       id: trx.id,
-      title: trx.status,
+      title: trx.orderNumber,
       name: trx.items.map((item) => item.productName).join(','),
       subTotal: subtotal,
       content: (
         <div className="space-y-1">
-          {trx.items.map((item) => (
-            <div key={item.productId}>
-              <div className="flex border-b p-4 justify-between">
-                <div className="flex flex-col gap-2">
-                  <TextLabel dot title={item.productName} size="md" />
-                  <p className="font-semibold">
-                    {formatCurrency(item.price)}
-                  </p>
+          <div>
+            {trx.items.map((item) => (
+              <div key={item.productId}>
+                <div className="flex border-b p-4 justify-between">
+                  <div className="flex flex-col gap-2">
+                    <TextLabel dot title={item.productName} size="md" />
+                    <p className="font-semibold">
+                      {formatCurrency(item.price)}
+                    </p>
+                  </div>
+                  <div>
+                    <span className="px-1 text-gray-500">
+                      stok: {item.stock} /</span>
+                    {item.quantity}</div>
                 </div>
-                <div>
-                  <span className="px-1 text-gray-500">
-                    stok: {item.stock} /</span>
-                  {item.quantity}</div>
+                <div className="border-b px-4 text-end py-2 font-semibold">
+                  {formatCurrency(item.subtotal)}
+                </div>
               </div>
-              <div className="border-b px-4 text-end py-2 font-semibold">
-                {formatCurrency(item.subtotal)}
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
+
         </div>
       ),
     }
@@ -78,7 +81,6 @@ const Cashier = () => {
                 <Accordion
                   items={accordionItems}
                   selectable="multiple"
-                  title="Transaksi"
                   multiple
                   value={selected}
                   onChange={setSelected}
@@ -108,7 +110,7 @@ const Cashier = () => {
           </div>
           <div>
             {/* <Button variant='outline' className="w-full" onClick={() => setChoosePayment(true)}> */}
-              {/* Submit */}
+            {/* Submit */}
             {/* </Button> */}
           </div>
         </div>

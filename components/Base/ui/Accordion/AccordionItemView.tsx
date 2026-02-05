@@ -3,8 +3,9 @@ import Tooltip from '../Tooltip'
 import { Icon } from '@iconify/react/dist/iconify.js'
 
 type Props = {
-  title: React.ReactNode
+  desc?: string,
   item: {
+    title: React.ReactNode
     content: React.ReactNode
   }
   isOpen: boolean
@@ -17,8 +18,8 @@ type Props = {
 
 const AccordionItemView: React.FC<Props> = ({
   item,
-  title,
   isOpen,
+  desc,
   isSelected,
   selectable,
   onToggleOpen,
@@ -55,9 +56,9 @@ const AccordionItemView: React.FC<Props> = ({
           onClick={onToggleOpen}
           className="flex-1 text-left font-medium cursor-pointer"
         >
-          {title}
+          {item.title}
         </button>
-
+        <p>{desc}</p>
         <div
           onClick={onDelete}>
           <Tooltip content="Hapus">

@@ -47,7 +47,7 @@ const Sidebar = () => {
     {
       id: uuid(),
       title: 'Catatan',
-      link: '/manage/logs',
+      link: '/manage/history',
       icon: <Icon icon="material-symbols-light:source-notes" width={24} />
     },
     {
@@ -126,9 +126,9 @@ const Sidebar = () => {
         <div className='flex gap-8 items-center'>
           <Image src={Logo} alt="" priority width={132} />
         </div>
-        <div className='flex'>
+        <div className='flex items-center justify-center'>
           {!isMobile ? (
-            <div className="flex gap-8">
+            <div className="flex gap-8 items-center">
               {filteredData.map((item, idx) => (
                 <div key={idx} onClick={() => isActiveLink(item.title)}>
                   <Link href={item.link} className="flex gap-4">

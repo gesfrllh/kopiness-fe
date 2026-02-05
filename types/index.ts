@@ -109,7 +109,8 @@ export interface TextLabel {
 export type AccordionItem = {
   id: string
   name?: string
-  title: React.ReactNode
+  title?: React.ReactNode
+  desc?: string,
   content: React.ReactNode
   subTotal: number
 }
@@ -117,7 +118,7 @@ export type AccordionItem = {
 type BasePropsAccordion = {
   items: AccordionItem[]
   multiple?: boolean
-  title: string,
+  title?: string,
 }
 
 /* 🔹 SINGLE SELECT */
