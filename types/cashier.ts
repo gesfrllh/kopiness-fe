@@ -25,3 +25,9 @@ export interface CashierResponse {
   totalItem: number,
   estimatedTotal: number
 }
+
+export interface PaymentListResponse {
+  id: string,
+  name: string,
+  logoUrl: string,
+}
