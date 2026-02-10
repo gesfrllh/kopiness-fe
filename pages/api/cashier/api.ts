@@ -15,3 +15,8 @@ export const payment = async (id: string) => {
   const response = await apiClient.post(`/transactions/${id}/payment`)
   return response.data
 }
+
+export const getPaymentType = async () => {
+  const response = await apiClient.get('/payment-methods')
+  return response.data
+}

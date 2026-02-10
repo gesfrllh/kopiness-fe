@@ -1,14 +1,16 @@
-import { deleteProduct, getCashier } from '@/pages/api/cashier/api'
-import { CashierResponse } from '@/types/cashier'
+import { deleteProduct, getCashier, getPaymentType } from '@/pages/api/cashier/api'
+import { CashierResponse, PaymentListResponse } from '@/types/cashier'
 import { create } from 'zustand'
 import { formatError } from '@/utils/formatError'
 import { showNotify } from '@/components/Base/notification/notify-controllers'
 
 interface CashierState {
   Cashier: CashierResponse[],
+  paymentList: PaymentListResponse[],
   loading: boolean,
   error: string,
   getCashier: () => Promise<void>,
+  getPayment: () => Promise<void>,
   removeProduct: (id: string) => Promise<void>
 }
 
@@ -16,6 +18,7 @@ export const useCashierStore = create<CashierState>((set, get) => ({
   Cashier: [],
   loading: false,
   error: '',
+  paymentList: [],
 
   getCashier: async () => {
     set({ loading: true })
@@ -29,6 +32,8 @@ export const useCashierStore = create<CashierState>((set, get) => ({
       set({ error: message });
       set({ loading: false })
       throw new Error(message);
+    } finally {
+      set({ loading: false })
     }
   },
 
@@ -54,6 +59,24 @@ export const useCashierStore = create<CashierState>((set, get) => ({
       })
       set({ loading: false })
       throw new Error(message)
+    } finally {
+      set({ loading: false })
     }
-  }
+  },
+
+  getPayment: async () => {
+    set({ loading: true });
+    try {
+      const res = await getPaymentType();
+      set({ paymentList: res.data.methods });
+      set({ loading: false })
+    } catch (err: unknown) {
+      const message = formatError(err) || 'Error get Payment List';
+      set({ error: message });
+      set({ loading: false })
+      throw new Error(message);
+    } finally {
+      set({ loading: false })
+    }
+  },
 }))

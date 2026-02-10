@@ -8,18 +8,26 @@ import AnimationLogin from "../animation/AnimationLogin";
 import { formatCurrency } from "@/utils/general";
 import { AccordionItem } from "@/types";
 import { ConfirmModal } from "../Base/ui/Modal/ConfirmModal";
+import Button from "../Base/Button";
+import { Modal } from "../Base/ui/Modal/Modal";
+import { ModalBody, ModalHeader } from "../Base/ui/Modal/ModalCompunds";
+import Tooltip from "../Base/ui/Tooltip";
+import { Icon } from "@iconify/react/dist/iconify.js";
 // import Button from "../Base/Button";
 
 const Cashier = () => {
   const [selected, setSelected] = useState<AccordionItem[]>([])
   const [deleted, setDeleted] = useState<AccordionItem | null>(null)
   const [openModal, setOpenModal] = useState<boolean>(false)
-  // const [choosePayment, setChoosePayment] = useState<boolean>(false)
+  const [choosePayment, setChoosePayment] = useState<boolean>(false)
+  const [selectedPayment, setSelectedPayment] = useState(null);
 
   const {
     getCashier,
     Cashier,
     loading,
+    paymentList,
+    getPayment,
     removeProduct,
   } = useCashierStore()
 
@@ -69,6 +77,7 @@ const Cashier = () => {
 
   useEffect(() => {
     getCashier()
+    getPayment()
   }, [])
 
   return (
@@ -108,11 +117,21 @@ const Cashier = () => {
               {formatCurrency(total)}
             </p>
           </div>
-          <div>
-            {/* <Button variant='outline' className="w-full" onClick={() => setChoosePayment(true)}> */}
-            {/* Submit */}
-            {/* </Button> */}
-          </div>
+          {selected.length > 0 ? (
+            <div className="flex gap-2 flex-col">
+              <Button variant='solid' className="w-full" onClick={() => setChoosePayment(true)}>
+                Choose Payment
+              </Button>
+              {selectedPayment !== null ? (
+                <div>
+                  <span className="text-sm font-semibold">Metode Pembayaran: </span>
+                </div>
+              ) : null}
+              <Button variant='outline' className="w-full" onClick={() => { }}>
+                Submit
+              </Button>
+            </div>
+          ) : null}
         </div>
       </div >
 
@@ -135,6 +154,35 @@ const Cashier = () => {
         confirmText="Hapus"
         cancelText="Batal"
       />
+
+      <Modal open={choosePayment} onClose={() => setChoosePayment} size='lg'>
+        <ModalHeader>
+          <div className='flex justify-between items-center'>
+            <p className='text-lg font-semibold'>Pilih Pembayaran</p>
+            <div onClick={() => (setChoosePayment(false))} className='cursor-pointer'>
+              <Tooltip content="Tutup">
+                <Icon
+                  icon="material-symbols:close-small-outline-rounded"
+                  width={36}
+                  height={36}
+                  style={{ color: '#b63232ff' }} />
+              </Tooltip>
+            </div>
+          </div>
+        </ModalHeader>
+        <ModalBody>
+          {Array.isArray(paymentList) && paymentList.length > 0 ?
+            (
+              <div className="border-2 flex flex-col gap-2 items-center">
+                {paymentList.map((item) => (
+
+                  <div key={item.id}>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+        </ModalBody>
+      </Modal>
 
       {loading ? <AnimationLogin /> : ''}
     </>
