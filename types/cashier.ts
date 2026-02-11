@@ -31,3 +31,8 @@ export interface PaymentListResponse {
   name: string,
   logoUrl: string,
 }
+
+export interface PaymentListRequest {
+  transactionIds: string[],
+  method: string
+}

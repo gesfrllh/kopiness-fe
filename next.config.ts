@@ -19,7 +19,8 @@ const nextConfig: NextConfig = {
         hostname: 'example.com',
         pathname: '/**',
       },
-      new URL("https://tdlbsxwhiusuobvszxvg.storage.supabase.co/**")
+      new URL("https://tdlbsxwhiusuobvszxvg.storage.supabase.co/**"),
+      new URL("https://tdlbsxwhiusuobvszxvg.supabase.co/**")
     ]
   },
   devIndicators: false,

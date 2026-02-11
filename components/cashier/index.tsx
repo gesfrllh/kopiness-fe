@@ -13,18 +13,31 @@ import { Modal } from "../Base/ui/Modal/Modal";
 import { ModalBody, ModalHeader } from "../Base/ui/Modal/ModalCompunds";
 import Tooltip from "../Base/ui/Tooltip";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import Image from "next/image";
+import { PaymentListResponse } from "@/types/cashier";
 // import Button from "../Base/Button";
 
 const Cashier = () => {
-  const [selected, setSelected] = useState<AccordionItem[]>([])
-  const [deleted, setDeleted] = useState<AccordionItem | null>(null)
-  const [openModal, setOpenModal] = useState<boolean>(false)
-  const [choosePayment, setChoosePayment] = useState<boolean>(false)
-  const [selectedPayment, setSelectedPayment] = useState(null);
+  // const [selected, setSelected] = useState<AccordionItem[]>([])
+  // const [deleted, setDeleted] = useState<AccordionItem | null>(null)
+  // const [openModal, setOpenModal] = useState<boolean>(false)
+  // const [choosePayment, setChoosePayment] = useState<boolean>(false)
+  // const [selectedPayment, setSelectedPayment] = useState<PaymentListResponse>();
 
   const {
     getCashier,
     Cashier,
+    selected,
+    deleted,
+    setChoosePayment,
+    choosePayment,
+    setDeleted,
+    setOpenModal,
+    setSelected,
+    setSelectedPayment,
+    selectedPayment,
+    openModal,
+    submitPayment,
     loading,
     paymentList,
     getPayment,
@@ -111,23 +124,27 @@ const Cashier = () => {
           <div className="overflow-auto max-h-[420px]">
             {selected.map((item) => item.content)}
           </div>
-          <div className="py-4 flex justify-between items-center">
-            <p className="text-gray-500">Total:</p>
-            <p className="font-semibold">
-              {formatCurrency(total)}
-            </p>
+          <div className="py-4 flex flex-col">
+            <div className="flex items-center justify-between p-2 w-full">
+              <p className="text-gray-500">Total:</p>
+              <p className="font-semibold">
+                {formatCurrency(total)}
+              </p>
+            </div>
+            {selectedPayment !== null ? (
+              <div className="flex text-sm font-semibold p-2 justify-between items-center">
+                <span>Metode Pembayaran:</span>
+                <span>{selectedPayment?.name}</span>
+              </div>
+            ) : null}
           </div>
           {selected.length > 0 ? (
             <div className="flex gap-2 flex-col">
               <Button variant='solid' className="w-full" onClick={() => setChoosePayment(true)}>
                 Choose Payment
               </Button>
-              {selectedPayment !== null ? (
-                <div>
-                  <span className="text-sm font-semibold">Metode Pembayaran: </span>
-                </div>
-              ) : null}
-              <Button variant='outline' className="w-full" onClick={() => { }}>
+
+              <Button variant='outline' className="w-full" onClick={submitPayment}>
                 Submit
               </Button>
             </div>
@@ -171,16 +188,42 @@ const Cashier = () => {
           </div>
         </ModalHeader>
         <ModalBody>
-          {Array.isArray(paymentList) && paymentList.length > 0 ?
-            (
-              <div className="border-2 flex flex-col gap-2 items-center">
-                {paymentList.map((item) => (
+          {Array.isArray(paymentList) && paymentList.length > 0 && (
+            <div className="flex flex-col gap-2">
+              {paymentList.map((item) => {
+                const isSelected = selectedPayment?.id === item.id
 
-                  <div key={item.id}>
+                return (
+                  <div
+                    key={item.id}
+                    onClick={() => setSelectedPayment(item)}
+                    className={`
+                      flex items-center gap-8 p-4 border rounded-lg cursor-pointer
+                      transition
+                      ${isSelected
+                        ? 'border-green-600 bg-green-50'
+                        : 'border-gray-300 hover:bg-gray-100'}
+                    `}>
+                    <Image
+                      src={item.logoUrl}
+                      alt={item.name}
+                      width={40}
+                      height={40}
+                      className="object-cover"
+                    />
+
+                    <p className="text-lg font-semibold">{item.name}</p>
+
+                    {isSelected && (
+                      <span className="ml-auto text-green-600 font-semibold">
+                        ✓ Dipilih
+                      </span>
+                    )}
                   </div>
-                ))}
-              </div>
-            ) : null}
+                )
+              })}
+            </div>
+          )}
         </ModalBody>
       </Modal>
 

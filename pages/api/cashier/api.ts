@@ -1,4 +1,5 @@
 import apiClient from "@/lib/api";
+import { PaymentListRequest } from "@/types/cashier";
 // import { CashierResponse } from "@/types/cashier";
 
 export const getCashier = async () => {
@@ -11,8 +12,8 @@ export const deleteProduct = async (id: string) => {
   return response.data
 }
 
-export const payment = async (id: string) => {
-  const response = await apiClient.post(`/transactions/${id}/payment`)
+export const payment = async (payload: PaymentListRequest) => {
+  const response = await apiClient.post<PaymentListRequest>(`/transactions/payment`, payload)
   return response.data
 }
 
