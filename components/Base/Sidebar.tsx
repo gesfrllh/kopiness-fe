@@ -52,8 +52,8 @@ const Sidebar = () => {
     },
     {
       id: uuid(),
-      title: 'Kalkulator Brew',
-      link: '/manage/calculate',
+      title: 'Coffe Time',
+      link: '/manage/coffee',
       icon: <Icon icon="material-symbols-light:coffee-maker" width={24} />
     },
     {
