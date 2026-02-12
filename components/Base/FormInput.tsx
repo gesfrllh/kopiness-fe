@@ -21,7 +21,7 @@ const FormInput: React.FC<BaseInputProps> = ({
           name={name}
           checked={Boolean(value)}
           onChange={onChange}
-          className="hidden peer"
+          className="hidden peer pt-4 pb-2"
           {...rest}
         />
 
@@ -53,7 +53,7 @@ const FormInput: React.FC<BaseInputProps> = ({
       value={value}
       onChange={onChange}
       placeholder={placeholder}
-      className={`outline-none bg-colors-var ${className}`}
+      className={`outline-none bg-colors-var pt-4 pb-2 ${className}`}
       {...rest}
     />
   );

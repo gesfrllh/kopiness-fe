@@ -29,13 +29,13 @@ const Select: React.FC<SelectProps> = ({
 
   return (
     <FormGroup label={label} required={required} value={value}>
-      <div ref={ref} className="relative w-full">
+      <div ref={ref} className="relative  w-full">
         <button
           type="button"
           name={name}
           disabled={disabled}
           onClick={() => setOpen((prev) => !prev)}
-          className={`w-full flex justify-between items-center rounded-md text-sm ${disabled ? "bg-gray-100 cursor-not-allowed" : "bg-colors-var"
+          className={`w-full flex justify-between cursor-pointer items-center pt-4 pb-2 rounded-md text-sm ${disabled ? "bg-gray-100 cursor-not-allowed" : "bg-colors-var"
             }`}
         >
           <div className="w-full flex justify-between items-center px-1">

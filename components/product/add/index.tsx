@@ -13,6 +13,7 @@ import { useProductStore } from '@/store/useProductStore'
 import { ProductRequest } from '@/types/product'
 import { useRouter } from 'next/navigation'
 import AnimationLogin from '@/components/animation/AnimationLogin'
+import FormInput from '@/components/Base/FormInput'
 
 type FormState = {
   name: string
@@ -130,40 +131,38 @@ const AddProduct = ({ id }: Props) => {
         {/* Row 1 */}
         <div className="grid md:grid-cols-2 gap-8">
           <FormGroup label="Product Name" required>
-            <input
-              value={form.name}
-              onChange={(e) => updateForm('name', e.target.value)}
-              className="border border-gray-300 rounded-xl px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-sm transition"
-            />
+            <FormInput
+                name='name'
+                value={form.name}
+                type='text'
+                onChange={(e) => setForm({ ...form, name: e.target.value })} />
           </FormGroup>
 
           <FormGroup label="Price" required>
-            <input
-              type="number"
-              value={form.price}
-              onChange={(e) => updateForm('price', e.target.value)}
-              className="border border-gray-300 rounded-xl px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-sm transition"
-            />
+            <FormInput
+                name='price'
+                value={form.price}
+                type='number'
+                onChange={(e) => setForm({ ...form, price: e.target.value })} />
           </FormGroup>
         </div>
 
         {/* Row 2 */}
         <div className="grid md:grid-cols-2 gap-8">
           <FormGroup label="Stock" required>
-            <input
-              type="number"
-              value={form.stock}
-              onChange={(e) => updateForm('stock', e.target.value)}
-              className="border border-gray-300 rounded-xl px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-sm transition"
-            />
+            <FormInput
+                name='stock'
+                value={form.stock}
+                type='number'
+                onChange={(e) => setForm({ ...form, stock: e.target.value })} />
           </FormGroup>
 
           <FormGroup label="Origin" required>
-            <input
-              value={form.origin}
-              onChange={(e) => updateForm('origin', e.target.value)}
-              className="border border-gray-300 rounded-xl px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-sm transition"
-            />
+            <FormInput
+                name='origin'
+                value={form.origin}
+                type='text'
+                onChange={(e) => setForm({ ...form, origin: e.target.value })} />
           </FormGroup>
         </div>
 
@@ -180,20 +179,20 @@ const AddProduct = ({ id }: Props) => {
 
         {/* Process */}
         <FormGroup label="Process" required>
-          <input
-            value={form.process}
-            onChange={(e) => updateForm('process', e.target.value)}
-            className="border border-gray-300 rounded-xl px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-sm transition"
-          />
+          <FormInput
+                name='process'
+                value={form.process}
+                type='text'
+                onChange={(e) => setForm({ ...form, process: e.target.value })} />
         </FormGroup>
 
         {/* Flavor Notes */}
         <FormGroup label="Flavor Notes" required>
-          <input
+          <FormInput
+            name='process'
             value={form.flavorNotes}
-            onChange={(e) => updateForm('flavorNotes', e.target.value)}
-            className="border border-gray-300 rounded-xl px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-sm transition"
-          />
+            type='text'
+            onChange={(e) => setForm({ ...form, flavorNotes: e.target.value })} />
         </FormGroup>
 
         {/* Description */}
@@ -202,7 +201,7 @@ const AddProduct = ({ id }: Props) => {
             value={form.description}
             onChange={(e) => updateForm('description', e.target.value)}
             rows={4}
-            className="border border-gray-300 rounded-xl px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-sm transition"
+            className="border border-gray-300 rounded-xl px-4 pt-4 pb-2 w-full focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-sm transition"
           />
         </FormGroup>
 

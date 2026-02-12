@@ -44,13 +44,13 @@ const FormGroup: React.FC<Group> = ({ children, label, required, value }) => {
       </label>
       <div
         className={clsx(
-          'border rounded px-3 pt-4 pb-2 transition-colors',
+          'border cursor-pointer rounded px-3  transition-colors',
           focus ? 'border-var' : 'border-gray-300'
         )}
       >
         {isValid &&
           cloneElement(children, {
-            className: 'w-full outline-none bg-transparent',
+            className: 'w-full  outline-none bg-transparent',
             onFocus: handleFocus,
             onBlur: handleBlur,
             ...(isPasswordInput && {
