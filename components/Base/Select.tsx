@@ -39,7 +39,7 @@ const Select: React.FC<SelectProps> = ({
             }`}
         >
           <div className="w-full flex justify-between items-center px-1">
-            <span className={value ? "text-black" : "text-gray-400"}>
+            <span className={value ? "font-semibold text-black" : "text-gray-400"}>
               {selectedLabel || ``}
             </span>
             <FiChevronDown

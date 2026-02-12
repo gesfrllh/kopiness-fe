@@ -118,23 +118,22 @@ const AddProduct = ({ id }: Props) => {
   return (
     <div>
       {/* Back */}
-      <div className='px-8 rounded-lg shadow-md w-72 py-4 mt-4 bg-colors-var'>
-        <Link href="/manage/product" className='flex gap-2 items-center'>
+      <div className="px-8 py-4 mt-4 rounded-xl shadow-[4px_4px_0px_2px_#4E1F00] bg-colors-var w-80">
+        <Link href="/manage/product" className="flex gap-2 items-center text-amber-900 font-semibold hover:text-amber-700 transition">
           <Icon icon="material-symbols:arrow-circle-left" width={24} />
           Product Page
         </Link>
       </div>
 
-      {/* Form */}
-      <div className='bg-colors-var p-8 rounded-lg shadow-md mt-8 flex flex-col gap-6'>
+      <div className="bg-colors-var p-8 rounded-2xl shadow-[4px_4px_0px_2px_#4E1F00] mt-8 flex flex-col gap-6">
 
         {/* Row 1 */}
-        <div className='grid md:grid-cols-2 gap-8'>
+        <div className="grid md:grid-cols-2 gap-8">
           <FormGroup label="Product Name" required>
             <input
               value={form.name}
               onChange={(e) => updateForm('name', e.target.value)}
-              className='border border-gray-300 rounded-md px-3 py-2 w-full'
+              className="border border-gray-300 rounded-xl px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-sm transition"
             />
           </FormGroup>
 
@@ -143,19 +142,19 @@ const AddProduct = ({ id }: Props) => {
               type="number"
               value={form.price}
               onChange={(e) => updateForm('price', e.target.value)}
-              className='border border-gray-300 rounded-md px-3 py-2 w-full'
+              className="border border-gray-300 rounded-xl px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-sm transition"
             />
           </FormGroup>
         </div>
 
         {/* Row 2 */}
-        <div className='grid md:grid-cols-2 gap-8'>
+        <div className="grid md:grid-cols-2 gap-8">
           <FormGroup label="Stock" required>
             <input
               type="number"
               value={form.stock}
               onChange={(e) => updateForm('stock', e.target.value)}
-              className='border border-gray-300 rounded-md px-3 py-2 w-full'
+              className="border border-gray-300 rounded-xl px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-sm transition"
             />
           </FormGroup>
 
@@ -163,10 +162,9 @@ const AddProduct = ({ id }: Props) => {
             <input
               value={form.origin}
               onChange={(e) => updateForm('origin', e.target.value)}
-              className='border border-gray-300 rounded-md px-3 py-2 w-full'
+              className="border border-gray-300 rounded-xl px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-sm transition"
             />
           </FormGroup>
-
         </div>
 
         {/* Roast Level */}
@@ -177,6 +175,7 @@ const AddProduct = ({ id }: Props) => {
           onChange={(val) => updateForm('roastLevel', val)}
           options={roastLevelOptions}
           required
+        // className="rounded-xl shadow-sm focus:ring-2 focus:ring-amber-400"
         />
 
         {/* Process */}
@@ -184,7 +183,7 @@ const AddProduct = ({ id }: Props) => {
           <input
             value={form.process}
             onChange={(e) => updateForm('process', e.target.value)}
-            className='border border-gray-300 rounded-md px-3 py-2 w-full'
+            className="border border-gray-300 rounded-xl px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-sm transition"
           />
         </FormGroup>
 
@@ -193,7 +192,7 @@ const AddProduct = ({ id }: Props) => {
           <input
             value={form.flavorNotes}
             onChange={(e) => updateForm('flavorNotes', e.target.value)}
-            className='border border-gray-300 rounded-md px-3 py-2 w-full'
+            className="border border-gray-300 rounded-xl px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-sm transition"
           />
         </FormGroup>
 
@@ -203,7 +202,7 @@ const AddProduct = ({ id }: Props) => {
             value={form.description}
             onChange={(e) => updateForm('description', e.target.value)}
             rows={4}
-            className='border border-gray-300 rounded-md px-3 py-2 w-full'
+            className="border border-gray-300 rounded-xl px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-sm transition"
           />
         </FormGroup>
 
@@ -212,18 +211,21 @@ const AddProduct = ({ id }: Props) => {
           uploadUrl="/api/uploads"
           value={form.imageUrl}
           onChange={(urls) => updateForm('imageUrl', urls)}
+        // className="rounded-2xl border border-amber-200 p-4 bg-amber-50 shadow-[4px_4px_0px_2px_#4E1F00] transition hover:bg-amber-100"
         />
 
         {/* Action */}
-        <div className='flex justify-end'>
+        <div className="flex justify-end">
           <Button
-            variant='outline'
+            variant="outline"
+            className="rounded-xl px-6 py-2 shadow-[2px_2px_0px_1px_#4E1F00] hover:shadow-[4px_4px_0px_2px_#4E1F00] transition"
             onClick={handleSubmit}
           >
             {isEdit ? 'Edit Product' : 'Save Product'}
           </Button>
         </div>
       </div>
+
       {loading ? <AnimationLogin /> : ''}
     </div>
   )

@@ -37,7 +37,7 @@ const FormGroup: React.FC<Group> = ({ children, label, required, value }) => {
       <label
         className={clsx(
           'absolute left-3 bg-colors-var transition-all px-1',
-          focus || hasValue ? 'text-xs -top-2 bg-colors-var' : ' top-2.5'
+          focus || hasValue ? 'text-xs text-amber-800 -top-2 bg-colors-var' : ' top-2.5'
         )}
       >
         {label} {required && <span className="text-red-500">*</span>}

@@ -45,7 +45,7 @@ export interface NavbarProps {
   icon?: ReactNode
 }
 
-export interface Option {
+export interface SelectOptions {
   label: string;
   value: string;
 }
@@ -55,7 +55,7 @@ export interface SelectProps {
   name: string;
   value: string;
   onChange: (value: string) => void;
-  options: Option[];
+  options: SelectOptions[];
   required?: boolean;
   disabled?: boolean;
 }

@@ -33,10 +33,10 @@ const DropzoneImage: React.FC<DropzoneImageProps> = ({
   const [loading, setLoading] = useState(false)
   const [previews, setPreviews] = useState<PreviewFile[]>([])
   const [editIndex, setEditIndex] = useState<number | null>(null)
-  const editInputRef = useRef<HTMLInputElement>(null)
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [previewImg, setPreviewImg] = useState<string | null>(null)
 
+  const editInputRef = useRef<HTMLInputElement>(null)
   /* ==========================
    * Upload handler
    * ========================== */
