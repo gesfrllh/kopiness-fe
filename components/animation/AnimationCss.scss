@@ -259,3 +259,72 @@
 .animate-collapseOut {
   animation: collapseOut 0.2s ease-in forwards;
 }
+
+
+// PRINT
+/* default: jangan tampil */
+.print-only {
+  display: none;
+}
+
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .print-only{
+    display: block;
+  }
+
+  .recipe-print-area,
+  .recipe-print-area * {
+    visibility: visible;
+  }
+
+  .recipe-print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 24px;
+  }
+
+  .recipe-print-area {
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  /* PRINT HEADER muncul */
+  .print-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .print-logo {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+  }
+
+  .print-title h1 {
+    font-size: 18px;
+    font-weight: 800;
+    margin: 0;
+  }
+
+  .print-title p {
+    font-size: 12px;
+    margin: 0;
+    color: #666;
+  }
+}
+

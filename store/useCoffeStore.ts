@@ -108,17 +108,17 @@ export const useCoffeeStore = create<CoffeState>((set, get) => ({
   setProblem: (value) => set({ problem: value }),
 
   getOptions: async () => {
-    set({ loading: true, loadingGenerate: true })
+    set({ loading: true })
 
     try {
       const res = await getOptions()
       set({ options: res.data })
-      set({ loading: false, loadingGenerate: false })
+      set({ loading: false })
     } catch (err: unknown) {
-      set({ loading: false, loadingGenerate: false })
+      set({ loading: false })
       throw new Error(formatError(err) || 'Error get Coffee Options')
     } finally {
-      set({ loading: false, loadingGenerate: false })
+      set({ loading: false })
     }
   },
   adjustCoffee: async () => {
@@ -155,7 +155,6 @@ export const useCoffeeStore = create<CoffeState>((set, get) => ({
 
   generateCoffe: async () => {
     set({ loading: true })
-    set({ loadingGenerate: true })
 
     const state = get()
 
@@ -175,13 +174,12 @@ export const useCoffeeStore = create<CoffeState>((set, get) => ({
       set({
         recipe: res.data,
         ratio: res.data.ratio,
-        loadingGenerate: false,
       })
 
     } catch (err: unknown) {
       throw new Error(formatError(err) || 'Error generate Coffee')
     } finally {
-      set({ loading: false, loadingGenerate: false })
+      set({ loading: false })
     }
   }
 }))
