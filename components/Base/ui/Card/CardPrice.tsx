@@ -9,7 +9,15 @@ interface CardPriceProps {
 const CardPrice: React.FC<CardPriceProps> = ({ value, className }) => {
   return (
     <span
-      className={clsx('font-bold text-green-600 text-right', className)}
+      className={clsx(
+        `
+        font-bold
+        text-lg
+        text-amber-600
+        tracking-tight
+        `,
+        className,
+      )}
     >
       {formatCurrency(value)}
     </span>

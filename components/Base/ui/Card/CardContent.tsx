@@ -3,7 +3,11 @@ interface CardContentProps {
 }
 
 const CardContent: React.FC<CardContentProps> = ({ children }) => {
-  return <div className="flex flex-col gap-2">{children}</div>;
+  return (
+    <div className="p-5 flex flex-col gap-3">
+      {children}
+    </div>
+  );
 };
 
 export default CardContent;

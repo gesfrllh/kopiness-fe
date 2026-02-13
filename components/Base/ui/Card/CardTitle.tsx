@@ -5,14 +5,16 @@ interface CardTitleProps {
 
 const CardTitle: React.FC<CardTitleProps> = ({ title, subtitle }) => {
   return (
-    <>
-      <span className="font-semibold text-xl">{title}</span>
+    <div className="flex flex-col">
+      <span className="font-semibold text-lg tracking-tight text-gray-800">
+        {title}
+      </span>
       {subtitle && (
-        <span className="font-semibold text-sm text-gray-600">
+        <span className="text-sm text-gray-500">
           {subtitle}
         </span>
       )}
-    </>
+    </div>
   );
 };
 
