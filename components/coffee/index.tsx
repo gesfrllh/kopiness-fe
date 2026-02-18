@@ -7,7 +7,6 @@ import Toggle from '../Base/Toggle'
 import CTA from '../Base/cta'
 import { useCoffeeStore } from '@/store/useCoffeStore'
 import '../animation/AnimationCss.scss'
-import Logo from '@/public/assets/logo.svg'
 import Image from 'next/image'
 import { AnimatedSection } from '../animation/AnimatedSection'
 import AnimationLogin from '../animation/AnimationLogin'
@@ -93,10 +92,10 @@ const Coffee = () => {
       />
 
       <div className="mt-6 mb-12 w-full rounded-2xl bg-colors-var p-10">
-        <div className="grid grid-cols-3 gap-10 ">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 ">
 
           {/* LEFT PANEL */}
-          <div className="col-span-2 rounded-2xl bg-white p-8 shadow-sm border border-amber-100">
+          <div className="lg:col-span-2 col-span-1 rounded-2xl bg-white p-8 shadow-sm border border-amber-100">
 
             <div className="flex items-center justify-between mb-8">
               <div>
@@ -134,15 +133,17 @@ const Coffee = () => {
               <Select
                 options={options.roastLevels}
                 name="roast"
+                required
                 label="Roast"
                 value={selected.value}
                 onChange={handleSelectChange(options.roastLevels, 'selected')}
               />
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Select
                   options={options.drinkNames}
                   name="menu"
+                  required
                   label="Menu"
                   value={selectedNames.value}
                   onChange={handleSelectChange(options.drinkNames, 'selectedNames')}
@@ -150,6 +151,7 @@ const Coffee = () => {
 
                 <Select
                   options={options.drinkTypes}
+                  required
                   name="type"
                   label="Type"
                   value={selectedType.value}
@@ -159,11 +161,12 @@ const Coffee = () => {
               <Select
                 options={options.strength}
                 name="strength"
+                required
                 label="Strength"
                 value={selectedStrength.value}
                 onChange={handleSelectChange(options.strength, 'selectedStrength')}
               />
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <AnimatedSection show={showMilk}>
                   <Select
                     options={options.milkTypes}
@@ -192,7 +195,7 @@ const Coffee = () => {
                 variant="outline"
                 className="w-52 flex items-center justify-center gap-2"
                 onClick={handleGenerate}
-                disabled={loading}
+                disabled={loading || !selected.value || !selectedNames.value || !selectedType.value || !selectedStrength.value}
               >
                 {loading && (
                   <span className="w-4 h-4 border-2 border-amber-600 border-t-transparent rounded-full animate-spin" />
@@ -204,7 +207,7 @@ const Coffee = () => {
               <div className="mt-8 p-6 bg-colors-var border border-amber-800 rounded-2xl shadow-[4px_4px_0px_2px_#4E1F00]">
                 <div className="h-6 w-52 bg-amber-100 rounded animate-pulse mb-6" />
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {[1, 2, 3, 4, 5, 6].map((i) => (
                     <div
                       key={i}
@@ -221,7 +224,7 @@ const Coffee = () => {
               <div className="mt-8 p-6 bg-colors-var border border-amber-800 rounded-2xl shadow-[4px_4px_0px_2px_#4E1F00]">
                 <h4 className="font-bold text-amber-900 text-lg mb-4">AI Adjustment Preview</h4>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="flex flex-col">
                     <span className="font-bold text-xs uppercase">Confidence</span>
                     <span className="font-semibold text-green-600">{dataAdjustAI?.confidence}%</span>
@@ -251,7 +254,7 @@ const Coffee = () => {
                   </div>
                 </div>
               </div>
-             </AnimatedSection>
+            </AnimatedSection>
 
           </div>
           {/* AI Adjustment Preview */}
@@ -293,7 +296,7 @@ const Coffee = () => {
 
             {!loading && recipe && (
               <div ref={reciptRef} className="recipe-print-area flex flex-col animate-fadeIn">
-                
+
                 <div className="border-b flex justify-between items-center border-amber-100 pb-5 mb-6">
                   <div>
                     <h3 className="text-2xl font-bold text-amber-900">
@@ -304,11 +307,11 @@ const Coffee = () => {
                     </p>
                   </div>
                   <div>
-                    <Image 
-                      src='https://tdlbsxwhiusuobvszxvg.supabase.co/storage/v1/object/public/s3/logo.svg' 
+                    <Image
+                      src='https://tdlbsxwhiusuobvszxvg.supabase.co/storage/v1/object/public/s3/logo.svg'
                       alt="logo"
                       width={72}
-                      height={72}/>
+                      height={72} />
                   </div>
                 </div>
 
@@ -358,13 +361,15 @@ const Coffee = () => {
             {recipe && (
               <div>
                 <div className="flex items-center justify-end gap-3 my-6">
-                  <div className="text-xs text-amber-700 cursor-pointer hover:underline font-medium" onClick={() => handlePrintRecipe()}>
-                    Ready to print 
-                  </div>
-                  <div>
-                    <Tooltip content="Dark">
-                      <Icon icon="ic:outline-local-printshop" width={28} style={{ color: '#b63232ff' }} />
-                    </Tooltip>
+                  <div className='cursor-pointer flex items-center gap-3' onClick={() => handlePrintRecipe()}>
+                    <div className="text-xs text-amber-700  hover:underline font-medium" >
+                      Ready to print
+                    </div>
+                    <div>
+                      <Tooltip content="Print">
+                        <Icon icon="ic:outline-local-printshop" width={28} style={{ color: '#b63232ff' }} />
+                      </Tooltip>
+                    </div>
                   </div>
                 </div>
                 <div className="mt-8 border-t pt-6">
@@ -429,7 +434,7 @@ const Coffee = () => {
               </div>
             )}
 
-            <AnimatedSection show={!!adjustment}>
+            <AnimatedSection show={!!adjustment && !loadingGenerate}>
               <div className="mt-6 p-6 bg-colors-var border border-amber-800 rounded-2xl shadow-[4px_4px_0px_2px_#4E1F00]">
                 <h4 className="font-bold text-amber-900 text-lg mb-4">
                   Adjustment Suggestion

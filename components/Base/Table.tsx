@@ -3,37 +3,47 @@ import type { TableProps } from '@/types'
 
 const Table = <T,>({ columns, data }: TableProps<T>) => {
   return (
-    <>
-      <div className="overflow-hidden rounded-lg border border-gray-300">
-        <table className="w-full border-collapse">
-          <thead>
+    <div className="rounded-2xl bg-white border border-neutral-200 shadow-sm">
+
+      {/* SCROLL WRAPPER */}
+      <div className="overflow-y-auto max-h-[calc(4*6rem)]">
+        <table className="min-w-full divide-y divide-neutral-200">
+          <thead className="bg-neutral-50">
             <tr>
-              {columns.map((item) => (
+              {columns.map((col) => (
                 <th
-                  key={item.id}
-                  className="border border-gray-300 p-2 text-left bg-gray-200"
+                  key={col.id}
+                  className="px-6 py-3 text-left text-sm font-medium text-neutral-500"
                 >
-                  {item.header}
+                  {col.header}
                 </th>
               ))}
             </tr>
           </thead>
 
-          <tbody>
+          <tbody className="divide-y divide-neutral-200">
             {data.length === 0 ? (
               <tr>
-                <td colSpan={columns.length} className="p-2 text-center">
-                  No Data Available
+                <td
+                  colSpan={columns.length}
+                  className="px-6 py-14 text-center text-neutral-400"
+                >
+                  No payment history yet ☕
                 </td>
               </tr>
             ) : (
               data.map((row, idx) => (
-                <tr key={idx} className="border-b">
+                <tr
+                  key={idx}
+                  className="group hover:bg-neutral-50 transition-colors duration-150"
+                >
                   {columns.map((col) => {
                     const value = col.accessor ? row[col.accessor] : undefined
-
                     return (
-                      <td key={col.id} className="border border-gray-300 p-2">
+                      <td
+                        key={col.id}
+                        className="px-6 py-4 text-neutral-700 whitespace-nowrap"
+                      >
                         {col.render ? col.render(value, row) : String(value ?? '')}
                       </td>
                     )
@@ -45,7 +55,8 @@ const Table = <T,>({ columns, data }: TableProps<T>) => {
         </table>
       </div>
 
-    </>
+    </div>
+
   )
 }
 

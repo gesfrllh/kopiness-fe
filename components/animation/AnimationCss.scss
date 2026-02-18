@@ -273,7 +273,7 @@
     visibility: hidden;
   }
 
-  .print-only{
+  .print-only {
     display: block;
   }
 
@@ -328,3 +328,14 @@
   }
 }
 
+
+.product-card {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.4s ease;
+}
+
+.product-card.show {
+  opacity: 1;
+  transform: translateY(0);
+}

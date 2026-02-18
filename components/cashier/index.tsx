@@ -14,16 +14,8 @@ import { ModalBody, ModalHeader } from "../Base/ui/Modal/ModalCompunds";
 import Tooltip from "../Base/ui/Tooltip";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Image from "next/image";
-import { PaymentListResponse } from "@/types/cashier";
-// import Button from "../Base/Button";
 
 const Cashier = () => {
-  // const [selected, setSelected] = useState<AccordionItem[]>([])
-  // const [deleted, setDeleted] = useState<AccordionItem | null>(null)
-  // const [openModal, setOpenModal] = useState<boolean>(false)
-  // const [choosePayment, setChoosePayment] = useState<boolean>(false)
-  // const [selectedPayment, setSelectedPayment] = useState<PaymentListResponse>();
-
   const {
     getCashier,
     Cashier,

@@ -10,10 +10,21 @@ const CardRoot: React.FC<CardRootProps> = ({ children, className }) => {
   return (
     <div
       className={clsx(
-        'flex flex-col gap-6 bg-colors-var p-4 shadow-[8px_6px_0px_1px_#422900] border rounded-lg',
-        className,
+        `
+    relative
+    bg-white
+    rounded-2xl
+    border border-amber-700
+    p-6
+    shadow-[8px_8px_0px_0px_#5C2E00]
+    transition-all duration-300
+    hover:translate-x-1
+    hover:translate-y-1
+    `,
+        className
       )}
     >
+
       {children}
     </div>
   );
