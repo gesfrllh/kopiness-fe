@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.13.8",
+    "@floating-ui/react-dom": "^2.1.7",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@studio-freight/lenis": "^1.0.42",
     "@tippyjs/react": "^4.2.6",

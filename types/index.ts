@@ -64,7 +64,7 @@ export interface Column<T> {
   id: string
   header: string
   accessor?: keyof T
-  render?: (value: unknown, row: T) => React.ReactNode
+  render?: (value: T[keyof T] | undefined, row: T) => React.ReactNode
 }
 
 export type TableProps<T> = {
