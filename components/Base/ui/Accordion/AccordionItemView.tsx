@@ -5,7 +5,7 @@ import { Icon } from '@iconify/react/dist/iconify.js'
 type Props = {
   desc?: string,
   item: {
-    title: React.ReactNode
+    title?: React.ReactNode
     content: React.ReactNode
   }
   isOpen: boolean
