@@ -6,7 +6,7 @@ const Table = <T,>({ columns, data }: TableProps<T>) => {
     <div className="rounded-2xl bg-white border border-neutral-200 shadow-sm">
 
       {/* SCROLL WRAPPER */}
-      <div className="overflow-y-auto max-h-[calc(4*6rem)]">
+      <div className="overflow-y-auto max-h-[calc(4*7rem)]">
         <table className="min-w-full divide-y divide-neutral-200">
           <thead className="bg-neutral-50">
             <tr>

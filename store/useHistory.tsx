@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { useAuthStore } from './useAuthStore'
+// import { useAuthStore } from './useAuthStore'
 import { HistoryPayload, HistoryResponseAdmin, HistoryResponseUser } from '@/types/history'
 import { getHistory } from '@/pages/api/history/history'
 import { formatError } from '@/utils/formatError'
@@ -16,17 +16,20 @@ interface HistoryState {
   total: number
   search: string
   payload: HistoryPayload
+  selectedStatus: string,
   columns: Column<HistoryResponseAdmin | HistoryResponseUser>[] // kita bisa bikin generic nanti kalau mau type-safe
   getHistory: (query?: Partial<HistoryPayload>) => Promise<void>
   setPage: (page: number) => Promise<void>
   setLimit: (limit: number) => Promise<void>
   setSearch: (search: string) => Promise<void>
+  setSelectedStatus: (select: string) => Promise<void>
 }
 
 export const useHistoryStore = create<HistoryState>((set, get) => ({
   history: [],
   loading: false,
   error: '',
+  selectedStatus: '',
   totalPages: 1,
   total: 0,
   search: '',
@@ -80,9 +83,9 @@ export const useHistoryStore = create<HistoryState>((set, get) => ({
     },
     {
       id: 'paymentMethod',
-      header: 'Metode Pembayaran',
+      header: 'Status Pembayaran',
       accessor: 'paymentMethod',
-      render: (value, _) => <span className="block font-medium">{value as string}</span>,
+      render: (value, _) => <span className="block font-medium uppercase">{value as string}</span>,
     },
     {
       id: 'itemCount',
@@ -136,5 +139,12 @@ export const useHistoryStore = create<HistoryState>((set, get) => ({
   setSearch: async (q: string) => {
     set({ search: q })
     await get().getHistory({ search: get().search, page: 1 })
+  },
+
+  setSelectedStatus: async (s: string) => {
+    set({ selectedStatus: s })
+
+    await get().getHistory({ status: s, page: 1 })
+    // console.log(get().selectedStatus)
   }
 }))

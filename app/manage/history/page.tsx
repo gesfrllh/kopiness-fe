@@ -1,10 +1,15 @@
 import React from "react";
 import History from "@/components/history";
+import LoaderTransition from "@/components/LoaderTransition";
 
 const page = () => {
   return (
     <>
-      <History />
+      <LoaderTransition />
+      <div>
+
+        <History />
+      </div>
     </>
   )
 }

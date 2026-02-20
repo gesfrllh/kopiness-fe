@@ -84,21 +84,28 @@ export default function LoginPage() {
               alt='Logo'
               width={92} />
           </div>
-          <div className='flex flex-col gap-4'>
-            <FormGroup label='Email' required={true}>
-              <FormInput
-                name='email'
-                type='email'
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })} />
-            </FormGroup>
-            <FormGroup label='Password' required={true}>
-              <FormInput
-                name='password'
-                value={form.password}
-                type='password'
-                onChange={(e) => setForm({ ...form, password: e.target.value })} />
-            </FormGroup>
+          <div className='flex flex-col gap-2'>
+            <div className='flex flex-col gap-4'>
+              <FormGroup label='Email' required={true}>
+                <FormInput
+                  name='email'
+                  type='email'
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })} />
+              </FormGroup>
+              <FormGroup label='Password' required={true}>
+                <FormInput
+                  name='password'
+                  value={form.password}
+                  type='password'
+                  onChange={(e) => setForm({ ...form, password: e.target.value })} />
+              </FormGroup>
+            </div>
+            <div className='text-end text-xs font-semibold text-red-500 hover:underline cursor-pointer'>
+              <Link href={'/forgot-password'}>
+                Lupa Password?
+              </Link>
+            </div>
           </div>
           <Button
             type="submit"

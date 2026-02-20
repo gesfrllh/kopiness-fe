@@ -7,6 +7,7 @@ import FormInput from "../Base/FormInput";
 import Pagination from "../Base/Pagination";
 import { useHistoryStore } from "@/store/useHistory";
 import AnimationLogin from "../animation/AnimationLogin";
+import Select from "../Base/Select";
 
 const History = () => {
 
@@ -18,6 +19,8 @@ const History = () => {
     getHistory,
     history,
     setLimit,
+    selectedStatus,
+    setSelectedStatus,
     setPage,
     search,
     columns,
@@ -27,6 +30,21 @@ const History = () => {
   useEffect(() => {
     getHistory()
   }, [])
+
+  const opts = [
+    {
+      value: 'PAID',
+      label: 'PAID',
+    },
+    {
+      value: 'CANCELLED',
+      label: 'CANCELLED',
+    },
+    {
+      value: 'PENDING',
+      label: 'PENDING',
+    }
+  ]
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -53,16 +71,26 @@ const History = () => {
             </div>
 
             {/* SEARCH */}
-            <div className="w-72">
-              <FormGroup label="Search Order">
-                <FormInput
-                  name="search"
-                  value={search}
-                  type="text"
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="w-full rounded-lg border px-4 py-2"
-                />
-              </FormGroup>
+            <div className="flex md:flex-row flex-col gap-4 items-center md:w-[720px]">
+              <div className="w-full">
+                <Select
+                  options={opts}
+                  label="Status Pembayaran"
+                  name="Status"
+                  onChange={setSelectedStatus}
+                  value={selectedStatus} />
+              </div>
+              <div className="w-72">
+                <FormGroup label="Search Order">
+                  <FormInput
+                    name="search"
+                    value={search}
+                    type="text"
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="w-full rounded-lg border px-4"
+                  />
+                </FormGroup>
+              </div>
             </div>
           </div>
 
