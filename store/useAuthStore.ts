@@ -1,55 +1,133 @@
 import { create } from 'zustand'
 import Cookies from 'js-cookie'
-import { AuthState } from '@/types/auth/user'
+import { AuthState, User } from '@/types/auth/user'
 import { formatError } from '@/utils/formatError'
 import { login, logout } from '@/pages/api/auth/api'
 
 type SetStateFn = (partial: Partial<AuthState> | ((state: AuthState) => Partial<AuthState>)) => void
 
-export const useAuthStore = create<AuthState>((set: SetStateFn) => ({
-  user: null,
-  token: null,
-  loading: false,
-  error: null,
-  role: null,
+const STORAGE_KEY = 'kopiness_auth'
 
-  login: async (email: string, password: string) => {
-    set({ loading: true, error: null })
-    try {
-      const res = await login(email, password)
-
-      Cookies.set("role", res.data.user.role, { path: "/" })
-      Cookies.set("status", res.status)
-      Cookies.set("is_logged_in", res.data.isLoggedIn)
-
-      set({
-        user: res.data.user,
-        loading: false
-      })
-
-      set({ role: res.data.user.role })
-    } catch (error: unknown) {
-      const message = formatError(error) || 'Login Failed'
-      set({ error: message, loading: false })
-      throw new Error(message)
+// Helper to save auth to localStorage (hanya user, token di cookies)
+const saveAuthToStorage = (user: User | null) => {
+  if (typeof window !== 'undefined') {
+    if (user) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ user }))
+    } else {
+      localStorage.removeItem(STORAGE_KEY)
     }
-  },
+  }
+}
 
-  logout: async () => {
-    set({ loading: true })
+// Helper to load auth from localStorage
+const loadAuthFromStorage = (): { user: User } | null => {
+  if (typeof window !== 'undefined') {
     try {
-      await logout()
-      set({
-        user: null,
-        loading: false
-      })
-      Cookies.remove('status')
-      Cookies.remove('role')
-    } catch (error: unknown) {
-      const message = formatError(error) || 'Logout Failed'
-      set({ error: message, loading: false })
-      throw new Error(message)
+      const stored = localStorage.getItem(STORAGE_KEY)
+      return stored ? JSON.parse(stored) : null
+    } catch (error) {
+      console.error('Failed to load auth from storage:', error)
+      return null
     }
-  },
-  setError: (error: string | null) => set({ error })
-}))
+  }
+  return null
+}
+
+export const useAuthStore = create<AuthState>((set: SetStateFn) => {
+  // Load dari localStorage saat store dibuat
+  const initialState = (() => {
+    const stored = loadAuthFromStorage()
+    if (stored) {
+      return {
+        user: stored.user,
+        token: null,
+        role: stored.user?.role || null,
+        loading: false,
+        error: null,
+        isHydrated: false, // Will be set to true after hydration
+      }
+    }
+    return {
+      user: null,
+      token: null,
+      role: null,
+      loading: false,
+      error: null,
+      isHydrated: false, // Will be set to true after hydration
+    }
+  })()
+
+  return {
+    ...initialState,
+
+    login: async (email: string, password: string) => {
+      set({ loading: true, error: null })
+      try {
+        const res = await login(email, password)
+
+        Cookies.set("role", res.data.user.role, { path: "/" })
+        Cookies.set("status", res.status)
+        Cookies.set("is_logged_in", res.data.isLoggedIn)
+
+        // Save user to localStorage (token di httpOnly cookies)
+        saveAuthToStorage(res.data.user)
+
+        set({
+          user: res.data.user,
+          token: null, // Token di httpOnly cookies, tidak disimpan di state
+          loading: false,
+          role: res.data.user.role,
+          error: null
+        })
+      } catch (error: unknown) {
+        const message = formatError(error) || 'Login Failed'
+        set({ error: message, loading: false })
+        throw new Error(message)
+      }
+    },
+
+    logout: async () => {
+      set({ loading: true })
+      try {
+        await logout()
+
+        // Clear dari localStorage
+        saveAuthToStorage(null)
+
+        set({
+          user: null,
+          token: null,
+          role: null,
+          loading: false,
+          error: null
+        })
+        Cookies.remove('status')
+        Cookies.remove('role')
+        Cookies.remove('is_logged_in')
+      } catch (error: unknown) {
+        const message = formatError(error) || 'Logout Failed'
+        set({ error: message, loading: false })
+        throw new Error(message)
+      }
+    },
+
+    // Initialize store dari localStorage on app load (fallback jika diperlukan)
+    hydrate: () => {
+      const stored = loadAuthFromStorage()
+      if (stored) {
+        set({
+          user: stored.user,
+          token: null, // Token di httpOnly cookies
+          role: stored.user?.role || null,
+          loading: false,
+          error: null,
+          isHydrated: true
+        })
+      } else {
+        set({ isHydrated: true })
+      }
+    },
+
+    setError: (error: string | null) => set({ error })
+  }
+})

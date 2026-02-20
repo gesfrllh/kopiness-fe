@@ -76,7 +76,7 @@ const FormInput: React.FC<BaseInputProps> = ({
       value={internalValue}
       onChange={handleDebouncedChange}
       placeholder={placeholder}
-      className={`outline-none bg-colors-var pt-4 pb-2 ${className}`}
+      className={`outline-none bg-colors-var p-2 ${className}`}
       {...rest}
     />
   );

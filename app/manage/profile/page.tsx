@@ -1,8 +1,8 @@
 import React from 'react'
-import Dashboard from '@/components/dashboard'
+import Profile from '@/components/profile'
 
 const page = () => {
-  return <Dashboard />
+  return <Profile />
 }
 
 export default page
