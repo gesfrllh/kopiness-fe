@@ -8,6 +8,7 @@ import Pagination from "../Base/Pagination";
 import { useHistoryStore } from "@/store/useHistory";
 import AnimationLogin from "../animation/AnimationLogin";
 import Select from "../Base/Select";
+import TrackingModal from './TrackingModal'
 
 const History = () => {
 
@@ -114,6 +115,7 @@ const History = () => {
         </div>
       </div>
       {loading ? <AnimationLogin /> : ''}
+      <TrackingModal />
     </>
 
   )

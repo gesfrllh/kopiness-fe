@@ -47,3 +47,51 @@ export default function cleanPayload<T extends Record<string, unknown>>(obj: T):
 
     return Object.fromEntries(entries) as Partial<T>
 }
+
+export type DateFormat =
+    | 'short'      // 23 Feb 2026
+    | 'long'       // 23 Februari 2026
+    | 'withTime'   // 23 Feb 2026, 10:39
+    | 'time'       // 10:39
+
+export const formatDate = (
+    date: string | Date,
+    type: DateFormat = 'short'
+) => {
+    const d = typeof date === 'string' ? new Date(date) : date
+
+    if (isNaN(d.getTime())) return '-'
+
+    const locale = 'id-ID'
+
+    switch (type) {
+        case 'long':
+            return d.toLocaleDateString(locale, {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric',
+            })
+
+        case 'withTime':
+            return d.toLocaleDateString(locale, {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+            })
+
+        case 'time':
+            return d.toLocaleTimeString(locale, {
+                hour: '2-digit',
+                minute: '2-digit',
+            })
+
+        default:
+            return d.toLocaleDateString(locale, {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+            })
+    }
+}

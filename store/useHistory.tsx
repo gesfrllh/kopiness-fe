@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import React from 'react'
 // import { useAuthStore } from './useAuthStore'
 import { HistoryPayload, HistoryResponseAdmin, HistoryResponseUser } from '@/types/history'
 import { getHistory } from '@/pages/api/history/history'
@@ -23,6 +24,14 @@ interface HistoryState {
   setLimit: (limit: number) => Promise<void>
   setSearch: (search: string) => Promise<void>
   setSelectedStatus: (select: string) => Promise<void>
+  addLocalHistory: (entry: HistoryResponseAdmin | HistoryResponseUser) => void
+  // tracking modal state
+  trackModal: {
+    open: boolean;
+    entry?: HistoryResponseAdmin | HistoryResponseUser | null;
+  }
+  openTrack: (entry: HistoryResponseAdmin | HistoryResponseUser) => void
+  closeTrack: () => void
 }
 
 export const useHistoryStore = create<HistoryState>((set, get) => ({
@@ -64,7 +73,7 @@ export const useHistoryStore = create<HistoryState>((set, get) => ({
     {
       id: 'status',
       header: 'Status',
-      accessor: 'status', // ✅ karena status ada langsung di interface
+      accessor: 'status',
       render: (value, _) => {
         const styles: Record<string, string> = {
           PAID: 'bg-[#E7F4EA] text-[#2E7D32]',
@@ -73,8 +82,7 @@ export const useHistoryStore = create<HistoryState>((set, get) => ({
         }
         return (
           <span
-            className={`px-3 py-1 text-xs font-semibold rounded-full ${styles[value as string] ?? ''
-              }`}
+            className={`px-3 py-1 text-xs font-semibold rounded-full ${styles[value as string] ?? ''}`}
           >
             {(value as string).toUpperCase()}
           </span>
@@ -102,9 +110,36 @@ export const useHistoryStore = create<HistoryState>((set, get) => ({
     {
       id: 'actions',
       header: '',
-      render: (_, __) => <ActionDropdown />,
+      render: (_, row) => (
+        <div className="flex items-center gap-2">
+          <ActionDropdown />
+          {row.tracking ? (
+            <button
+              onClick={() => {
+                get().openTrack(row as HistoryResponseAdmin | HistoryResponseUser)
+              }}
+              className="px-3 py-1 text-sm rounded-md bg-primary text-white"
+            >
+              Track
+            </button>
+          ) : null}
+        </div>
+      ),
     },
   ],
+
+  addLocalHistory: (entry: HistoryResponseAdmin | HistoryResponseUser) => {
+    set({ history: [entry, ...(get().history || [])] })
+  },
+
+  // tracking modal handlers
+  trackModal: { open: false, entry: null },
+  openTrack: (entry: HistoryResponseAdmin | HistoryResponseUser) => {
+    set({ trackModal: { open: true, entry } })
+  },
+  closeTrack: () => {
+    set({ trackModal: { open: false, entry: null } })
+  },
 
   getHistory: async (query?: Partial<HistoryPayload>) => {
     set({ loading: true, error: '' })

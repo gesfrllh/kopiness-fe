@@ -1,7 +1,7 @@
 'use client'
 
 import { useCashierStore } from "@/store/useCashierStore";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Accordion from "../Base/ui/Accordion/Accordion";
 import TextLabel from "../Base/TextLabel";
 import AnimationLogin from "../animation/AnimationLogin";

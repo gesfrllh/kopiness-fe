@@ -30,7 +30,7 @@ const Pagination: React.FC<PaginationsProps> = ({
 
   return (
     <div className={`flex items-center justify-between gap-4 ${classNames}`}>
-      <div className="text-sm text-gray-600">
+      <div className="text-sm theme-text">
         Page <span className="font-medium">{page}</span> of{' '}
         <span className="font-medium">{totalPage}</span> ·{' '}
         {totalData} items
@@ -40,7 +40,7 @@ const Pagination: React.FC<PaginationsProps> = ({
         <button
           disabled={disabled || page === 1}
           onClick={() => onPageChange(1)}
-          className="px-3 py-2 rounded border disabled:opacity-50"
+          className="px-3 py-2 rounded theme-border disabled:opacity-50"
         >
           «
         </button>
@@ -48,7 +48,7 @@ const Pagination: React.FC<PaginationsProps> = ({
         <button
           disabled={disabled || page === 1}
           onClick={() => onPageChange(page - 1)}
-          className="px-3 py-2 rounded border disabled:opacity-50"
+          className="px-3 py-2 rounded theme-border disabled:opacity-50"
         >
           ‹
         </button>
@@ -56,7 +56,7 @@ const Pagination: React.FC<PaginationsProps> = ({
         {paginationRange?.map((item, idx) => {
           if (item === '...') {
             return (
-              <span key={idx} className="px-2 text-gray-400">
+              <span key={idx} className="px-2 text-muted">
                 ...
               </span>
             );
@@ -70,9 +70,9 @@ const Pagination: React.FC<PaginationsProps> = ({
               key={idx}
               disabled={disabled}
               onClick={() => onPageChange(pageNumber)}
-              className={`px-3 py-2 rounded border text-sm ${isActive
-                  ? 'bg-black text-white'
-                  : 'hover:bg-gray-100'
+              className={`px-3 py-2 rounded theme-border text-sm ${isActive
+                ? 'bg-primary text-white'
+                : 'hover:bg-primary-700 hover:text-white'
                 } disabled:opacity-50`}
             >
               {pageNumber}
@@ -83,7 +83,7 @@ const Pagination: React.FC<PaginationsProps> = ({
         <button
           disabled={disabled || page === totalPage}
           onClick={() => onPageChange(page + 1)}
-          className="px-3 py-2 rounded border disabled:opacity-50"
+          className="px-3 py-2 rounded theme-border disabled:opacity-50"
         >
           ›
         </button>
@@ -91,13 +91,13 @@ const Pagination: React.FC<PaginationsProps> = ({
         <button
           disabled={disabled || page === totalPage}
           onClick={() => onPageChange(totalPage)}
-          className="px-3 py-2 rounded border disabled:opacity-50"
+          className="px-3 py-2 rounded theme-border disabled:opacity-50"
         >
           »
         </button>
 
         {onLimitChange && (
-          <Select 
+          <Select
             label='limit'
             name='pagination'
             value={String(limit)}

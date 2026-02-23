@@ -1,5 +1,29 @@
 @use "tailwindcss";
 
+
+[data-theme='dark'] {
+  --primary: #f59e0b;
+  --primary-600: #f59e0b;
+  --primary-700: #b45309;
+  --muted: #94a3b8;
+  --card-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 0.6);
+  /* notify colors for dark */
+  --notify-info: #1e40af;
+  --notify-success: #16a34a;
+  --notify-warning: #f59e0b;
+  --notify-error: #ef4444;
+  --notify-text: #e5e7eb;
+}
+
+:root {
+  /* notify defaults - light */
+  --notify-info: #2563eb;
+  --notify-success: #22c55e;
+  --notify-warning: #facc15;
+  --notify-error: #ef4444;
+  --notify-text: #0f172a;
+}
+
 /* =====================
    THEME TOKENS
 ===================== */
@@ -48,6 +72,76 @@ $dark-theme: (
 
 [data-theme='dark'] {
   @include theme-vars($dark-theme);
+}
+
+/* =====================
+   THEME TOKENS - EXTENDED
+   Utilities that components will use to stay theme-aware
+===================== */
+
+:root {
+  --primary: #92400E;
+  --primary-600: #92400E;
+  --primary-700: #5C2E00;
+  --muted: #9ca3af;
+  --card-shadow: 8px 8px 0px 0px rgba(92, 46, 0, 0.85);
+}
+
+[data-theme='dark'] {
+  --primary: #f59e0b;
+  --primary-600: #f59e0b;
+  --primary-700: #b45309;
+  --muted: #94a3b8;
+  --card-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 0.6);
+}
+
+/* Utility classes */
+.theme-text {
+  color: var(--text);
+}
+
+.theme-bg {
+  background-color: var(--bg);
+}
+
+.theme-card {
+  background-color: var(--card);
+}
+
+.theme-border {
+  border: var(--border);
+}
+
+.text-primary {
+  color: var(--primary);
+}
+
+.bg-primary {
+  background-color: var(--primary);
+  color: #fff;
+}
+
+.dot-primary {
+  background-color: var(--primary);
+}
+
+.btn-solid {
+  background-color: var(--primary);
+  color: white;
+}
+
+.btn-solid:hover {
+  filter: brightness(0.95);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+}
+
+.card-shadow {
+  box-shadow: var(--card-shadow);
 }
 
 /* =====================

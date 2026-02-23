@@ -47,19 +47,15 @@ const FormInput: React.FC<BaseInputProps> = ({
           name={name}
           checked={Boolean(value)}
           onChange={onChange}
-          className="hidden peer pt-4 pb-2"
+          className="hidden peer"
           {...rest}
         />
         <div
-          className="
-            w-5 h-5
-            border border-gray-500 peer-checked:border-amber-800
-            rounded-md
-            flex items-center justify-center
-            peer-checked:bg-amber-800
-          "
+          className={
+            `w-5 h-5 rounded-md flex items-center justify-center theme-border peer-checked:bg-primary peer-checked:text-white`
+          }
         >
-          <span className="peer-checked:block text-white text-xs">✓</span>
+          <span className="hidden peer-checked:block text-white text-xs">✓</span>
         </div>
       </label>
     );
@@ -76,7 +72,7 @@ const FormInput: React.FC<BaseInputProps> = ({
       value={internalValue}
       onChange={handleDebouncedChange}
       placeholder={placeholder}
-      className={`outline-none bg-colors-var p-2 ${className}`}
+      className={`outline-none bg-colors-var p-2 theme-text rounded ${className}`}
       {...rest}
     />
   );
