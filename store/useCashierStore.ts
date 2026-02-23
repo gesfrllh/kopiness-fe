@@ -7,6 +7,7 @@ import {
 } from '@/pages/api/cashier/api'
 import { CashierResponse, PaymentListRequest, PaymentListResponse } from '@/types/cashier'
 import { AccordionItem } from '@/types'
+import { useHistoryStore } from '@/store/useHistory'
 import { formatError } from '@/utils/formatError'
 import { showNotify } from '@/components/Base/notification/notify-controllers'
 
@@ -160,6 +161,36 @@ export const useCashierStore = create<CashierState>((set, get) => ({
         text: 'Pembayaran berhasil',
         type: 'success',
       })
+
+      // attach basic tracking info locally for each paid transaction
+      try {
+        const addLocal = useHistoryStore.getState().addLocalHistory
+        selected.forEach((item) => {
+          const trackingId = `TRK-${Date.now().toString().slice(-6)}-${Math.random().toString(36).slice(2, 6)}`
+          const histEntry = {
+            id: item.id,
+            status: 'PAID' as const,
+            total: item.subTotal,
+            paymentMethod: selectedPayment?.name ?? selectedPayment?.id ?? 'CASH',
+            itemCount: 1,
+            createdAt: new Date().toISOString(),
+            invoiceNumber: `INV-${Date.now().toString().slice(-6)}`,
+            tracking: {
+              trackingId,
+              status: 'PENDING' as const,
+              updatedAt: new Date().toISOString(),
+              events: [
+                { time: new Date().toISOString(), description: 'Pembayaran diterima' }
+              ]
+            }
+          }
+
+          addLocal(histEntry)
+        })
+      } catch (e) {
+        // non-fatal: local tracking failed
+        console.warn('addLocalHistory failed', e)
+      }
 
       get().resetUI()
       await get().getCashier()

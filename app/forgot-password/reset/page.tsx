@@ -1,10 +1,12 @@
 import ResetPassword from "@/components/forgotPaassword/resetPassword";
-import React from "react";
+import React, { Suspense } from "react";
 
 const page = () => {
   return (
     <>
-      <ResetPassword />
+      <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+        <ResetPassword />
+      </Suspense>
     </>
   )
 }

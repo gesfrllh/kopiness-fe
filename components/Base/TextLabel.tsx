@@ -31,12 +31,12 @@ const TextLabel: React.FC<TextLabelProps> = ({ size = "md", dot, title }) => {
       {dot && (
         <span
           className={clsx(
-            "inline-block rounded-full bg-amber-800",
+            "inline-block rounded-full dot-primary",
             sizeMap[size].dot
           )}
         />
       )}
-      <p className={clsx("text-gray-800", sizeMap[size].text)}>
+      <p className={clsx("theme-text", sizeMap[size].text)}>
         {title}
       </p>
     </div>

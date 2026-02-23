@@ -14,9 +14,9 @@ const Button: React.FC<ButtonProps> = ({
       className={clsx(
         'px-4 py-2 rounded-lg font-medium transition-colors cursor-pointer',
         {
-          'bg-amber-800 text-white hover:bg-amber-700': variant === 'solid' && !disabled,
-          'border border-amber-800 text-amber-800 hover:bg-amber-800 hover:text-white': variant === 'outline' && !disabled,
-          'opacity-50 cursor-not-allowed bg-gray-600': disabled,
+          'btn-solid': variant === 'solid' && !disabled,
+          'btn-outline': variant === 'outline' && !disabled,
+          'opacity-50 cursor-not-allowed': disabled,
         },
         className
       )}

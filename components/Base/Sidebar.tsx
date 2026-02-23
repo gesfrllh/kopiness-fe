@@ -122,7 +122,7 @@ const Sidebar = () => {
 
   return (
     <>
-      <div className='h-20 fixed w-full flex border-b border-amber-800 items-center justify-between px-12 md:px-32 bg-colors-var'>
+      <div className={'h-20 fixed w-full flex items-center justify-between px-12 md:px-32 theme-card'} style={{ borderBottom: '1px solid var(--border)' }}>
         <div className='flex gap-8 items-center'>
           <Image src={Logo} alt="" priority width={132} />
         </div>
@@ -131,7 +131,7 @@ const Sidebar = () => {
             <div className="flex gap-8 items-center">
               {filteredData.map((item, idx) => (
                 <div key={idx} onClick={() => isActiveLink(item.title)}>
-                  <Link href={item.link} className="flex gap-4">
+                  <Link href={item.link} className="flex gap-4 theme-text hover:text-primary transition-colors">
                     <div>
                       {item.icon}
                     </div>
@@ -153,7 +153,7 @@ const Sidebar = () => {
               <div className={`mobile-menu ${openMenu ? "open" : "close"}`}>
                 {filteredData.map((item, idx) => (
                   <div key={idx} onClick={() => isActiveLink(item.title)}>
-                    <Link href={item.link} onClick={openMobileMenu} className="flex py-4 gap-4 hover:bg-amber-800 hover:text-white px-4 rounded-lg">
+                    <Link href={item.link} onClick={openMobileMenu} className="flex py-4 gap-4 hover:bg-primary hover:text-white px-4 rounded-lg transition-colors">
                       <div>{item.icon}</div>
                       <div>{item.title}</div>
                     </Link>

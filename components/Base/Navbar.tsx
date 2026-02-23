@@ -72,7 +72,7 @@ const Navbar = () => {
 
   return (
     <>
-      <div className='border-b-2 fixed shadow-[4px_4px_0px_2px_#4E1F00] bg-colors-var w-full p-8 flex items-center justify-between'>
+      <div className={'fixed w-full p-8 flex items-center justify-between theme-card card-shadow'} style={{ borderBottom: '1px solid var(--border)' }}>
         <div className='flex items-center gap-8'>
           <div className='h-0 relative -top-16'>
             <Image

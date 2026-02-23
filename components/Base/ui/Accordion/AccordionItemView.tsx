@@ -36,8 +36,9 @@ const AccordionItemView: React.FC<Props> = ({
 
   return (
     <div
-      className={`border shadow-[8px_6px_0px_1px_#422900] bg-colors-var rounded-lg overflow-hidden mb-4 ${isSelected ? 'border-amber-800' : ''
-        }`}
+      className={`theme-card rounded-lg overflow-hidden mb-4 ${isSelected ? 'border-amber-800' : ''}
+      ` + ' card-shadow'}
+      style={{ border: isSelected ? '1px solid var(--primary-600)' : 'var(--border)' }}
     >
       {/* HEADER */}
       <div className="flex items-center gap-2 px-4 py-3">
@@ -54,11 +55,11 @@ const AccordionItemView: React.FC<Props> = ({
 
         <button
           onClick={onToggleOpen}
-          className="flex-1 text-left font-medium cursor-pointer"
+          className="flex-1 text-left font-medium cursor-pointer theme-text"
         >
           {item.title}
         </button>
-        <p>{desc}</p>
+        <p className="text-sm text-muted">{desc}</p>
         <div
           onClick={onDelete}>
           <Tooltip content="Hapus">

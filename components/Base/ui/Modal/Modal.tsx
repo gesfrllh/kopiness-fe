@@ -58,7 +58,7 @@ export const Modal: React.FC<ModalProps> = ({
       >
         {/* Header */}
         {(title || description) && (
-          <div className="border-b px-6 py-4">
+          <div className="border-b border-var px-6 py-4">
             {title && (
               <h2 className="text-lg font-semibold">{title}</h2>
             )}
@@ -75,7 +75,7 @@ export const Modal: React.FC<ModalProps> = ({
 
         {/* Footer */}
         {footer && (
-          <div className="border-t px-6 py-4 flex justify-end gap-3">
+          <div className="border-t border-var px-6 py-4 flex justify-end gap-3">
             {footer}
           </div>
         )}
