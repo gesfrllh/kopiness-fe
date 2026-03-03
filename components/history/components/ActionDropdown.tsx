@@ -1,7 +1,18 @@
 import { useState, useEffect } from 'react'
-import { useFloating, offset, flip, shift, autoUpdate } from '@floating-ui/react-dom'
+import {
+  useFloating,
+  offset,
+  flip,
+  shift,
+  autoUpdate
+} from '@floating-ui/react-dom'
+import { ActionProps } from '@/types'
 
-const ActionDropdown = () => {
+interface ActionDropdownProps {
+  item?: ActionProps[]
+}
+
+const ActionDropdown = ({ item }: ActionDropdownProps) => {
   const [open, setOpen] = useState(false)
 
   const { x, y, strategy, refs, update } = useFloating({
@@ -10,7 +21,6 @@ const ActionDropdown = () => {
     whileElementsMounted: autoUpdate,
   })
 
-  // Close dropdown kalau klik luar
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       const refEl = refs.reference.current
@@ -18,7 +28,6 @@ const ActionDropdown = () => {
 
       const target = e.target as Node
 
-      // pastikan current ada dan HTMLElement
       const clickedOutside =
         (!refEl || !(refEl instanceof HTMLElement) || !refEl.contains(target)) &&
         (!floatingEl || !(floatingEl instanceof HTMLElement) || !floatingEl.contains(target))
@@ -35,10 +44,10 @@ const ActionDropdown = () => {
   return (
     <div className="relative inline-block text-left">
       <button
-        ref={refs.setReference} // <-- pakai setReference
+        ref={refs.setReference}
         onClick={() => {
           setOpen((prev) => !prev)
-          update() // update posisi saat dibuka
+          update()
         }}
         className="text-neutral-400 hover:text-neutral-700 text-lg px-2 py-1 rounded-md hover:bg-neutral-100 transition"
       >
@@ -47,7 +56,7 @@ const ActionDropdown = () => {
 
       {open && (
         <div
-          ref={refs.setFloating} // <-- pakai setFloating
+          ref={refs.setFloating}
           style={{
             position: strategy,
             top: y ?? 0,
@@ -56,15 +65,12 @@ const ActionDropdown = () => {
           className="mt-2 w-40 rounded-xl bg-white border border-neutral-200 shadow-lg z-50"
         >
           <div className="py-2 text-sm text-neutral-700 flex flex-col">
-            <button className="w-full text-left px-4 py-2 cursor-pointer hover:bg-neutral-50">
-              View details
-            </button>
-            <button className="w-full text-left px-4 py-2 cursor-pointer hover:bg-neutral-50">
-              Download invoice
-            </button>
-            <button className="w-full text-left px-4 py-2 cursor-pointer hover:bg-neutral-50">
-              Print
-            </button>
+            {Array.isArray(item) && item.length > 0 &&
+              item.map((v, k) => (
+                <button key={k} onClick={v.onClick} className="w-full text-left px-4 py-2 cursor-pointer hover:bg-neutral-50">
+                  {v.title}
+                </button>
+              ))}
           </div>
         </div>
       )}

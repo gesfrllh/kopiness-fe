@@ -1,8 +1,10 @@
+type statusPayment = 'PAID' | 'PENDING' | 'CANCELLED'
+
 export interface PaymentHistory {
   id: string,
   invoice: string,
   amount: number,
-  status: 'PAID' | 'PENDING' | 'FAILED',
+  status: statusPayment,
   createdAt: string,
   paymentMethod: string
 }
@@ -16,7 +18,7 @@ export interface CustomerHistory {
 export interface HistoryResponseAdmin {
   id: string,
   invoiceNumber?: string,
-  status: 'PENDING' | 'CANCEL' | 'PAID',
+  status: statusPayment,
   total: number,
   createdAt: string,
   paymentMethod: string,
@@ -28,7 +30,7 @@ export interface HistoryResponseAdmin {
 
 export interface HistoryResponseUser {
   id: string,
-  status: 'PENDING' | 'CANCEL' | 'PAID',
+  status: statusPayment,
   total: number,
   paymentMethod: string,
   itemCount: number

@@ -16,7 +16,7 @@ const Button: React.FC<ButtonProps> = ({
         {
           'btn-solid': variant === 'solid' && !disabled,
           'btn-outline': variant === 'outline' && !disabled,
-          'opacity-50 cursor-not-allowed': disabled,
+          'opacity-50 cursor-not-allowed bg-gray-500': disabled,
         },
         className
       )}
