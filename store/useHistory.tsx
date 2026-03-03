@@ -1,16 +1,16 @@
 import { create } from 'zustand'
 import React from 'react'
-// import { useAuthStore } from './useAuthStore'
 import { HistoryPayload, HistoryResponseAdmin, HistoryResponseUser } from '@/types/history'
 import { getHistory } from '@/pages/api/history/history'
 import { formatError } from '@/utils/formatError'
 import cleanPayload from '@/utils/general'
 import { formatCurrency } from '@/utils/general'
-import ActionDropdown from '@/components/history/components/ActionDropdown'
 import { Column } from '@/types'
+import ActionCell from '@/components/history/components/ActionCell'
 
 interface HistoryState {
-  history: HistoryResponseAdmin[] | HistoryResponseUser[]
+  history: HistoryResponseAdmin[] | HistoryResponseUser[],
+  details: null,
   loading: boolean
   error?: string
   totalPages: number
@@ -31,12 +31,13 @@ interface HistoryState {
     entry?: HistoryResponseAdmin | HistoryResponseUser | null;
   }
   openTrack: (entry: HistoryResponseAdmin | HistoryResponseUser) => void
-  closeTrack: () => void
+  closeTrack: () => void,
 }
 
 export const useHistoryStore = create<HistoryState>((set, get) => ({
   history: [],
   loading: false,
+  details: null,
   error: '',
   selectedStatus: '',
   totalPages: 1,
@@ -110,21 +111,7 @@ export const useHistoryStore = create<HistoryState>((set, get) => ({
     {
       id: 'actions',
       header: '',
-      render: (_, row) => (
-        <div className="flex items-center gap-2">
-          <ActionDropdown />
-          {row.tracking ? (
-            <button
-              onClick={() => {
-                get().openTrack(row as HistoryResponseAdmin | HistoryResponseUser)
-              }}
-              className="px-3 py-1 text-sm rounded-md bg-primary text-white"
-            >
-              Track
-            </button>
-          ) : null}
-        </div>
-      ),
+      render: (_, row) => <ActionCell row={row} />
     },
   ],
 

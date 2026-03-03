@@ -148,3 +148,9 @@ export type AccordionProps =
   | (BasePropsAccordion & SingleSelectProps)
   | (BasePropsAccordion & MultiSelectProps)
   | (BasePropsAccordion & NoSelectProps)
+
+export interface ActionProps {
+  title: string,
+  active?: boolean,
+  onClick: () => void
+}

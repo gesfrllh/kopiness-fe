@@ -5,3 +5,8 @@ export const getHistory = async (payload: HistoryPayload) => {
   const response = await apiClient.post('transactions/history', payload)
   return response.data
 }
+
+export const getDetail = async (id: string) => {
+  const response = await apiClient.get(`transactions/${id}`)
+  return response.data
+}
