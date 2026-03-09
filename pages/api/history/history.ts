@@ -10,3 +10,8 @@ export const getDetail = async (id: string) => {
   const response = await apiClient.get(`transactions/${id}`)
   return response.data
 }
+
+export const getDetailsTracking = async (id: string) => {
+  const response = await apiClient.get(`transactions/${id}/tracking`)
+  return response.data
+}

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import clsx from 'clsx'
-import { PaymentHistory } from '@/types/history'
+import { PaymentHistory, statusPayment } from '@/types/history'
 
 interface Props {
   payment: PaymentHistory
@@ -12,10 +12,9 @@ const PaymentCard = ({ payment }: Props) => {
   const [open, setOpen] = useState(false)
 
   const statusColor = {
-    SUCCESS: 'bg-green-500/20 text-green-400',
+    PAID: 'bg-green-500/20 text-green-400',
     PENDING: 'bg-yellow-500/20 text-yellow-400',
-    PAID: 'bg-blue-500/20 text-blue-400',
-    FAILED: 'bg-red-500/20 text-red-400',
+    CANCELLED: 'bg-red-500/20 text-red-400',
   }
 
   return (
@@ -43,7 +42,7 @@ const PaymentCard = ({ payment }: Props) => {
             <span
               className={clsx(
                 'text-xs px-2 py-1 rounded-full',
-                statusColor[payment.status]
+                statusColor[payment.status as statusPayment]
               )}
             >
               {payment.status}
@@ -82,13 +81,13 @@ const PaymentCard = ({ payment }: Props) => {
             {payment.paymentMethod}
           </p>
 
-          {payment.status === 'FAILED' && (
+          {payment.status === 'CANCELLED' && (
             <button className="mt-3 px-3 py-1.5 text-sm rounded-md bg-red-500/20 text-red-400 hover:bg-red-500/30 transition">
               Retry Payment
             </button>
           )}
 
-          {payment.status === 'SUCCESS' && (
+          {payment.status === 'PAID' && (
             <button className="mt-3 px-3 py-1.5 text-sm rounded-md bg-primary/20 text-primary hover:bg-primary/30 transition">
               Download Invoice
             </button>
