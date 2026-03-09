@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import React from 'react'
-import { HistoryPayload, HistoryResponseAdmin, HistoryResponseUser } from '@/types/history'
-import { getHistory } from '@/pages/api/history/history'
+import { HistoryDetails, HistoryPayload, HistoryResponseAdmin, HistoryResponseUser, } from '@/types/history'
+import { getDetail, getHistory } from '@/pages/api/history/history'
 import { formatError } from '@/utils/formatError'
 import cleanPayload from '@/utils/general'
 import { formatCurrency } from '@/utils/general'
@@ -10,9 +10,10 @@ import ActionCell from '@/components/history/components/ActionCell'
 
 interface HistoryState {
   history: HistoryResponseAdmin[] | HistoryResponseUser[],
-  details: null,
+  details?: HistoryDetails | null,
   loading: boolean
   error?: string
+  // paymentId: string
   totalPages: number
   total: number
   search: string
@@ -32,6 +33,7 @@ interface HistoryState {
   }
   openTrack: (entry: HistoryResponseAdmin | HistoryResponseUser) => void
   closeTrack: () => void,
+  getDetails: (id: string) => Promise<void>
 }
 
 export const useHistoryStore = create<HistoryState>((set, get) => ({
@@ -168,5 +170,19 @@ export const useHistoryStore = create<HistoryState>((set, get) => ({
 
     await get().getHistory({ status: s, page: 1 })
     // console.log(get().selectedStatus)
+  },
+
+  getDetails: async (id: string) => {
+    set({ loading: true })
+    try {
+      const res = await getDetail(id)
+      set({ loading: false, details: res.data })
+    } catch (err: unknown) {
+      const message = formatError(err) || 'Error get History Details'
+      set({ error: message })
+      throw new Error(message)
+    } finally {
+      set({ loading: false })
+    }
   }
 }))

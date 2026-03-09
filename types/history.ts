@@ -1,4 +1,6 @@
-type statusPayment = 'PAID' | 'PENDING' | 'CANCELLED'
+import { Product } from "./product"
+
+export type statusPayment = 'PAID' | 'PENDING' | 'CANCELLED'
 
 export interface PaymentHistory {
   id: string,
@@ -61,4 +63,28 @@ export interface TrackingInfo {
   status: 'PENDING' | 'IN_TRANSIT' | 'DELIVERED' | 'CANCELLED';
   updatedAt: string;
   events?: TrackingEvent[];
+}
+
+export interface PaymentDetails {
+  id: string,
+  invoiceNumber: string,
+  totalAmount: number,
+  method: string,
+  createdAt: string
+  paidAt: string
+}
+
+export interface ItemsDetailsProduct {
+  id: string,
+  quantity: number,
+  price: null | number,
+  productId: string,
+  transactionId: string,
+  product: Product
+}
+
+export interface HistoryDetails extends Pick<HistoryResponseAdmin, 'orderNumber' | 'id' | 'status' | 'total' | 'createdAt'> {
+  paymentId: string,
+  payment: PaymentDetails
+  items: ItemsDetailsProduct
 }
