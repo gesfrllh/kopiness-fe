@@ -27,17 +27,26 @@ export default function LoginPage() {
   const { login, loading, error } = useAuthStore()
   const router = useRouter()
 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    await login(form.email, form.password)
-    if (!error) {
+    if (!emailRegex.test(form.email)) {
+      showNotify({ type: 'error', text: 'Format email tidak valid' })
+      return
+    }
+
+    try {
+      await login(form.email, form.password)
       showNotify({
         type: "success",
         title: 'Sukses!',
         text: "Login Berhasil!"
       })
       router.push('/manage/dashboard')
+    } catch {
+      // error sudah di-handle oleh store dan useEffect
     }
   }
 

@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import Cookies from 'js-cookie'
 import { AuthState, User } from '@/types/auth/user'
 import { formatError } from '@/utils/formatError'
-import { login, logout } from '@/pages/api/auth/api'
+import { login, logout } from '@/lib/api/auth'
 
 type SetStateFn = (partial: Partial<AuthState> | ((state: AuthState) => Partial<AuthState>)) => void
 
@@ -25,8 +25,7 @@ const loadAuthFromStorage = (): { user: User } | null => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY)
       return stored ? JSON.parse(stored) : null
-    } catch (error) {
-      console.error('Failed to load auth from storage:', error)
+    } catch {
       return null
     }
   }
@@ -65,9 +64,9 @@ export const useAuthStore = create<AuthState>((set: SetStateFn) => {
       try {
         const res = await login(email, password)
 
-        Cookies.set("role", res.data.user.role, { path: "/" })
-        Cookies.set("status", res.status)
-        Cookies.set("is_logged_in", res.data.isLoggedIn)
+        Cookies.set("role", res.data.user.role, { path: "/", secure: true, sameSite: "strict" })
+        Cookies.set("status", res.status, { secure: true, sameSite: "strict" })
+        Cookies.set("is_logged_in", res.data.isLoggedIn, { secure: true, sameSite: "strict" })
 
         // Save user to localStorage (token di httpOnly cookies)
         saveAuthToStorage(res.data.user)

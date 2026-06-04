@@ -2,19 +2,13 @@
 
 import React from 'react'
 import { User } from '@/types/auth/user'
-import { Mail, Shield, Calendar, Award } from 'lucide-react'
+import { Mail, Shield, Award } from 'lucide-react'
 
 interface ProfileSectionProps {
   user: User
 }
 
 const ProfileSection: React.FC<ProfileSectionProps> = ({ user }) => {
-  const memberSinceDate = new Date().toLocaleDateString('id-ID', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
-
   const profileStats = [
     {
       icon: Mail,
@@ -26,11 +20,6 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ user }) => {
       label: 'Role',
       value: user.role || 'CUSTOMER',
       badge: true,
-    },
-    {
-      icon: Calendar,
-      label: 'Member Since',
-      value: memberSinceDate,
     },
     {
       icon: Award,

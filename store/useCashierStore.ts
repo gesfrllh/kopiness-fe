@@ -4,7 +4,7 @@ import {
   getCashier,
   getPaymentType,
   payment,
-} from '@/pages/api/cashier/api'
+} from '@/lib/api/cashier'
 import { CashierResponse, PaymentListRequest, PaymentListResponse } from '@/types/cashier'
 import { AccordionItem } from '@/types'
 import { useHistoryStore } from '@/store/useHistory'

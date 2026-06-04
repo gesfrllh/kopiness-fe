@@ -8,10 +8,10 @@ import {
   Clock,
   CheckCircle,
   AlertCircle,
+  Loader,
 } from 'lucide-react'
 
 import StatsCard from './components/StatsCard'
-import LoaderTransition from '@/components/LoaderTransition'
 import RevenueChart from './components/RevenueChart'
 import TopProducts from './components/TopProducts'
 import PaymentBreakdown from './components/PaymentBreakdown'
@@ -27,11 +27,14 @@ const Dashboard = () => {
   }, [getOverview])
 
   if (loading || !data) {
-    return <LoaderTransition />
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <Loader className="w-8 h-8 animate-spin text-amber-600" />
+      </div>
+    )
   }
 
   const { stats, revenueChart, topProducts, paymentBreakdown, recentTransaction } = data
-  console.log(recentTransaction)
 
   const statsData = [
     {

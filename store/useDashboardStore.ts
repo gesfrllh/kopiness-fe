@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { DashboardOverview } from '@/types/dashboard'
-import { getDashboard } from '@/pages/api/dashboard/api'
+import { getDashboard } from '@/lib/api/dashboard'
 import { formatError } from '@/utils/formatError'
 
 interface DashboardState {
@@ -19,7 +19,6 @@ export const useDashboardStore = create<DashboardState>((set) => ({
     set({ loading: true })
     try {
       const res = await getDashboard();
-      // `getDashboard()` already returns the response data payload.
       set({
         loading: false,
         data: res.data

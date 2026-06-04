@@ -1,12 +1,12 @@
 import { create } from 'zustand'
 import React from 'react'
 import { HistoryDetails, HistoryPayload, HistoryResponseAdmin, HistoryResponseUser, } from '@/types/history'
-import { getDetail, getHistory } from '@/pages/api/history/history'
 import { formatError } from '@/utils/formatError'
-import cleanPayload from '@/utils/general'
+import cleanPayload, { hydrateTrackingSteps } from '@/utils/general'
 import { formatCurrency } from '@/utils/general'
 import { Column } from '@/types'
 import ActionCell from '@/components/history/components/ActionCell'
+import { getDetail, getHistory } from '@/lib/api/history'
 
 interface HistoryState {
   history: HistoryResponseAdmin[] | HistoryResponseUser[],
@@ -39,10 +39,10 @@ interface HistoryState {
 export const useHistoryStore = create<HistoryState>((set, get) => ({
   history: [],
   loading: false,
-  details: null,
   error: '',
   selectedStatus: '',
   totalPages: 1,
+  details: null,
   total: 0,
   search: '',
   payload: {
@@ -175,8 +175,14 @@ export const useHistoryStore = create<HistoryState>((set, get) => ({
   getDetails: async (id: string) => {
     set({ loading: true })
     try {
-      const res = await getDetail(id)
-      set({ loading: false, details: res.data })
+      const response = await getDetail(id)
+      // const steps = hydrateTrackingSteps(tracking.steps, detail.status)
+
+      // const progressPercent = ((steps.filter(s => s.completed).length) / steps.length) * 100
+      set({
+        details: response.data,
+        loading: false
+      })
     } catch (err: unknown) {
       const message = formatError(err) || 'Error get History Details'
       set({ error: message })

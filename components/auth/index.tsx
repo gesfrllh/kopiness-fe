@@ -22,9 +22,9 @@ export default function OAuthSuccess() {
           const isLoggedin = data.isLoggedIn
           const role = data.user.role
 
-          Cookies.set('status', res.status.toString())
-          Cookies.set('is_logged_in', isLoggedin)
-          Cookies.set('role', role)
+          Cookies.set('status', res.status.toString(), { secure: true, sameSite: 'strict' })
+          Cookies.set('is_logged_in', isLoggedin, { secure: true, sameSite: 'strict' })
+          Cookies.set('role', role, { secure: true, sameSite: 'strict' })
 
           router.replace('/manage/dashboard')
         }

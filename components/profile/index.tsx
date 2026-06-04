@@ -5,7 +5,6 @@ import { useAuthStore } from '@/store/useAuthStore'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { User, Mail, Lock, LogOut, Edit2 } from 'lucide-react'
-import LoaderTransition from '@/components/LoaderTransition'
 import ProfileSection from './components/ProfileSection'
 import EditProfileForm from './components/EditProfileForm'
 import ChangePasswordForm from './components/ChangePasswordForm'
@@ -14,7 +13,6 @@ import AccountSettings from './components/AccountSettings'
 type TabType = 'profile' | 'edit' | 'password' | 'settings'
 
 const ProfilePage = () => {
-  const [loader, setLoader] = useState(false)
   const [activeTab, setActiveTab] = useState<TabType>('profile')
   const [mounted, setMounted] = useState(false)
   const { user, logout, isHydrated } = useAuthStore()
@@ -23,7 +21,6 @@ const ProfilePage = () => {
   // Ensure client-side only rendering after hydration
   useEffect(() => {
     setMounted(true)
-    setLoader(true)
   }, [])
 
   // Redirect if not authenticated
@@ -58,15 +55,12 @@ const ProfilePage = () => {
   ]
 
   return (
-    <>
-      <LoaderTransition onFinish={() => setLoader(true)} />
-      {loader && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="w-full space-y-8"
-        >
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full space-y-8"
+      >
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Profile Settings</h1>
@@ -149,9 +143,7 @@ const ProfilePage = () => {
             {activeTab === 'password' && <ChangePasswordForm />}
             {activeTab === 'settings' && <AccountSettings user={user} />}
           </motion.div>
-        </motion.div>
-      )}
-    </>
+      </motion.div>
   )
 }
 

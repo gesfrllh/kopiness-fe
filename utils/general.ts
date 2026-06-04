@@ -1,14 +1,15 @@
-import { PaymentHistory } from "@/types/history";
+import { PaymentHistory, StepsTracking } from "@/types/history";
 
-export const formatCurrency = (val: number) => {
-    const formatted = new Intl.NumberFormat('id-ID', {
+export const formatCurrency = (
+    value: number = 0
+) => {
+    return new Intl.NumberFormat('id-ID', {
         style: 'currency',
-        currency: 'IDR'
-    }).format(val)
-
-    return formatted
+        currency: 'IDR',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+    }).format(value)
 }
-
 export const Range = (start: number, end: number): number[] => {
     const length = end - start + 1;
     return Array.from({ length }, (_, i) => start + i)
@@ -94,4 +95,39 @@ export const formatDate = (
                 year: 'numeric',
             })
     }
+}
+
+const stepOrder = [
+    'CREATED',
+    'PAYMENT_STARTED',
+    'PAID',
+    'CANCELLED',
+]
+
+export function hydrateTrackingSteps(steps: StepsTracking[], currentStatus: string) {
+    const currentIndex = stepOrder.indexOf(currentStatus)
+
+    return steps.map((step, idx) => {
+        if (idx < currentIndex) {
+            return {
+                ...step,
+                completed: true,
+                active: false,
+            }
+        }
+
+        if (idx === currentIndex) {
+            return {
+                ...step,
+                active: true,
+                completed: true,
+            }
+        }
+
+        return {
+            ...step,
+            completed: false,
+            active: false,
+        }
+    })
 }

@@ -14,7 +14,7 @@ import {
     editProduct,
     getProduct,
     getProductById
-} from '@/pages/api/product/productApi';
+} from '@/lib/api/productApi';
 
 interface ProductState {
     products: ProductResponse[];
