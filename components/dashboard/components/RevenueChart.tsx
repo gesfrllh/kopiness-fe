@@ -1,7 +1,7 @@
 'use client'
 
 import { RevenueChart } from '@/types/dashboard'
-import { DateFormat, formatDate } from '@/utils/general'
+import { formatDate } from '@/utils/general'
 import React, { useMemo } from 'react'
 
 interface RevenueChartProps {

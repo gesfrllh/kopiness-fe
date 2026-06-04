@@ -36,53 +36,26 @@ const ChangePasswordForm: React.FC = () => {
     }))
   }
 
+  const allFilled = formData.currentPassword && formData.newPassword && formData.confirmPassword
+  const passwordValid = formData.newPassword.length >= 8
+  const passwordsMatch = formData.newPassword === formData.confirmPassword
+  const isDifferent = formData.currentPassword && formData.newPassword && formData.currentPassword !== formData.newPassword
+  const canSubmit = allFilled && passwordValid && passwordsMatch && isDifferent && !loading
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!canSubmit) return
     setLoading(true)
 
     try {
-      // Validation
-      if (!formData.currentPassword) {
-        showNotify({ type: 'error', text: 'Current password is required' })
-        return
-      }
-
-      if (!formData.newPassword) {
-        showNotify({ type: 'error', text: 'New password is required' })
-        return
-      }
-
-      if (formData.newPassword.length < 8) {
-        showNotify({ type: 'error', text: 'Password must be at least 8 characters' })
-        return
-      }
-
-      if (formData.newPassword !== formData.confirmPassword) {
-        showNotify({ type: 'error', text: 'Passwords do not match' })
-        return
-      }
-
-      if (formData.currentPassword === formData.newPassword) {
-        showNotify({ type: 'error', text: 'New password must be different from current password' })
-        return
-      }
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      await new Promise(resolve => setTimeout(resolve, 1000))
 
       setSuccess(true)
       showNotify({ type: 'success', text: 'Password changed successfully' })
 
-      // Reset form
-      setFormData({
-        currentPassword: '',
-        newPassword: '',
-        confirmPassword: '',
-      })
-
-      // Reset success state after 3 seconds
+      setFormData({ currentPassword: '', newPassword: '', confirmPassword: '' })
       setTimeout(() => setSuccess(false), 3000)
-    } catch (error) {
+    } catch {
       showNotify({ type: 'error', text: 'Failed to change password' })
       console.error(error)
     } finally {
@@ -199,7 +172,7 @@ const ChangePasswordForm: React.FC = () => {
 
         {/* Form Actions */}
         <div className="flex gap-3 pt-4 border-t border-gray-200">
-          <Button type="submit" variant="solid" disabled={loading} className="flex-1">
+          <Button type="submit" variant="solid" disabled={!canSubmit} className="flex-1">
             {loading ? 'Updating...' : 'Change Password'}
           </Button>
           <Button

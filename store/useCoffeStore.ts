@@ -1,4 +1,4 @@
-import { adjustData, generateData, getOptions } from '@/pages/api/coffee/api'
+import { adjustData, generateData, getOptions } from '@/lib/api/coffee'
 import { CoffePayload, CoffeResponseOptions } from '@/types/coffee'
 import { formatError } from '@/utils/formatError'
 import { create } from 'zustand'
@@ -40,7 +40,15 @@ interface CoffeeRecipe {
   milkTemp?: number
   milkVolume?: number,
   foamDensity?: string,
-  grindSize: string
+  grindSize: string,
+  potentialProblems: Problems[]
+}
+
+interface Problems {
+  descrtiption: string,
+  key: string,
+  label: string,
+  severity: string
 }
 
 interface CoffeState {

@@ -378,12 +378,11 @@ const Coffee = () => {
                   </h4>
 
                   <Select
-                    options={[
-                      { label: 'Terlalu pahit', value: 'TERLALU_PAHIT' },
-                      { label: 'Terlalu asam', value: 'TERLALU_ASAM' },
-                      { label: 'Hambar', value: 'HAMBAR' },
-                      { label: 'Over Extracted', value: 'OVER_EXTRACTED' },
-                    ]}
+                    options={recipe.potentialProblems
+                      .map((prob) => ({ label: prob.label, value: prob.key }))
+                      .filter((opt, index, self) =>
+                        self.findIndex((o) => o.value === opt.value) === index
+                      )}
                     name="problem"
                     label="Problem"
                     value={problem}

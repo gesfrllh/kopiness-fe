@@ -22,7 +22,7 @@ import { useRouter } from 'next/navigation'
 import { formatCurrency } from '@/utils/general'
 import TextLabel from '../Base/TextLabel'
 import FormInput from '../Base/FormInput'
-import '../animation/AnimationCss.scss'
+// import '../animation/AnimationCss.scss'
 
 const Product = () => {
   const [animate, setAnimate] = useState(false)

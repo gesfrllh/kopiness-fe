@@ -1,14 +1,11 @@
 'use client'
 
-import React, { useState } from "react";
+import React from "react";
 import { motion, easeOut } from 'framer-motion'
-import LoaderTransition from "@/components/LoaderTransition";
 import { ArrowRight } from 'lucide-react';
 import Link from "next/link";
 
 const HeroSection: React.FC = () => {
-  const [loader, setLoader] = useState(false)
-
   const containerVariants = {
     hidden: {},
     visible: {
@@ -28,29 +25,10 @@ const HeroSection: React.FC = () => {
     }
   }
 
-  const coffeeBlends = ['Arabica', 'Robusta', 'Specialty', 'Single Origin']
-
-  const sliderVariants = {
-    animate: {
-      x: [0, -1200],
-      transition: {
-        x: {
-          repeat: Infinity,
-          repeatType: 'loop' as const,
-          duration: 20,
-          ease: 'linear'
-        }
-      }
-    }
-  }
-
   return (
     <>
-      <LoaderTransition onFinish={() => setLoader(true)} />
       <section className="hero min-h-fit flex items-center justify-center py-12 md:py-20 overflow-hidden">
-        {loader && (
-          <>
-            <motion.div
+        <motion.div
               initial="hidden"
               animate="visible"
               variants={containerVariants}
@@ -104,28 +82,6 @@ const HeroSection: React.FC = () => {
                 </div>
               </motion.div>
             </motion.div>
-
-            {/* Floating Coffee Blends Slider */}
-            {/* <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8, duration: 0.6 }}
-              className="absolute bottom-0 left-0 right-0 w-full overflow-hidden"
-            >
-              <motion.div
-                variants={sliderVariants}
-                animate="animate"
-                className="flex gap-6 whitespace-nowrap py-6 px-4"
-              >
-                {[...coffeeBlends, ...coffeeBlends].map((blend, idx) => (
-                  <div key={idx} className="flex items-center gap-4 px-6 py-3 bg-white/80 backdrop-blur-md rounded-full border border-amber-100 shadow-lg">
-                    <span className="text-amber-900 font-semibold text-sm">{blend}</span>
-                  </div>
-                ))}
-              </motion.div>
-            </motion.div> */}
-          </>
-        )}
       </section>
     </>
   )

@@ -3,17 +3,17 @@ import type { TableProps } from '@/types'
 
 const Table = <T,>({ columns, data }: TableProps<T>) => {
   return (
-    <div className="rounded-2xl bg-white border border-neutral-200 shadow-sm">
+    <div className="rounded-xl bg-white border border-gray-200 shadow-sm overflow-hidden">
 
       {/* SCROLL WRAPPER */}
-      <div className="overflow-y-auto max-h-[calc(4*7rem)]">
-        <table className="min-w-full divide-y divide-neutral-200">
-          <thead className="bg-neutral-50">
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-amber-50">
             <tr>
               {columns.map((col) => (
                 <th
                   key={col.id}
-                  className="px-6 py-3 text-left text-sm font-medium text-neutral-500"
+                  className="sticky top-0 z-10 bg-amber-50 px-6 py-3.5 text-left text-xs font-semibold text-amber-900 uppercase tracking-wider"
                 >
                   {col.header}
                 </th>
@@ -21,12 +21,12 @@ const Table = <T,>({ columns, data }: TableProps<T>) => {
             </tr>
           </thead>
 
-          <tbody className="divide-y divide-neutral-200">
+          <tbody className="divide-y divide-gray-100">
             {data.length === 0 ? (
               <tr>
                 <td
                   colSpan={columns.length}
-                  className="px-6 py-14 text-center text-neutral-400"
+                  className="px-6 py-14 text-center text-gray-400"
                 >
                   No payment history yet ☕
                 </td>
@@ -35,14 +35,14 @@ const Table = <T,>({ columns, data }: TableProps<T>) => {
               data.map((row, idx) => (
                 <tr
                   key={idx}
-                  className="group hover:bg-neutral-50 transition-colors duration-150"
+                  className="group hover:bg-amber-50/50 transition-colors duration-150"
                 >
                   {columns.map((col) => {
                     const value = col.accessor ? row[col.accessor] : undefined
                     return (
                       <td
                         key={col.id}
-                        className="px-6 py-4 text-neutral-700 whitespace-nowrap"
+                        className="px-6 py-4 text-gray-700 whitespace-nowrap"
                       >
                         {col.render ? col.render(value, row) : String(value ?? '')}
                       </td>

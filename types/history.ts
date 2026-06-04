@@ -86,5 +86,22 @@ export interface ItemsDetailsProduct {
 export interface HistoryDetails extends Pick<HistoryResponseAdmin, 'orderNumber' | 'id' | 'status' | 'total' | 'createdAt'> {
   paymentId: string,
   payment: PaymentDetails
-  items: ItemsDetailsProduct
+  items: ItemsDetailsProduct[]
+  tracking: HistoryTracking
 }
+
+export interface StepsTracking {
+  action: string;
+  active: boolean;
+  completed: boolean;
+  label: string;
+  step: number;
+  timeStamp: string;
+}
+
+export interface HistoryTracking extends Pick<HistoryResponseAdmin, 'orderNumber' | 'status'> {
+  steps: StepsTracking[]
+  progressPercent: number
+  timeline: null
+}
+

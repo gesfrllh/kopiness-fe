@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react'
 import { Icon } from '@iconify/react'
 import Image from 'next/image'
 
-import { UploadFileApi } from '@/pages/api/uploads'
+import { UploadFileApi } from '@/lib/api/uploads'
 import AnimationLogin from '../animation/AnimationLogin'
 import { showNotify } from './notification/notify-controllers'
 import { getImageSize } from '@/utils/general'
@@ -25,6 +25,14 @@ type PreviewFile = {
   size: string
 }
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
+
+const validateFile = (file: File): string | null => {
+  if (!file.type.startsWith('image/')) return 'Hanya file gambar yang diizinkan'
+  if (file.size > MAX_FILE_SIZE) return 'Ukuran file maksimal 5MB'
+  return null
+}
+
 const DropzoneImage: React.FC<DropzoneImageProps> = ({
   value = [],
   onChange,
@@ -43,10 +51,8 @@ const DropzoneImage: React.FC<DropzoneImageProps> = ({
   const uploadFile = async (file: File): Promise<string> => {
     const formData = new FormData()
     formData.append('file', file)
-
     const res = await UploadFileApi(formData)
     if (!res) throw new Error('Upload failed')
-
     return res.data.url
   }
 
@@ -58,19 +64,26 @@ const DropzoneImage: React.FC<DropzoneImageProps> = ({
         const uploadedUrls: string[] = []
 
         for (const file of Array.from(files)) {
+          const error = validateFile(file)
+          if (error) {
+            showNotify({ type: 'error', text: `${file.name}: ${error}` })
+            continue
+          }
+
           const url = await uploadFile(file)
           uploadedUrls.push(url)
         }
 
-        showNotify({
-          type: 'success',
-          title: 'Sukses',
-          text: 'Gambar berhasil diunggah',
-        })
-
-        onChange([...value, ...uploadedUrls])
-      } catch (error) {
-        console.error(error)
+        if (uploadedUrls.length > 0) {
+          showNotify({
+            type: 'success',
+            title: 'Sukses',
+            text: `${uploadedUrls.length} gambar berhasil diunggah`,
+          })
+          onChange([...value, ...uploadedUrls])
+        }
+      } catch {
+        showNotify({ type: 'error', text: 'Gagal mengunggah gambar' })
       } finally {
         setLoading(false)
       }
@@ -81,6 +94,13 @@ const DropzoneImage: React.FC<DropzoneImageProps> = ({
   const handleEditImage = async (file: File) => {
     if (editIndex === null) return
     setLoading(true)
+
+    const error = validateFile(file)
+    if (error) {
+      showNotify({ type: 'error', text: error })
+      setLoading(false)
+      return
+    }
 
     try {
       const newUrl = await uploadFile(file)

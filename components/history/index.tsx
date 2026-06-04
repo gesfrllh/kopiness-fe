@@ -9,7 +9,6 @@ import { useHistoryStore } from "@/store/useHistory";
 import AnimationLogin from "../animation/AnimationLogin";
 import Select from "../Base/Select";
 import TrackingModal from './TrackingModal'
-
 const History = () => {
 
   const {
@@ -122,4 +121,3 @@ const History = () => {
 }
 
 export default History
-

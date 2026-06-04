@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { User } from '@/types/auth/user'
 import { showNotify } from '@/components/Base/notification/notify-controllers'
 import FormInput from '@/components/Base/FormInput'
@@ -13,65 +13,47 @@ interface EditProfileFormProps {
 }
 
 const EditProfileForm: React.FC<EditProfileFormProps> = ({ user }) => {
-  const [formData, setFormData] = useState({
-    name: user.name || '',
-    email: user.email || '',
-  })
+  const initial = useMemo(() => ({ name: user.name || '', email: user.email || '' }), [user])
 
+  const [formData, setFormData] = useState(initial)
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
 
+  const isDirty = formData.name !== initial.name || formData.email !== initial.email
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  const isValid = formData.name.trim() && emailRegex.test(formData.email)
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
+    setFormData(prev => ({ ...prev, [name]: value }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!isValid) return
     setLoading(true)
 
     try {
-      // Validation
-      if (!formData.name.trim()) {
-        showNotify({ type: 'error', text: 'Name is required' })
-        return
-      }
-
-      if (!formData.email.trim()) {
-        showNotify({ type: 'error', text: 'Email is required' })
-        return
-      }
-
-      // Email validation
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      if (!emailRegex.test(formData.email)) {
-        showNotify({ type: 'error', text: 'Please enter a valid email' })
-        return
-      }
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
+      await new Promise(resolve => setTimeout(resolve, 1000))
       setSuccess(true)
       showNotify({ type: 'success', text: 'Profile updated successfully' })
-
-      // Reset success state after 3 seconds
       setTimeout(() => setSuccess(false), 3000)
-    } catch (error) {
+    } catch {
       showNotify({ type: 'error', text: 'Failed to update profile' })
-      console.error(error)
     } finally {
       setLoading(false)
     }
   }
 
+  const handleReset = useCallback(() => {
+    setFormData(initial)
+    setSuccess(false)
+  }, [initial])
+
   return (
     <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100">
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Success Message */}
         {success && (
           <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3">
             <CheckCircle className="text-green-600 flex-shrink-0 mt-0.5" size={20} />
@@ -82,7 +64,6 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({ user }) => {
           </div>
         )}
 
-        {/* Info Alert */}
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-start gap-3">
           <AlertCircle className="text-blue-600 flex-shrink-0 mt-0.5" size={20} />
           <p className="text-sm text-blue-800">
@@ -90,7 +71,6 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({ user }) => {
           </p>
         </div>
 
-        {/* Form Fields */}
         <div className="space-y-4">
           <FormGroup label="Full Name">
             <FormInput
@@ -115,33 +95,28 @@ const EditProfileForm: React.FC<EditProfileFormProps> = ({ user }) => {
           </FormGroup>
         </div>
 
-        {/* Form Actions */}
         <div className="flex gap-3 pt-4 border-t border-gray-200">
           <Button
             type="submit"
             variant="solid"
-            disabled={loading}
+            disabled={loading || !isDirty || !isValid}
             className="flex-1"
           >
             {loading ? 'Saving...' : 'Save Changes'}
           </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => {
-              setFormData({
-                name: user.name || '',
-                email: user.email || '',
-              })
-            }}
-            className="flex-1"
-          >
-            Cancel
-          </Button>
+          {isDirty && (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleReset}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+          )}
         </div>
       </form>
 
-      {/* Additional Info */}
       <div className="mt-8 pt-8 border-t border-gray-200">
         <h3 className="font-semibold text-gray-900 mb-4">Profile Tips</h3>
         <ul className="space-y-2 text-sm text-gray-600">
