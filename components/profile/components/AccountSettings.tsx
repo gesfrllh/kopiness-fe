@@ -28,7 +28,7 @@ const AccountSettings: React.FC<AccountSettingsProps> = () => {
 
   const securityOptions = [
     {
-      id: 'twoFactor' as const,
+      id: 'twoFactorEnabled' as const,
       title: '2-Factor Authentication',
       description: 'Add an extra layer of security to your account',
       enabled: settings.twoFactorEnabled,
