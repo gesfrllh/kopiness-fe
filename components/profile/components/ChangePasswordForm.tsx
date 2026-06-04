@@ -55,7 +55,7 @@ const ChangePasswordForm: React.FC = () => {
 
       setFormData({ currentPassword: '', newPassword: '', confirmPassword: '' })
       setTimeout(() => setSuccess(false), 3000)
-    } catch {
+    } catch (error) {
       showNotify({ type: 'error', text: 'Failed to change password' })
       console.error(error)
     } finally {
