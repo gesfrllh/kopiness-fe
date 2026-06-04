@@ -5,8 +5,6 @@ const apiClient = axios.create({
   withCredentials: true,
 });
 
-console.log('API Base URL:', process.env.NEXT_PUBLIC_API_BASE_URL);
-
 apiClient.interceptors.request.use(
   (config) => {
     config.headers = config.headers ?? {};
