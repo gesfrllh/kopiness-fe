@@ -49,7 +49,7 @@ export const useCartStore = create<CartState>((set, get) => ({
     fetchCart: async () => {
     try {
       const res = await getCart()
-      const items: CartItem[] = (res?.items ?? []).map((item) => ({
+      const items: CartItem[] = (res?.items ?? []).map((item: { productId: string; productName: string; productImage?: string; price: number; stock: number; quantity: number }) => ({
         id: item.productId,
         name: item.productName,
         imageUrl: item.productImage ? [item.productImage] : [],

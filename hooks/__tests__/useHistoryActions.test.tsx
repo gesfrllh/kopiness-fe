@@ -8,10 +8,14 @@ vi.mock('next/navigation', () => ({
 
 const mockRow: HistoryResponseAdmin = {
   id: '123',
-  orderId: 'ORD-001',
+  invoiceNumber: 'INV-001',
+  orderNumber: 'ORD-001',
   status: 'PAID',
-  transactionDate: '2026-06-09',
-  totalPayment: 50000,
+  total: 50000,
+  createdAt: '2026-06-09T10:00:00Z',
+  paymentMethod: 'CASH',
+  itemCount: 3,
+  customer: { id: 'c1', name: 'Budi', email: 'budi@test.com' },
 }
 
 describe('useHistoryActions', () => {

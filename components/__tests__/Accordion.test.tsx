@@ -2,11 +2,11 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, it, expect, vi } from 'vitest'
 import Accordion from '@/components/Base/ui/Accordion/Accordion'
-import type { AccordionItem, AccordionProps } from '@/types'
+import type { AccordionItem } from '@/types'
 
 const items: AccordionItem[] = [
-  { id: '1', title: 'Item 1', content: <p>Content 1</p> },
-  { id: '2', title: 'Item 2', content: <p>Content 2</p> },
+  { id: '1', title: 'Item 1', content: <p>Content 1</p>, subTotal: 10000 },
+  { id: '2', title: 'Item 2', content: <p>Content 2</p>, subTotal: 20000 },
 ]
 
 describe('Accordion', () => {
@@ -50,6 +50,7 @@ describe('Accordion with single select', () => {
         selectable="single"
         value={null}
         onChange={onChange}
+        onClick={() => {}}
       />
     )
 
@@ -66,6 +67,7 @@ describe('Accordion with single select', () => {
         selectable="single"
         value={null}
         onChange={() => {}}
+        onClick={() => {}}
       />
     )
 
@@ -82,6 +84,7 @@ describe('Accordion with multiple select', () => {
         selectable="multiple"
         value={[]}
         onChange={() => {}}
+        onClick={() => {}}
       />
     )
 
@@ -99,6 +102,7 @@ describe('Accordion with multiple select', () => {
         selectable="multiple"
         value={[]}
         onChange={onChange}
+        onClick={() => {}}
       />
     )
 

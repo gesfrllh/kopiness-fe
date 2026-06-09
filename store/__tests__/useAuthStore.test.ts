@@ -28,7 +28,7 @@ const mockUser = {
   id: '1',
   name: 'Test User',
   email: 'test@test.com',
-  role: 'SUPERADMIN',
+  role: 'SUPERADMIN' as const,
   store_id: 'store-1',
 }
 

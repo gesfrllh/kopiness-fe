@@ -11,17 +11,17 @@ describe('FormInput', () => {
   })
 
   it('renders checkbox mode', () => {
-    render(<FormInput type="checkbox" value={true} onChange={() => {}} name="check" />)
+    render(<FormInput type="checkbox" value={true as unknown as string} onChange={() => {}} name="check" />)
     expect(screen.getByRole('checkbox')).toBeInTheDocument()
   })
 
   it('shows checked state in checkbox mode', () => {
-    render(<FormInput type="checkbox" value={true} onChange={() => {}} name="check" />)
+    render(<FormInput type="checkbox" value={true as unknown as string} onChange={() => {}} name="check" />)
     expect(screen.getByRole('checkbox')).toBeChecked()
   })
 
   it('shows unchecked state in checkbox mode', () => {
-    render(<FormInput type="checkbox" value={false} onChange={() => {}} name="check" />)
+    render(<FormInput type="checkbox" value={false as unknown as string} onChange={() => {}} name="check" />)
     expect(screen.getByRole('checkbox')).not.toBeChecked()
   })
 

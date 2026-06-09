@@ -3,9 +3,9 @@ import { describe, it, expect } from 'vitest'
 import UserTable from '@/components/users/UserTable'
 
 const users = [
-  { id: '1', name: 'Alice', email: 'alice@test.com', role: 'SUPERADMIN' },
-  { id: '2', name: 'Bob', email: 'bob@test.com', role: 'STOREOWNER' },
-  { id: '3', name: 'Charlie', email: 'charlie@test.com', role: 'CUSTOMER' },
+  { id: '1', name: 'Alice', email: 'alice@test.com', role: 'SUPERADMIN' as const },
+  { id: '2', name: 'Bob', email: 'bob@test.com', role: 'STOREOWNER' as const },
+  { id: '3', name: 'Charlie', email: 'charlie@test.com', role: 'CUSTOMER' as const },
 ]
 
 describe('UserTable', () => {
