@@ -1,6 +1,6 @@
 import { Product } from "./product"
 
-export type statusPayment = 'PAID' | 'PENDING' | 'CANCELLED'
+export type statusPayment = 'PENDING' | 'PAID' | 'IN_PROGRESS' | 'DELIVERED' | 'CANCELLED'
 
 export interface PaymentHistory {
   id: string,
@@ -60,7 +60,7 @@ export interface TrackingEvent {
 
 export interface TrackingInfo {
   trackingId: string;
-  status: 'PENDING' | 'IN_TRANSIT' | 'DELIVERED' | 'CANCELLED';
+  status: 'PENDING' | 'PAID' | 'IN_PROGRESS' | 'DELIVERED' | 'CANCELLED';
   updatedAt: string;
   events?: TrackingEvent[];
 }

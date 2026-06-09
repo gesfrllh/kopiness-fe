@@ -7,6 +7,7 @@ interface CTAProps {
   size?: "sm" | "md" | "lg";
   variant?: "gradient" | "dark" | "light";
   rightSlot?: React.ReactNode;
+  leftSlot?: React.ReactNode;
   className?: string;
 }
 
@@ -41,6 +42,7 @@ const CTA: React.FC<CTAProps> = ({
   icon,
   size = "md",
   variant = "gradient",
+  leftSlot,
   rightSlot,
   className = "",
 }) => {
@@ -70,6 +72,7 @@ const CTA: React.FC<CTAProps> = ({
         )}
 
         <div className="relative flex items-center justify-between gap-6">
+          {leftSlot && <div className="shrink-0">{leftSlot}</div>}
           <div className="flex items-center gap-3">
             {icon && (
               <div

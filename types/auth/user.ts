@@ -2,7 +2,8 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  role: "ADMIN" | "CUSTOMER" | undefined;
+  role: "SUPERADMIN" | "STOREOWNER" | "CUSTOMER" | undefined;
+  store_id?: string;
 }
 
 export interface AuthPayload {
@@ -28,5 +29,12 @@ export interface RegisterInput {
   name: string;
   email: string;
   password: string;
-  role: "ADMIN" | "CUSTOMER";
+  role: "CUSTOMER";
+}
+
+export interface AdminRegisterInput {
+  name: string;
+  email: string;
+  password: string;
+  role: "STOREOWNER";
 }

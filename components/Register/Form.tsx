@@ -7,21 +7,12 @@ import FormInput from '../Base/FormInput'
 import Button from '../Base/Button'
 import Link from 'next/link'
 import Logo from '@/public/assets/logo.svg'
-import Select from '../Base/Select'
 import { register } from '@/lib/api/auth'
 import { showNotify } from '../Base/notification/notify-controllers'
 import { useRouter } from 'next/navigation'
 import { formatError } from '@/utils/formatError'
 import AnimationLogin from '../animation/AnimationLogin'
-
-interface RegisterInput {
-  name: string
-  email: string
-  role: UserRole
-  password: string
-}
-
-type UserRole = "ADMIN" | "CUSTOMER"
+import { RegisterInput } from '@/types/auth/user'
 
 const Form = () => {
   const [loading, setLoading] = useState(false)
@@ -29,8 +20,8 @@ const Form = () => {
   const [form, setForm] = useState<RegisterInput>({
     name: '',
     email: '',
-    role: 'CUSTOMER',
-    password: ''
+    password: '',
+    role: 'CUSTOMER'
   })
 
   const router = useRouter()
@@ -96,20 +87,6 @@ const Form = () => {
               />
             </FormGroup>
 
-            <Select
-              label="Role"
-              name="role"
-              required
-              value={form.role}
-              onChange={(value) =>
-                setForm({ ...form, role: value as UserRole })
-              }
-              options={[
-                { label: "Admin", value: "ADMIN" },
-                { label: "Customer", value: "CUSTOMER" },
-              ]}
-            />
-
             <FormGroup label='Email' required>
               <FormInput
                 name='email'
@@ -140,7 +117,6 @@ const Form = () => {
             disabled={
               !form.email ||
               !form.password ||
-              !form.role ||
               !form.name
             }
             className='w-full mt-8'

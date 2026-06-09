@@ -79,7 +79,7 @@ export const useCashierStore = create<CashierState>((set, get) => ({
     set({ loading: true, error: '' })
     try {
       const res = await getCashier()
-      set({ Cashier: res.data })
+      set({ Cashier: res })
     } catch (err: unknown) {
       const message = formatError(err) || 'Error get Cashier'
       set({ error: message })
@@ -93,7 +93,7 @@ export const useCashierStore = create<CashierState>((set, get) => ({
     set({ loading: true, error: '' })
     try {
       const res = await getPaymentType()
-      set({ paymentList: res.data.methods })
+      set({ paymentList: res.methods })
     } catch (err: unknown) {
       const message = formatError(err) || 'Error get Payment List'
       set({ error: message })

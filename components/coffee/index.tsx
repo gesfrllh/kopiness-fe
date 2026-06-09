@@ -91,11 +91,11 @@ const Coffee = () => {
         }
       />
 
-      <div className="mt-6 mb-12 w-full rounded-2xl bg-colors-var p-10">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 ">
+      <div className="mt-6 mb-12 w-full rounded-2xl bg-colors-var p-4 md:p-10">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-10">
 
           {/* LEFT PANEL */}
-          <div className="lg:col-span-2 col-span-1 rounded-2xl bg-white p-8 shadow-sm border border-amber-100">
+          <div className="lg:col-span-2 col-span-1 rounded-2xl bg-white p-4 md:p-8 shadow-sm border border-amber-100">
 
             <div className="flex items-center justify-between mb-8">
               <div>

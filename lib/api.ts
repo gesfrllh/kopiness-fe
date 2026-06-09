@@ -21,7 +21,12 @@ apiClient.interceptors.request.use(
 );
 
 apiClient.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    if (response.data && typeof response.data === 'object' && 'data' in response.data) {
+      response.data = response.data.data;
+    }
+    return response;
+  },
   (error: AxiosError) => {
     if (error.response?.status === 401 && typeof window !== 'undefined') {
       window.location.href = '/login';

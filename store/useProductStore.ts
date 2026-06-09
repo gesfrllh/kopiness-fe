@@ -2,19 +2,18 @@ import { showNotify } from '@/components/Base/notification/notify-controllers';
 import { create } from 'zustand';
 import { formatError } from '@/utils/formatError';
 import {
-    CartRequest,
     ProductRequest,
     ProductResponse,
     ProductResponseById
 } from '@/types/product';
 import {
     addProduct,
-    confirmCart,
     deleteProduct,
     editProduct,
     getProduct,
     getProductById
 } from '@/lib/api/productApi';
+import { addCartItem } from '@/lib/api/cart';
 
 interface ProductState {
     products: ProductResponse[];
@@ -28,6 +27,8 @@ interface ProductState {
     productsId?: string;
     modalDetail: boolean;
 
+    storeId: string;
+    setStoreId: (id: string) => void;
     setPage: (page: number) => void;
     setLimit: (limit: number) => void;
     setProductsId: (id?: string) => void;
@@ -57,6 +58,7 @@ export const useProductStore = create<ProductState>((set, get) => ({
     draftQty: {},
 
     // pagination default
+    storeId: '',
     page: 1,
     limit: 10,
     total: 0,
@@ -65,6 +67,7 @@ export const useProductStore = create<ProductState>((set, get) => ({
     productsId: '',
     modalDetail: false,
 
+    setStoreId: (storeId) => set({ storeId }),
     setPage: (page) => set({ page }),
     setProductsId: (productsId) => set({ productsId }),
     setLimit: (limit) => set({ limit, page: 1 }),
@@ -102,26 +105,19 @@ export const useProductStore = create<ProductState>((set, get) => ({
     commitStockChanges: async () => {
         set({ loading: true })
         const { draftQty } = get()
-        const items = Object.entries(draftQty).filter(([, quantity]) => quantity > 0).map(([productId, quantity]) => ({
-            productId,
-            quantity
-        }))
-
-        const payload: CartRequest = {
-            items,
-        }
+        const entries = Object.entries(draftQty).filter(([, quantity]) => quantity > 0)
 
         try {
-            await confirmCart(payload)
+            for (const [productId, quantity] of entries) {
+                await addCartItem(productId, quantity)
+            }
             set({ loading: false })
             await get().getProduct()
             showNotify({
                 type: 'success',
                 title: 'Sukses',
-                text: 'Submit Produk Berhasil',
+                text: 'Produk berhasil ditambahkan ke keranjang',
             });
-
-            // return res
         } catch (err) {
             const message = formatError(err) || 'Error submit data';
             set({ error: message });
@@ -131,7 +127,6 @@ export const useProductStore = create<ProductState>((set, get) => ({
                 title: 'Gagal',
                 text: message,
             });
-
             throw new Error(message);
         }
 
@@ -139,19 +134,19 @@ export const useProductStore = create<ProductState>((set, get) => ({
     },
 
     getProduct: async () => {
-        const { page, limit } = get();
+        const { page, limit, storeId } = get();
         set({ loading: true })
         try {
             const res = await getProduct({
                 page,
                 limit,
+                store_id: storeId || undefined,
             });
-            const pagination = res.data.meta
             set({ loading: false })
             set({
-                products: res.data.data,
-                total: pagination.total,
-                totalPages: pagination.totalPages,
+                products: res.data,
+                total: res.meta.total,
+                totalPages: res.meta.totalPages,
             });
         } catch (err: unknown) {
             const message = formatError(err) || 'Error get Product';
@@ -169,7 +164,7 @@ export const useProductStore = create<ProductState>((set, get) => ({
 
         try {
             const res = await getProductById(productsId as string)
-            set({ productsById: res.data })
+            set({ productsById: res })
             set({ loading: false })
             return res
         } catch (err: unknown) {
@@ -185,9 +180,11 @@ export const useProductStore = create<ProductState>((set, get) => ({
 
     addProducts: async (prd) => {
         set({ loading: true })
+        const { storeId } = get()
+        const payload = storeId && !prd.store_id ? { ...prd, store_id: storeId } : prd
 
         try {
-            await addProduct(prd);
+            await addProduct(payload);
 
             await get().getProduct();
 
@@ -240,9 +237,11 @@ export const useProductStore = create<ProductState>((set, get) => ({
 
     updateProduct: async (id: string, updt) => {
         set({ loading: true })
+        const { storeId } = get()
+        const payload = storeId && !updt.store_id ? { ...updt, store_id: storeId } : updt
 
         try {
-            await editProduct(id, updt)
+            await editProduct(id, payload)
 
             set({ loading: false })
             showNotify({

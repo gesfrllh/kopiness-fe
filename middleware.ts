@@ -51,7 +51,7 @@ export function middleware(request: NextRequest) {
 }
 
 function redirectByRole(role: string | undefined, request: NextRequest) {
-  return role === 'ADMIN'
+  return role === 'SUPERADMIN' || role === 'STOREOWNER'
     ? NextResponse.redirect(
       new URL('/manage/dashboard', request.url)
     )

@@ -154,7 +154,7 @@ const FeaturedProducts: React.FC = () => {
           className="text-center mt-12"
         >
           <Link
-            href="/manage/product"
+            href="/manage/stores"
             className="inline-flex items-center gap-2 px-8 py-3 border-2 border-amber-900 text-amber-900 font-semibold rounded-lg hover:bg-amber-900 hover:text-white transition-colors"
           >
             Lihat Semua Produk →

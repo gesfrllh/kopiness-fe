@@ -1,5 +1,3 @@
-import { ApolloError } from "@apollo/client"
-
 const USER_FRIENDLY_MESSAGES: Record<string, string> = {
   'Network error': 'Koneksi bermasalah, silakan coba lagi',
   'User not found': 'Email atau password salah',
@@ -17,9 +15,7 @@ export function formatError(err: unknown): string {
 
   let message = ''
 
-  if (err instanceof ApolloError) {
-    message = err.graphQLErrors?.[0]?.message || err.message || 'Network error'
-  } else if (err instanceof Error) {
+  if (err instanceof Error) {
     message = err.message
   } else {
     return 'Terjadi kesalahan'
