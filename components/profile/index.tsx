@@ -74,7 +74,7 @@ const ProfilePage = () => {
             transition={{ delay: 0.1, duration: 0.5 }}
             className="bg-gradient-to-r from-amber-50 to-amber-100 rounded-xl p-6 md:p-8 border border-amber-200"
           >
-            <div className="flex items-start gap-6">
+            <div className="flex items-start gap-6 flex-wrap">
               {/* Avatar */}
               <div className="relative">
                 <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg">

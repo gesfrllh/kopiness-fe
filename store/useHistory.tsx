@@ -10,23 +10,22 @@ import { getDetail, getHistory } from '@/lib/api/history'
 
 interface HistoryState {
   history: HistoryResponseAdmin[] | HistoryResponseUser[],
+  localHistory: HistoryResponseAdmin[],
   details?: HistoryDetails | null,
   loading: boolean
   error?: string
-  // paymentId: string
   totalPages: number
   total: number
   search: string
   payload: HistoryPayload
   selectedStatus: string,
-  columns: Column<HistoryResponseAdmin | HistoryResponseUser>[] // kita bisa bikin generic nanti kalau mau type-safe
+  columns: Column<HistoryResponseAdmin | HistoryResponseUser>[]
   getHistory: (query?: Partial<HistoryPayload>) => Promise<void>
   setPage: (page: number) => Promise<void>
   setLimit: (limit: number) => Promise<void>
   setSearch: (search: string) => Promise<void>
   setSelectedStatus: (select: string) => Promise<void>
   addLocalHistory: (entry: HistoryResponseAdmin | HistoryResponseUser) => void
-  // tracking modal state
   trackModal: {
     open: boolean;
     entry?: HistoryResponseAdmin | HistoryResponseUser | null;
@@ -38,6 +37,7 @@ interface HistoryState {
 
 export const useHistoryStore = create<HistoryState>((set, get) => ({
   history: [],
+  localHistory: [],
   loading: false,
   error: '',
   selectedStatus: '',
@@ -79,8 +79,10 @@ export const useHistoryStore = create<HistoryState>((set, get) => ({
       accessor: 'status',
       render: (value, _) => {
         const styles: Record<string, string> = {
-          PAID: 'bg-[#E7F4EA] text-[#2E7D32]',
           PENDING: 'bg-[#E3F2FD] text-[#1565C0]',
+          PAID: 'bg-[#E7F4EA] text-[#2E7D32]',
+          IN_PROGRESS: 'bg-[#FFF3CD] text-[#856404]',
+          DELIVERED: 'bg-[#D1E7DD] text-[#0F5132]',
           CANCELLED: 'bg-[#FFF4E5] text-[#E65100]',
         }
         return (
@@ -118,7 +120,7 @@ export const useHistoryStore = create<HistoryState>((set, get) => ({
   ],
 
   addLocalHistory: (entry: HistoryResponseAdmin | HistoryResponseUser) => {
-    set({ history: [entry, ...(get().history || [])] })
+    set({ localHistory: [entry as HistoryResponseAdmin, ...(get().localHistory || [])] })
   },
 
   // tracking modal handlers
@@ -138,9 +140,9 @@ export const useHistoryStore = create<HistoryState>((set, get) => ({
 
       const res = await getHistory(cleanedPayload)
       set({
-        history: res.data.data,
-        totalPages: res.data.meta.totalPages,
-        total: res.data.meta.total,
+        history: res.data,
+        totalPages: res.meta.totalPages,
+        total: res.meta.total,
         payload
       })
     } catch (err: unknown) {
@@ -176,11 +178,8 @@ export const useHistoryStore = create<HistoryState>((set, get) => ({
     set({ loading: true })
     try {
       const response = await getDetail(id)
-      // const steps = hydrateTrackingSteps(tracking.steps, detail.status)
-
-      // const progressPercent = ((steps.filter(s => s.completed).length) / steps.length) * 100
       set({
-        details: response.data,
+        details: response,
         loading: false
       })
     } catch (err: unknown) {

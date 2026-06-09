@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { ButtonProps } from '@/types';
 
 const Button: React.FC<ButtonProps> = ({
-  variant = 'solid',
+  variant = 'outline',
   disabled = false,
   children,
   className,
@@ -11,16 +11,24 @@ const Button: React.FC<ButtonProps> = ({
 }) => {
   return (
     <button
+      disabled={disabled}
       className={clsx(
-        'px-4 py-2 rounded-lg font-medium transition-colors cursor-pointer',
+        'px-4 py-2 rounded-lg font-medium transition-all duration-200 cursor-pointer',
+
         {
-          'btn-solid': variant === 'solid' && !disabled,
-          'btn-outline': variant === 'outline' && !disabled,
-          'opacity-50 cursor-not-allowed bg-gray-500': disabled,
+          'bg-primary text-white hover:brightness-95':
+            variant === 'solid' && !disabled,
+
+          'border border-primary text-primary bg-transparent hover:bg-primary hover:text-white':
+            variant === 'outline' && !disabled,
+
+          'opacity-50 cursor-not-allowed':
+            disabled,
         },
+
+        // Override dari parent selalu di akhir
         className
       )}
-      disabled={disabled}
       {...props}
     >
       {children}

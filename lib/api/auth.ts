@@ -1,6 +1,5 @@
 import apiClient from "@/lib/api";
-import { RegisterInput } from "@/types/auth/user";
-import Cookies from "js-cookie";
+import { AdminRegisterInput, RegisterInput } from "@/types/auth/user";
 
 export const login = async (email: string, password: string) => {
   const response = await apiClient.post('auth/login', {
@@ -17,13 +16,11 @@ export const register = async (req: RegisterInput) => {
   return response.data;
 };
 
+export const adminCreateUser = async (req: AdminRegisterInput) => {
+  const response = await apiClient.post('auth/storeowners', req)
+  return response.data;
+};
+
 export const logout = async () => {
-  const token = Cookies.get('token')
-  await apiClient.post('auth/logout', {}, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  });
-  Cookies.remove('token', { path: '/' });
-  Cookies.remove('is_logged_in', { path: '/' })
+  await apiClient.post('auth/logout')
 }

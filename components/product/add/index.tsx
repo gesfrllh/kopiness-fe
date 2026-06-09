@@ -11,9 +11,10 @@ import DropzoneImage from '@/components/Base/Dropzone'
 import Button from '@/components/Base/Button'
 import { useProductStore } from '@/store/useProductStore'
 import { ProductRequest } from '@/types/product'
-import { useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import AnimationLogin from '@/components/animation/AnimationLogin'
 import FormInput from '@/components/Base/FormInput'
+import Cookies from 'js-cookie'
 
 type FormState = {
   name: string
@@ -66,6 +67,9 @@ const AddProduct = ({ id }: Props) => {
   } = useProductStore()
 
   const router = useRouter()
+  const params = useParams()
+
+  const slug = params.slug
 
   useEffect(() => {
     if (!id) {
@@ -100,10 +104,12 @@ const AddProduct = ({ id }: Props) => {
   }, [productsById, isEdit])
 
   const handleSubmit = async () => {
+    const storeId = Cookies.get('store_id')
     const payload: ProductRequest = {
       ...form,
       price: Number(form.price),
       stock: Number(form.stock),
+      store_id: storeId || undefined,
     }
 
     if (isEdit) {
@@ -112,15 +118,15 @@ const AddProduct = ({ id }: Props) => {
       addProducts(payload)
     }
     if (!error) {
-      router.push('/manage/product')
+      router.push(`/manage/stores/${slug}`)
     }
   }
 
   return (
     <div>
       {/* Back */}
-      <div className="px-8 py-4 mt-4 rounded-xl shadow-[4px_4px_0px_2px_#4E1F00] bg-colors-var w-80">
-        <Link href="/manage/product" className="flex gap-2 items-center text-amber-900 font-semibold hover:text-amber-700 transition">
+      <div className="px-8 py-4 mt-4 rounded-xl shadow-[4px_4px_0px_2px_#4E1F00] bg-colors-var w-full md:w-80">
+        <Link href={`/manage/stores/${slug}`} className="flex gap-2 items-center text-amber-900 font-semibold hover:text-amber-700 transition">
           <Icon icon="material-symbols:arrow-circle-left" width={24} />
           Product Page
         </Link>
@@ -132,18 +138,18 @@ const AddProduct = ({ id }: Props) => {
         <div className="grid md:grid-cols-2 gap-8">
           <FormGroup label="Product Name" required>
             <FormInput
-                name='name'
-                value={form.name}
-                type='text'
-                onChange={(e) => setForm({ ...form, name: e.target.value })} />
+              name='name'
+              value={form.name}
+              type='text'
+              onChange={(e) => setForm({ ...form, name: e.target.value })} />
           </FormGroup>
 
           <FormGroup label="Price" required>
             <FormInput
-                name='price'
-                value={form.price}
-                type='number'
-                onChange={(e) => setForm({ ...form, price: e.target.value })} />
+              name='price'
+              value={form.price}
+              type='number'
+              onChange={(e) => setForm({ ...form, price: e.target.value })} />
           </FormGroup>
         </div>
 
@@ -151,18 +157,18 @@ const AddProduct = ({ id }: Props) => {
         <div className="grid md:grid-cols-2 gap-8">
           <FormGroup label="Stock" required>
             <FormInput
-                name='stock'
-                value={form.stock}
-                type='number'
-                onChange={(e) => setForm({ ...form, stock: e.target.value })} />
+              name='stock'
+              value={form.stock}
+              type='number'
+              onChange={(e) => setForm({ ...form, stock: e.target.value })} />
           </FormGroup>
 
           <FormGroup label="Origin" required>
             <FormInput
-                name='origin'
-                value={form.origin}
-                type='text'
-                onChange={(e) => setForm({ ...form, origin: e.target.value })} />
+              name='origin'
+              value={form.origin}
+              type='text'
+              onChange={(e) => setForm({ ...form, origin: e.target.value })} />
           </FormGroup>
         </div>
 
@@ -180,10 +186,10 @@ const AddProduct = ({ id }: Props) => {
         {/* Process */}
         <FormGroup label="Process" required>
           <FormInput
-                name='process'
-                value={form.process}
-                type='text'
-                onChange={(e) => setForm({ ...form, process: e.target.value })} />
+            name='process'
+            value={form.process}
+            type='text'
+            onChange={(e) => setForm({ ...form, process: e.target.value })} />
         </FormGroup>
 
         {/* Flavor Notes */}

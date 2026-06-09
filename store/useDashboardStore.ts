@@ -21,8 +21,9 @@ export const useDashboardStore = create<DashboardState>((set) => ({
       const res = await getDashboard();
       set({
         loading: false,
-        data: res.data
+        data: res
       })
+
     } catch (err: unknown) {
       throw new Error(formatError(err) || 'Error generate Coffee')
     } finally {

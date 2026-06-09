@@ -30,8 +30,8 @@ export default function Page({
       {/* <Button onClick={() => getDetailsTracking(id)}>
         Get Tracking Log
       </Button> */}
-      <div className="px-8">
-        <div className="px-10 py-8 space-y-8">
+      <div className="px-4 md:px-8">
+        <div className="px-4 md:px-10 py-8 space-y-8">
 
           {/* HEADER */}
           <div>
@@ -43,21 +43,21 @@ export default function Page({
             </p>
           </div>
 
-          <div className="grid grid-cols-12 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
 
             {/* LEFT: MAP */}
-            <div className="col-span-8">
+            <div className="md:col-span-8">
               <div className="bg-white border rounded-2xl overflow-hidden">
 
                 {/* MAP AREA */}
-                <div className="h-[400px] bg-gray-200 relative">
+                <div className="h-48 md:h-[400px] bg-gray-200 relative">
                   <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black text-white text-xs px-3 py-1 rounded-full">
                     Selected location
                   </div>
                 </div>
 
                 {/* SERVICE INFO */}
-                <div className="p-6 flex items-center justify-between">
+                <div className="p-4 md:p-6 flex items-center justify-between flex-wrap gap-4">
                   <div>
                     <p className="font-semibold text-gray-800">
                       House Cleaning
@@ -81,7 +81,7 @@ export default function Page({
             </div>
 
             {/* RIGHT: TIMELINE + INFO */}
-            <div className="col-span-4 space-y-6">
+            <div className="md:col-span-4 space-y-6">
 
               {/* TIMELINE */}
               <div className="bg-white border rounded-2xl p-6">

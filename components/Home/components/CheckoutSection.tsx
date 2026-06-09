@@ -129,7 +129,7 @@ const CheckoutSection: React.FC = () => {
             Jutaan pecinta kopi sudah merasakan kemudahan dan kepuasan berbelanja di Kopiness
           </p>
           <Link
-            href="/manage/product"
+            href="/manage/stores"
             className="inline-block px-8 py-3 bg-white text-amber-900 font-bold rounded-lg hover:bg-amber-50 transition-colors"
           >
             Mulai Berbelanja

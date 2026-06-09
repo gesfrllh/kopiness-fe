@@ -37,9 +37,9 @@ const Sidebar = () => {
     },
     {
       id: uuid(),
-      title: 'Produk',
-      link: '/manage/product',
-      icon: <Icon icon="material-symbols-light:desktop-landscape-add" width={24} />
+      title: 'Store',
+      link: '/manage/stores',
+      icon: <Icon icon="mdi:store-search" width={24} />
     },
     {
       id: uuid(),
@@ -95,9 +95,12 @@ const Sidebar = () => {
     setUserData({ role: roleCookie })
   }, [])
 
+  const isManagement = userData?.role === 'SUPERADMIN' || userData?.role === 'STOREOWNER'
+  const isSuperAdmin = userData?.role === 'SUPERADMIN'
+
   const filteredData = useMemo(() => {
     const base = dataItem.map(item => {
-      if (userData?.role !== 'ADMIN' && item.title === 'Dashboard') {
+      if (!isManagement && item.title === 'Dashboard') {
         return {
           ...item,
           title: 'Home',
@@ -108,7 +111,25 @@ const Sidebar = () => {
       return item
     })
 
-    if (userData?.role === 'ADMIN') {
+    if (!isManagement) {
+      base.splice(1, 0, {
+        id: uuid(),
+        title: 'Stores',
+        link: '/manage/stores',
+        icon: <Icon icon="mdi:store" width={24} />
+      })
+    }
+
+    if (isSuperAdmin) {
+      base.splice(1, 0, {
+        id: uuid(),
+        title: 'Kelola Pengguna',
+        link: '/manage/users',
+        icon: <Icon icon="mdi:users-group" width={24} />
+      })
+    }
+
+    if (isManagement) {
       base.unshift({
         id: uuid(),
         title: 'Home',
@@ -118,7 +139,7 @@ const Sidebar = () => {
     }
 
     return base
-  }, [userData])
+  }, [userData, isManagement, isSuperAdmin])
 
   const openMobileMenu = () => {
     setOpenMenu(prev => !prev)
@@ -132,7 +153,7 @@ const Sidebar = () => {
   }, [])
 
   return (
-    <div className='h-20 fixed w-full flex items-center justify-between px-12 md:px-32 theme-card border-b'>
+    <div className='h-20 fixed w-full flex items-center justify-between px-4 md:px-32 theme-card border-b'>
 
       {/* LOGO */}
       <div className='flex gap-8 items-center'>
@@ -202,6 +223,10 @@ const Sidebar = () => {
 
               </div>
             ))}
+
+            <Link href="/manage/cart" className="relative p-2 hover:bg-gray-100 rounded-lg transition">
+              <Icon icon="mdi:cart" width={24} />
+            </Link>
 
             <Button variant='outline' onClick={handleLogout}>
               Logout

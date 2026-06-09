@@ -56,7 +56,7 @@ const HeroSection: React.FC = () => {
 
               {/* CTA Buttons */}
               <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/manage/product" className="btn btn--primary inline-flex items-center gap-2 justify-center">
+                <Link href="/manage/stores" className="btn btn--primary inline-flex items-center gap-2 justify-center">
                   Lihat Produk Kami
                   <ArrowRight size={18} />
                 </Link>

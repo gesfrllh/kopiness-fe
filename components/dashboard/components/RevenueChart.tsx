@@ -45,7 +45,7 @@ const RevenueCharts: React.FC<RevenueChartProps> = ({ data }) => {
 
           return (
             <div key={idx} className="space-y-1">
-              <div className="flex justify-between items-center text-xs">
+              <div className="flex justify-between items-center text-xs flex-wrap gap-1">
                 <span className="text-gray-700 font-medium">{formatDate(item.date, 'long')}</span>
                 <span className="text-gray-600">
                   Rp {(item.total / 1_000_000).toFixed(2)}M

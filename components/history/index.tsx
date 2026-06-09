@@ -18,6 +18,7 @@ const History = () => {
     total,
     getHistory,
     history,
+    localHistory,
     setLimit,
     selectedStatus,
     setSelectedStatus,
@@ -25,6 +26,8 @@ const History = () => {
     search,
     columns,
     loading } = useHistoryStore();
+
+  const displayData = [...localHistory, ...history]
   const [searching, setSearching] = useState('')
 
   useEffect(() => {
@@ -32,18 +35,11 @@ const History = () => {
   }, [])
 
   const opts = [
-    {
-      value: 'PAID',
-      label: 'PAID',
-    },
-    {
-      value: 'CANCELLED',
-      label: 'CANCELLED',
-    },
-    {
-      value: 'PENDING',
-      label: 'PENDING',
-    }
+    { value: 'PENDING', label: 'PENDING' },
+    { value: 'PAID', label: 'PAID' },
+    { value: 'IN_PROGRESS', label: 'IN PROGRESS' },
+    { value: 'DELIVERED', label: 'DELIVERED' },
+    { value: 'CANCELLED', label: 'CANCELLED' },
   ]
 
   useEffect(() => {
@@ -80,7 +76,7 @@ const History = () => {
                   onChange={setSelectedStatus}
                   value={selectedStatus} />
               </div>
-              <div className="w-72">
+              <div className="w-full md:w-72">
                 <FormGroup label="Search Order">
                   <FormInput
                     name="search"
@@ -96,7 +92,7 @@ const History = () => {
 
           {/* TABLE */}
           <div className="p-6">
-            <Table columns={columns} data={history} />
+            <Table columns={columns} data={displayData} />
           </div>
 
           <div className="px-6 pb-6">

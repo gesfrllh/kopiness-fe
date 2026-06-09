@@ -18,7 +18,7 @@ import Tooltip from '../Base/ui/Tooltip'
 import { ConfirmModal } from '../Base/ui/Modal/ConfirmModal'
 import { useCartStore } from '@/store/useCartStore'
 import { ProductResponse } from '@/types/product'
-import { useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import { formatCurrency } from '@/utils/general'
 import TextLabel from '../Base/TextLabel'
 import FormInput from '../Base/FormInput'
@@ -50,7 +50,8 @@ const Product = () => {
     getProduct,
     commitStockChanges,
     getProductByIds,
-    removeProduct
+    removeProduct,
+    setStoreId
   } = useProductStore()
 
   const {
@@ -66,6 +67,8 @@ const Product = () => {
 
   const role = Cookies.get('role')
   const router = useRouter()
+  const params = useParams()
+  const slug = params.slug
 
   const toggleItem = (id: string) => {
     setCheckedItems((prev) => ({
@@ -75,15 +78,17 @@ const Product = () => {
   }
 
   useEffect(() => {
+    const storeId = Cookies.get('store_id')
+    if (storeId) setStoreId(storeId)
     getProduct()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, limit])
 
   useEffect(() => {
     if (!loading) {
-      setAnimate(false) // reset dulu
+      setAnimate(false)
       requestAnimationFrame(() => {
-        setAnimate(true) // trigger animasi setelah DOM paint
+        setAnimate(true)
       })
     }
   }, [loading])
@@ -106,20 +111,23 @@ const Product = () => {
   }
 
   const editProduct = (id: string) => {
-    router.push(`/manage/product/edit/${id}`)
+    router.push(`/manage/product/edit/${slug}/${id}`)
   }
 
   return (
     <>
       <div>
-        <CTA title="Product Cta" />
+        <CTA title="Product Cta" leftSlot={<Link href="/manage/stores" className="flex gap-2 items-center text-white font-semibold hover:text-amber-700 transition">
+          <Icon icon="material-symbols:arrow-circle-left" width={24} />
+          Store Page
+        </Link>} />
         <div className="bg-colors-var rounded-lg my-8 py-4 px-8">
           {/* Header */}
-          <div className="flex items-center justify-between pb-4 border-b border-gray-300">
+          <div className="flex items-center justify-between pb-4 border-b border-gray-300 flex-wrap gap-4">
             <span>Product</span>
             <div className="flex items-center gap-8">
               <Button variant="outline">
-                <Link href="/manage/product/add">Add Product</Link>
+                <Link href={`/manage/product/add/${slug}`}>Add Product</Link>
               </Button>
 
               <div
@@ -175,7 +183,7 @@ const Product = () => {
                       <CardRoot.footer>
 
                         {/* ADMIN ACTION */}
-                        {role === 'ADMIN' && (
+                        {(role === 'SUPERADMIN' || role === 'STOREOWNER') && (
                           <div className="flex p-4 justify-end gap-3 text-gray-400 text-sm">
                             <div
                               className="cursor-pointer hover:text-blue-500 transition"
@@ -284,10 +292,10 @@ const Product = () => {
             </div>
           </ModalHeader>
           <ModalBody>
-            <div className='grid gap-8 grid-cols-3'>
-              <div className='col-span-2'>
+            <div className='grid gap-8 grid-cols-1 md:grid-cols-3'>
+              <div className='md:col-span-2'>
                 {productsById && productsById.imageUrl && (
-                  <div className="relative  h-[400px] overflow-hidden rounded-lg shadow-lg">
+                  <div className="relative h-48 md:h-[400px] overflow-hidden rounded-lg shadow-lg">
                     <Image
                       src={productsById.imageUrl[0]}
                       alt="Product image"
@@ -297,7 +305,7 @@ const Product = () => {
                   </div>
                 )}
               </div>
-              <div className='border-var rounded-lg shadow-[8px_6px_0px_1px_#422900] px-8 py-4 w-auto'>
+              <div className='border-var rounded-lg shadow-[8px_6px_0px_1px_#422900] px-4 md:px-8 py-4 w-auto'>
                 <div className='w-full'>
                   <p className='text-xl font-semibold'>{productsById.name}</p>
                   <div className='flex justify-between items-center py-4'>
@@ -365,35 +373,37 @@ const Product = () => {
                   {items.map((item) => (
                     <div
                       key={item.id}
-                      className='shadow-[8px_6px_0px_1px_#422900] border-var rounded-lg flex gap-4 p-8 items-center'
+                      className='shadow-[8px_6px_0px_1px_#422900] border-var rounded-lg flex flex-col md:flex-row gap-4 p-4 md:p-8 items-start md:items-center'
                     >
-                      <FormInput
-                        type="checkbox"
-                        name={`item-${item.id}`}
-                        checked={checkedItems[item.id as string] as boolean ?? false}
-                        onChange={() => toggleItem(item.id as string)}
-                        className="w-5 h-5"
-                      />
-
-                      <div className='w-32 rounded-lg'>
-                        <Image
-                          className='w-[200px] rounded-lg h-[100px] object-cover'
-                          src={item.imageUrl[0]}
-                          width={400}
-                          height={400}
-                          alt={item.name}
+                      <div className="flex items-center gap-4 w-full md:w-auto">
+                        <FormInput
+                          type="checkbox"
+                          name={`item-${item.id}`}
+                          checked={checkedItems[item.id as string] as boolean ?? false}
+                          onChange={() => toggleItem(item.id as string)}
+                          className="w-5 h-5 shrink-0"
                         />
+
+                        <div className='w-20 h-20 md:w-32 md:h-32 rounded-lg shrink-0 overflow-hidden'>
+                          <Image
+                            className='w-full h-full object-cover'
+                            src={item.imageUrl[0]}
+                            width={400}
+                            height={400}
+                            alt={item.name}
+                          />
+                        </div>
                       </div>
 
-                      <div className='flex justify-between w-full'>
-                        <div className='flex flex-col gap-8'>
+                      <div className='flex justify-between w-full gap-4 flex-col md:flex-row'>
+                        <div className='flex flex-col gap-2 md:gap-8'>
                           <div className='flex flex-col'>
                             <TextLabel size='xl' title={item.name} dot />
-                            <p className='text-xs px-6'>
+                            <p className='text-xs md:px-6'>
                               {item.description}
                             </p>
                           </div>
-                          <div className='px-6'>
+                          <div className='md:px-6'>
                             <p className='font-semibold'>
                               {formatCurrency(item.price)}
                             </p>
@@ -402,7 +412,7 @@ const Product = () => {
                             </p>
                           </div>
                         </div>
-                        <div className='flex gap-4 items-center'>
+                        <div className='flex gap-4 items-center self-end md:self-auto'>
                           <Button
                             variant='outline'
                             onClick={() => updateDraftStock(item.id as string, -1)}

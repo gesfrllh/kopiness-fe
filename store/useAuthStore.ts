@@ -64,18 +64,20 @@ export const useAuthStore = create<AuthState>((set: SetStateFn) => {
       try {
         const res = await login(email, password)
 
-        Cookies.set("role", res.data.user.role, { path: "/", secure: true, sameSite: "strict" })
-        Cookies.set("status", res.status, { secure: true, sameSite: "strict" })
-        Cookies.set("is_logged_in", res.data.isLoggedIn, { secure: true, sameSite: "strict" })
+        Cookies.set("role", res.user.role, { path: "/", secure: true, sameSite: "strict" })
+        Cookies.set("is_logged_in", res.isLoggedIn, { path: "/", secure: true, sameSite: "strict" })
+        if (res.user.store_id) {
+          Cookies.set("store_id", res.user.store_id, { path: "/", secure: true, sameSite: "strict" })
+        }
 
         // Save user to localStorage (token di httpOnly cookies)
-        saveAuthToStorage(res.data.user)
+        saveAuthToStorage(res.user)
 
         set({
-          user: res.data.user,
+          user: res.user,
           token: null, // Token di httpOnly cookies, tidak disimpan di state
           loading: false,
-          role: res.data.user.role,
+          role: res.user.role,
           error: null
         })
       } catch (error: unknown) {
@@ -103,6 +105,7 @@ export const useAuthStore = create<AuthState>((set: SetStateFn) => {
         Cookies.remove('status')
         Cookies.remove('role')
         Cookies.remove('is_logged_in')
+        Cookies.remove('store_id')
       } catch (error: unknown) {
         const message = formatError(error) || 'Logout Failed'
         set({ error: message, loading: false })

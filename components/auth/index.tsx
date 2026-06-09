@@ -26,7 +26,11 @@ export default function OAuthSuccess() {
           Cookies.set('is_logged_in', isLoggedin, { secure: true, sameSite: 'strict' })
           Cookies.set('role', role, { secure: true, sameSite: 'strict' })
 
-          router.replace('/manage/dashboard')
+          if (role === 'SUPERADMIN' || role === 'STOREOWNER') {
+            router.replace('/manage/dashboard')
+          } else {
+            router.replace('/manage/home')
+          }
         }
       })
       .catch(() => {

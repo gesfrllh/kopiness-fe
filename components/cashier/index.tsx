@@ -113,7 +113,7 @@ const Cashier = () => {
         </div>
         <div className="border m-4 md:m-0 p-4 shadow-[8px_6px_0px_1px_#422900] bg-colors-var rounded-lg overflow-auto sticky top-5 h-fit">
           <span className="text-lg font-semibold">Payment</span>
-          <div className="overflow-auto max-h-[420px]">
+          <div className="overflow-auto max-h-60 md:max-h-[420px]">
             {selected.map((item) => item.content)}
           </div>
           <div className="py-4 flex flex-col">
