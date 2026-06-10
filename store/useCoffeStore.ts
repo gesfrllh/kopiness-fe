@@ -120,7 +120,7 @@ export const useCoffeeStore = create<CoffeState>((set, get) => ({
 
     try {
       const res = await getOptions()
-      set({ options: res.data })
+      set({ options: res })
       set({ loading: false })
     } catch (err: unknown) {
       set({ loading: false })
@@ -150,8 +150,8 @@ export const useCoffeeStore = create<CoffeState>((set, get) => ({
 
       set({ loadingGenerate: false })
       set({
-        adjustment: res.data.data,
-        dataAdjustAI: res.data.data
+        adjustment: res.data,
+        dataAdjustAI: res.data
       })
     } catch (err: unknown) {
       set({ loadingGenerate: false })
@@ -178,10 +178,9 @@ export const useCoffeeStore = create<CoffeState>((set, get) => ({
 
     try {
       const res = await generateData(payload)
-
       set({
-        recipe: res.data,
-        ratio: res.data.ratio,
+        recipe: res,
+        ratio: res.ratio,
       })
 
     } catch (err: unknown) {
