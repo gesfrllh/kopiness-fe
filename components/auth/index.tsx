@@ -37,7 +37,7 @@ export default function OAuthSuccess() {
         router.replace('/login?error=oauth_failed')
         setLoading(false)
       })
-  }, [])
+  }, [router])
 
   return (
     <>

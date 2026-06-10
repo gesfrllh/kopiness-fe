@@ -83,7 +83,7 @@ const Cashier = () => {
   useEffect(() => {
     getCashier()
     getPayment()
-  }, [])
+  }, [getCashier, getPayment])
 
   return (
     <>

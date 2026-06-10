@@ -23,7 +23,7 @@ export default function ForgotPassword() {
       setlinkData(res.data.data.resetLink)
       setLoading(false)
       setSent(true)
-    } catch (err) {
+    } catch {
       setLoading(false)
     }
 

@@ -60,7 +60,7 @@ const Coffee = () => {
       const selectedOption = list.find((opt) => opt.value === val)
       if (selectedOption) setSelectedField(key, selectedOption)
     },
-    [setSelectedField]
+    [setSelectedField, options]
   )
 
   const reciptRef = useRef<HTMLDivElement>(null)

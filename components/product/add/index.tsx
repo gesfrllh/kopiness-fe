@@ -77,14 +77,14 @@ const AddProduct = ({ id }: Props) => {
       setProductsId(undefined)
       resetProductById()
     }
-  }, [id])
+  }, [id, resetProductById, setProductsId, setForm])
 
   useEffect(() => {
     if (!id) return
 
     setProductsId(id)
     getProductByIds()
-  }, [id])
+  }, [id, setProductsId, getProductByIds])
 
   useEffect(() => {
     if (!isEdit) return

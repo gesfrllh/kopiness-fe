@@ -7,7 +7,6 @@ import { StepsTracking } from "@/types/history";
 // import { ItemsDetailsProduct } from "@/types/history";
 import { formatCurrency } from "@/utils/general";
 import React, { useEffect } from "react";
-import { formatDate } from "@/utils/general";
 
 export default function Page({
   params,
@@ -20,11 +19,10 @@ export default function Page({
     getDetails,
     details,
     loading,
-    trackModal
   } = useHistoryStore()
   useEffect(() => {
     getDetails(id)
-  }, [])
+  }, [getDetails, id])
   return (
     <>
       {/* <Button onClick={() => getDetailsTracking(id)}>
