@@ -1,7 +1,7 @@
 name: Quality Check
 
 on:
-  push:
+  pull_request:
     branches:
       - main
       - development
@@ -19,7 +19,6 @@ jobs:
           cache: yarn
 
       - run: yarn install --frozen-lockfile
-
-      - run: yarn tsc --noEmit
-
+      - run: yarn lint
       - run: yarn test
+      - run: yarn build
