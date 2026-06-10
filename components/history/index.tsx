@@ -28,11 +28,11 @@ const History = () => {
     loading } = useHistoryStore();
 
   const displayData = [...localHistory, ...history]
-  const [searching, setSearching] = useState('')
+  const [searching] = useState('')
 
   useEffect(() => {
     getHistory()
-  }, [])
+  }, [getHistory])
 
   const opts = [
     { value: 'PENDING', label: 'PENDING' },
@@ -47,7 +47,7 @@ const History = () => {
       setSearch(searching)
     }, 500);
     return () => clearTimeout(timer)
-  }, [searching, setSearching])
+  }, [searching, setSearch])
 
   return (
     <>

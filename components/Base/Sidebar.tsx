@@ -22,56 +22,6 @@ const Sidebar = () => {
   const [openMenu, setOpenMenu] = useState(false)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
 
-  const dataItem = [
-    {
-      id: uuid(),
-      title: 'Dashboard',
-      link: '/manage/dashboard',
-      icon: <Icon icon="material-symbols-light:dashboard-rounded" width={24} />
-    },
-    {
-      id: uuid(),
-      title: 'Kasir',
-      link: '/manage/cashier',
-      icon: <Icon icon="material-symbols-light:shopping-cart-sharp" width={24} />
-    },
-    {
-      id: uuid(),
-      title: 'Store',
-      link: '/manage/stores',
-      icon: <Icon icon="mdi:store-search" width={24} />
-    },
-    {
-      id: uuid(),
-      title: 'History',
-      icon: <Icon icon="material-symbols-light:source-notes" width={24} />,
-      children: [
-        {
-          id: uuid(),
-          title: 'Payment History',
-          link: '/manage/history'
-        },
-        {
-          id: uuid(),
-          title: 'Order Management',
-          link: '/manage/order'
-        }
-      ]
-    },
-    {
-      id: uuid(),
-      title: 'Coffe Time',
-      link: '/manage/coffee',
-      icon: <Icon icon="material-symbols-light:coffee-maker" width={24} />
-    },
-    {
-      id: uuid(),
-      title: 'Profile',
-      link: '/manage/profile',
-      icon: <Icon icon="mdi:account-circle" width={24} />
-    },
-  ]
-
   const handleLogout = async () => {
     try {
       await logout()
@@ -99,7 +49,55 @@ const Sidebar = () => {
   const isSuperAdmin = userData?.role === 'SUPERADMIN'
 
   const filteredData = useMemo(() => {
-    const base = dataItem.map(item => {
+    const base = [
+      {
+        id: uuid(),
+        title: 'Dashboard',
+        link: '/manage/dashboard',
+        icon: <Icon icon="material-symbols-light:dashboard-rounded" width={24} />
+      },
+      {
+        id: uuid(),
+        title: 'Kasir',
+        link: '/manage/cashier',
+        icon: <Icon icon="material-symbols-light:shopping-cart-sharp" width={24} />
+      },
+      {
+        id: uuid(),
+        title: 'Store',
+        link: '/manage/stores',
+        icon: <Icon icon="mdi:store-search" width={24} />
+      },
+      {
+        id: uuid(),
+        title: 'History',
+        icon: <Icon icon="material-symbols-light:source-notes" width={24} />,
+        children: [
+          {
+            id: uuid(),
+            title: 'Payment History',
+            link: '/manage/history'
+          },
+          {
+            id: uuid(),
+            title: 'Order Management',
+            link: '/manage/order'
+          }
+        ]
+      },
+      {
+        id: uuid(),
+        title: 'Coffe Time',
+        link: '/manage/coffee',
+        icon: <Icon icon="material-symbols-light:coffee-maker" width={24} />
+      },
+      {
+        id: uuid(),
+        title: 'Profile',
+        link: '/manage/profile',
+        icon: <Icon icon="mdi:account-circle" width={24} />
+      },
+    ].map(item => {
       if (!isManagement && item.title === 'Dashboard') {
         return {
           ...item,
@@ -139,7 +137,7 @@ const Sidebar = () => {
     }
 
     return base
-  }, [userData, isManagement, isSuperAdmin])
+  }, [isManagement, isSuperAdmin])
 
   const openMobileMenu = () => {
     setOpenMenu(prev => !prev)
