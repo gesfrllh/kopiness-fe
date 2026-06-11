@@ -166,7 +166,7 @@ const Coffee = () => {
                 value={selectedStrength.value}
                 onChange={handleSelectChange(options.strength, 'selectedStrength')}
               />
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 <AnimatedSection show={showMilk}>
                   <Select
                     options={options.milkTypes}
@@ -224,7 +224,7 @@ const Coffee = () => {
               <div className="mt-8 p-6 bg-colors-var border border-amber-800 rounded-2xl shadow-[4px_4px_0px_2px_#4E1F00]">
                 <h4 className="font-bold text-amber-900 text-lg mb-4">AI Adjustment Preview</h4>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="sm:grid flex flex-col sm:grid-cols-2 gap-4">
                   <div className="flex flex-col">
                     <span className="font-bold text-xs uppercase">Confidence</span>
                     <span className="font-semibold text-green-600">{dataAdjustAI?.confidence}%</span>
@@ -393,7 +393,7 @@ const Coffee = () => {
                     variant="solid"
                     className="w-44 flex items-center mt-4 justify-center gap-2"
                     onClick={adjustCoffee}
-                    disabled={loadingGenerate}
+                    disabled={loadingGenerate || problem === ''}
                   >
                     {loadingGenerate && (
                       <span className="w-4 h-4 border-2 border-amber-600 border-t-transparent rounded-full animate-spin" />

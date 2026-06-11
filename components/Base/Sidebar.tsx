@@ -13,6 +13,7 @@ import { formatError } from '@/utils/formatError'
 import { useAuthStore } from '@/store/useAuthStore'
 import { useResponsiveStore } from '@/store/useResponsiveStore'
 import Button from './Button'
+import '../animation/AnimationCss.scss'
 
 const Sidebar = () => {
   const isMobile = useResponsiveStore((state) => state.isMobile)
@@ -154,12 +155,14 @@ const Sidebar = () => {
     <div className='h-20 fixed w-full flex items-center justify-between px-4 md:px-32 theme-card border-b'>
 
       {/* LOGO */}
-      <div className='flex gap-8 items-center'>
-        <Image src={Logo} alt="" priority width={132} />
-      </div>
+      {!isMobile && (
+        <div className='flex gap-8 items-center'>
+          <Image src={Logo} alt="" priority width={132} />
+        </div>
+      )}
 
       {/* MENU */}
-      <div className='flex items-center'>
+      <div className='flex items-center w-full'>
         {!isMobile ? (
           <div className="flex gap-8 items-center">
 
@@ -231,11 +234,21 @@ const Sidebar = () => {
             </Button>
           </div>
         ) : (
-          <div>
-            <Button variant='outline' onClick={openMobileMenu}>
-              {openMenu ? 'Close Menu' : 'Open Menu'}
+          <div className="flex justify-end w-full">
+            <Button
+              variant="outline"
+              onClick={openMobileMenu}
+              className="w-[58px] h-12 p-0"
+            >
+              <div
+                id="nav-icon1"
+                className={openMenu ? "open" : ""}
+              >
+                <span />
+                <span />
+                <span />
+              </div>
             </Button>
-
             <div className={`mobile-menu ${openMenu ? "open" : "close"}`}>
               {filteredData.map((item, idx) => (
                 <div key={idx}>
@@ -244,9 +257,10 @@ const Sidebar = () => {
                     <>
                       <div
                         className="flex justify-between items-center py-4 px-4"
-                        onClick={() =>
+                        onClick={(e) => {
+                          e.stopPropagation()
                           setOpenDropdown(openDropdown === item.title ? null : item.title)
-                        }
+                        }}
                       >
                         <div className="flex gap-4">
                           {item.icon}
@@ -296,6 +310,7 @@ const Sidebar = () => {
               </Button>
             </div>
           </div>
+
         )}
       </div>
     </div>

@@ -29,7 +29,7 @@ const Select: React.FC<SelectProps> = ({
 
   return (
     <FormGroup label={label} required={required} value={value}>
-      <div ref={ref} className="relative  w-full">
+      <div ref={ref} className="relative w-full">
         <button
           type="button"
           name={name}
@@ -51,14 +51,16 @@ const Select: React.FC<SelectProps> = ({
 
         <ul
           className={`
-            absolute left-0 z-12 top-10 mt-2 w-full
-            bg-colors-var rounded-md shadow-sm
-            max-h-60 overflow-y-auto text-sm
-            transform origin-top transition-all duration-200 ease-out
-            ${open
-              ? 'opacity-100 scale-y-100'
-              : 'opacity-0 scale-y-0 pointer-events-none'}
-          `}
+          absolute left-0 top-10 mt-2 w-full
+          bg-colors-var rounded-md shadow-lg
+          max-h-60 overflow-y-auto text-sm
+          z-[9999]
+          transform origin-top transition-all duration-200 ease-out
+          ${open
+              ? "opacity-100 scale-y-100"
+              : "opacity-0 scale-y-0 pointer-events-none"
+            }
+        `}
         >
           {options.map((opt) => (
             <li
