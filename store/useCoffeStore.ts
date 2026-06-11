@@ -162,10 +162,14 @@ export const useCoffeeStore = create<CoffeState>((set, get) => ({
   },
 
   generateCoffe: async () => {
-    set({ loading: true })
+    set({
+      loading: true,
+      dataAdjustAI: null,
+      problem: '',
+      adjustment: null,
+    })
 
     const state = get()
-
     const payload: CoffePayload = {
       drinkName: state.selectedNames.value,
       drinkType: state.selectedType.value,

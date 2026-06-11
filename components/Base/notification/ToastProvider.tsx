@@ -72,12 +72,23 @@ export const ToastProvider = ({
 
   const getContainerPosition = () => {
     const pos: Record<string, string> = {
-      "top-right": "top-8 right-8 items-end flex-col-reverse",
-      "top-center": "top-8 left-1/2 -translate-x-1/2 items-center flex-col-reverse",
-      "top-left": "top-8 left-8 items-start flex-col-reverse",
-      "bottom-right": "bottom-8 right-8 items-end flex-col",
-      "bottom-center": "bottom-8 left-1/2 -translate-x-1/2 items-center flex-col",
-      "bottom-left": "bottom-8 left-8 items-start flex-col",
+      "top-right":
+        "top-4 left-4 right-4 sm:top-8 sm:left-auto sm:right-8 items-stretch sm:items-end flex-col-reverse",
+
+      "top-center":
+        "top-4 left-4 right-4 sm:top-8 sm:left-1/2 sm:right-auto sm:-translate-x-1/2 items-stretch sm:items-center flex-col-reverse",
+
+      "top-left":
+        "top-4 left-4 right-4 sm:top-8 sm:left-8 sm:right-auto items-stretch sm:items-start flex-col-reverse",
+
+      "bottom-right":
+        "bottom-4 left-4 right-4 sm:bottom-8 sm:left-auto sm:right-8 items-stretch sm:items-end flex-col",
+
+      "bottom-center":
+        "bottom-4 left-4 right-4 sm:bottom-8 sm:left-1/2 sm:right-auto sm:-translate-x-1/2 items-stretch sm:items-center flex-col",
+
+      "bottom-left":
+        "bottom-4 left-4 right-4 sm:bottom-8 sm:left-8 sm:right-auto items-stretch sm:items-start flex-col",
     };
     return pos[position] || pos["top-right"];
   };
@@ -100,7 +111,7 @@ export const ToastProvider = ({
                   transition={{ duration: 0.15 }}
                 >
                   <NotifyItem
-                    {...item} 
+                    {...item}
                     onClose={() => remove(item._id)}
                   />
                 </motion.div>
