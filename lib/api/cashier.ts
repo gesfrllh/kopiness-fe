@@ -22,7 +22,7 @@ export const getPaymentType = async () => {
   return response.data
 }
 
-export const createTransaction = async (payload: { items: Array<{ productId: string; quantity: number }> }) => {
+export const createTransaction = async (payload: { items: Array<{ productId: string; quantity: number }>; deliveryAddress: string; deliveryLatitude: number; deliveryLongitude: number }) => {
   const response = await apiClient.post('/transactions', payload)
   return response.data
 }

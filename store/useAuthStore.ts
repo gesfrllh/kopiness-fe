@@ -64,10 +64,11 @@ export const useAuthStore = create<AuthState>((set: SetStateFn) => {
       try {
         const res = await login(email, password)
 
-        Cookies.set("role", res.user.role, { path: "/", secure: true, sameSite: "strict" })
-        Cookies.set("is_logged_in", res.isLoggedIn, { path: "/", secure: true, sameSite: "strict" })
+        // These cookies drive navigation only; the backend authorizes every API request.
+        Cookies.set("role", res.user.role, { path: "/", sameSite: "strict" })
+        Cookies.set("is_logged_in", res.isLoggedIn, { path: "/", sameSite: "strict" })
         if (res.user.store_id) {
-          Cookies.set("store_id", res.user.store_id, { path: "/", secure: true, sameSite: "strict" })
+          Cookies.set("store_id", res.user.store_id, { path: "/", sameSite: "strict" })
         }
 
         // Save user to localStorage (token di httpOnly cookies)

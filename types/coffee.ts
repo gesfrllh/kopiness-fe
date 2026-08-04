@@ -16,7 +16,8 @@ export interface CoffePayload {
   strength: string,
   milkType: string,
   syrupType: string,
-  ice: boolean
+  ice: boolean,
+  dose: number
 }
 
 export interface CoffeeRecipe {

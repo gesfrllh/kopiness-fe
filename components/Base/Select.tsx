@@ -35,11 +35,11 @@ const Select: React.FC<SelectProps> = ({
           name={name}
           disabled={disabled}
           onClick={() => setOpen((prev) => !prev)}
-          className={`w-full flex justify-between cursor-pointer items-center pt-4 pb-2 rounded-md text-sm ${disabled ? "bg-gray-100 cursor-not-allowed" : "bg-colors-var"
+          className={`w-full flex justify-between cursor-pointer items-center pt-4 pb-2 rounded-md text-sm theme-text ${disabled ? "bg-[var(--surface-muted)] cursor-not-allowed" : "bg-colors-var"
             }`}
         >
           <div className="w-full flex justify-between items-center px-1">
-            <span className={value ? "font-semibold text-black" : "text-gray-400"}>
+            <span className={value ? "font-semibold" : "text-[var(--muted)]"}>
               {selectedLabel || ``}
             </span>
             <FiChevronDown

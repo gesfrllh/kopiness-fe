@@ -1,11 +1,19 @@
-export type DeliveryStatus = "IN_PROGRESS" | "DELIVERED"
+export type OrderStatus =
+  | "PENDING"
+  | "PAID"
+  | "ACCEPTED"
+  | "REJECTED"
+  | "PREPARING"
+  | "HANDED_TO_COURIER"
+  | "ON_DELIVERY"
+  | "DELIVERED"
+  | "CANCELLED"
 
 export interface Order {
   id: string
   customer: string
   customerPhone?: string
-  status: string
-  deliveryStatus: DeliveryStatus
+  status: OrderStatus
   total: number
   createdAt?: string
 }

@@ -106,10 +106,10 @@ describe('formatDate', () => {
 
 describe('hydrateTrackingSteps', () => {
   const steps: StepsTracking[] = [
-    { action: 'created', active: false, completed: false, label: 'CREATED', step: 0, timeStamp: '' },
-    { action: 'started', active: false, completed: false, label: 'PAYMENT_STARTED', step: 1, timeStamp: '' },
-    { action: 'paid', active: false, completed: false, label: 'PAID', step: 2, timeStamp: '' },
-    { action: 'cancelled', active: false, completed: false, label: 'CANCELLED', step: 3, timeStamp: '' },
+    { action: 'created', active: false, completed: false, label: 'CREATED', step: 0, timestamp: null },
+    { action: 'started', active: false, completed: false, label: 'PAYMENT_STARTED', step: 1, timestamp: null },
+    { action: 'paid', active: false, completed: false, label: 'PAID', step: 2, timestamp: null },
+    { action: 'cancelled', active: false, completed: false, label: 'CANCELLED', step: 3, timestamp: null },
   ]
 
   it('marks all steps before current as completed', () => {

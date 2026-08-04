@@ -1,32 +1,36 @@
 import { create } from 'zustand'
 import { User, AdminRegisterInput } from '@/types/auth/user'
-import { adminCreateUser } from '@/lib/api/auth'
+import { adminCreateUser, getUsers } from '@/lib/api/auth'
 import { showNotify } from '@/components/Base/notification/notify-controllers'
 import { formatError } from '@/utils/formatError'
-
-const dummyUsers: User[] = [
-  { id: '1', name: 'Ahmad Fauzi', email: 'ahmad@kopiness.com', role: 'STOREOWNER' },
-  { id: '2', name: 'Siti Rahma', email: 'siti@kopiness.com', role: 'STOREOWNER' },
-  { id: '3', name: 'Budi Santoso', email: 'budi@kopiness.com', role: 'STOREOWNER' },
-  { id: '4', name: 'Super Admin', email: 'admin@kopiness.com', role: 'SUPERADMIN' },
-]
 
 interface UserManagementState {
   users: User[]
   loading: boolean
   creating: boolean
 
-  fetchUsers: () => void
+  fetchUsers: () => Promise<void>
   createUser: (data: AdminRegisterInput) => Promise<boolean>
 }
 
-export const useUserManagementStore = create<UserManagementState>((set) => ({
-  users: dummyUsers,
+export const useUserManagementStore = create<UserManagementState>((set, get) => ({
+  users: [],
   loading: false,
   creating: false,
 
-  fetchUsers: () => {
-    set({ users: dummyUsers })
+  fetchUsers: async () => {
+    set({ loading: true })
+    try {
+      const users = await getUsers()
+      set({ users, loading: false })
+    } catch (err) {
+      set({ users: [], loading: false })
+      showNotify({
+        type: 'error',
+        title: 'Gagal memuat pengguna',
+        text: formatError(err),
+      })
+    }
   },
 
   createUser: async (data) => {
@@ -39,6 +43,7 @@ export const useUserManagementStore = create<UserManagementState>((set) => ({
         text: 'Store owner berhasil ditambahkan.',
       })
       set({ creating: false })
+      await get().fetchUsers()
       return true
     } catch (err) {
       showNotify({

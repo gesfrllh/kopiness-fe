@@ -7,6 +7,9 @@ import { StepsTracking } from "@/types/history";
 // import { ItemsDetailsProduct } from "@/types/history";
 import { formatCurrency } from "@/utils/general";
 import React, { useEffect } from "react";
+import dynamic from 'next/dynamic'
+
+const CourierMap = dynamic(() => import('@/components/map/CourierMap'), { ssr: false })
 
 export default function Page({
   params,
@@ -21,7 +24,12 @@ export default function Page({
     loading,
   } = useHistoryStore()
   useEffect(() => {
-    getDetails(id)
+    void getDetails(id)
+    const refreshInterval = window.setInterval(() => {
+      void getDetails(id)
+    }, 10_000)
+
+    return () => window.clearInterval(refreshInterval)
   }, [getDetails, id])
   return (
     <>
@@ -49,8 +57,15 @@ export default function Page({
 
                 {/* MAP AREA */}
                 <div className="h-48 md:h-[400px] bg-gray-200 relative">
+                  {details?.tracking?.location && (
+                    <CourierMap
+                      latitude={details.tracking.location.latitude}
+                      longitude={details.tracking.location.longitude}
+                      destination={details.tracking.destination}
+                    />
+                  )}
                   <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black text-white text-xs px-3 py-1 rounded-full">
-                    Selected location
+                    {details?.tracking?.location ? 'Lokasi kurir terakhir' : 'Lokasi kurir belum tersedia'}
                   </div>
                 </div>
 
@@ -58,16 +73,27 @@ export default function Page({
                 <div className="p-4 md:p-6 flex items-center justify-between flex-wrap gap-4">
                   <div>
                     <p className="font-semibold text-gray-800">
-                      House Cleaning
+                      {details?.tracking?.courier?.name ?? 'Kurir belum ditugaskan'}
                     </p>
                     <p className="text-sm text-gray-400">
-                      {details?.payment.createdAt}
+                      {details?.tracking?.location?.updatedAt
+                        ? `Diperbarui ${new Date(details.tracking.location.updatedAt).toLocaleString()}`
+                        : 'Belum ada pembaruan lokasi'}
                     </p>
                   </div>
 
                   <div className="flex gap-3">
                     <button className="w-10 h-10 rounded-full border flex items-center justify-center">
-                      📞
+                      {details?.tracking?.location ? (
+                        <a
+                          href={`https://www.google.com/maps?q=${details.tracking.location.latitude},${details.tracking.location.longitude}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          aria-label="Buka lokasi kurir di Google Maps"
+                        >
+                          Map
+                        </a>
+                      ) : 'Map'}
                     </button>
                     <button className="w-10 h-10 rounded-full border flex items-center justify-center">
                       💬
@@ -113,7 +139,7 @@ export default function Page({
                         </p>
 
                         <p className="text-sm text-gray-400">
-                          {step.timeStamp}
+                          {step.timestamp ? new Date(step.timestamp).toLocaleString() : '-'}
                         </p>
                       </div>
 

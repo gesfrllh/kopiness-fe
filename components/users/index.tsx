@@ -43,7 +43,7 @@ const UserManagementPage = () => {
       <CreateUserModal
         open={openModal}
         onClose={() => setOpenModal(false)}
-        onSuccess={() => fetchUsers()}
+        onSuccess={() => undefined}
       />
     </div>
   )

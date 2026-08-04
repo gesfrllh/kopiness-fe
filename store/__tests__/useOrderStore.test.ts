@@ -21,7 +21,7 @@ describe('useOrderStore', () => {
 
   it('fetchOrders loads from API', async () => {
     const mockOrders = [
-      { id: 'ORD-001', customer: 'Budi', status: 'PAID', deliveryStatus: 'IN_PROGRESS', total: 120000 },
+      { id: 'ORD-001', customer: 'Budi', status: 'PAID', total: 120000 },
     ]
     vi.mocked(getOrders).mockResolvedValue({ data: mockOrders })
 
@@ -31,41 +31,40 @@ describe('useOrderStore', () => {
     expect(useOrderStore.getState().loading).toBe(false)
   })
 
-  it('fetchOrders uses dummy on failure', async () => {
+  it('fetchOrders clears orders on API failure', async () => {
     vi.mocked(getOrders).mockRejectedValue(new Error('Network error'))
 
     await useOrderStore.getState().fetchOrders()
 
     const orders = useOrderStore.getState().orders
-    expect(orders.length).toBeGreaterThan(0)
-    expect(orders[0]).toHaveProperty('customer')
+    expect(orders).toEqual([])
   })
 
-  it('setDeliveryStatus updates order status', async () => {
+  it('setOrderStatus updates order status', async () => {
     vi.mocked(updateOrderStatus).mockResolvedValue(undefined)
 
     useOrderStore.setState({
-      orders: [{ id: 'ORD-001', customer: 'Budi', status: 'PAID', deliveryStatus: 'IN_PROGRESS', total: 120000 }],
+      orders: [{ id: 'ORD-001', customer: 'Budi', status: 'PAID', total: 120000 }],
     })
 
-    await useOrderStore.getState().setDeliveryStatus('ORD-001', 'DELIVERED')
+    await useOrderStore.getState().setOrderStatus('ORD-001', 'DELIVERED')
 
     const order = useOrderStore.getState().orders[0]
-    expect(order.deliveryStatus).toBe('DELIVERED')
+    expect(order.status).toBe('DELIVERED')
     expect(useOrderStore.getState().updating).toBeNull()
   })
 
-  it('setDeliveryStatus handles API error', async () => {
+  it('setOrderStatus handles API error', async () => {
     vi.mocked(updateOrderStatus).mockRejectedValue(new Error('Failed'))
 
     useOrderStore.setState({
-      orders: [{ id: 'ORD-001', customer: 'Budi', status: 'PAID', deliveryStatus: 'IN_PROGRESS', total: 120000 }],
+      orders: [{ id: 'ORD-001', customer: 'Budi', status: 'PAID', total: 120000 }],
     })
 
-    await useOrderStore.getState().setDeliveryStatus('ORD-001', 'DELIVERED')
+    await useOrderStore.getState().setOrderStatus('ORD-001', 'DELIVERED')
 
     const order = useOrderStore.getState().orders[0]
-    expect(order.deliveryStatus).toBe('IN_PROGRESS')
+    expect(order.status).toBe('PAID')
     expect(useOrderStore.getState().updating).toBeNull()
   })
 })

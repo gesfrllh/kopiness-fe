@@ -13,13 +13,16 @@ const USER_FRIENDLY_MESSAGES: Record<string, string> = {
 export function formatError(err: unknown): string {
   if (!err || typeof err !== 'object') return 'Terjadi kesalahan'
 
-  let message = ''
-
-  if (err instanceof Error) {
-    message = err.message
-  } else {
-    return 'Terjadi kesalahan'
+  const axiosMessage = (err as {
+    response?: { data?: { message?: string | string[] } }
+  }).response?.data?.message
+  if (axiosMessage) {
+    return Array.isArray(axiosMessage) ? axiosMessage.join(', ') : axiosMessage
   }
+
+  if (!(err instanceof Error)) return 'Terjadi kesalahan'
+
+  const message = err.message
 
   return USER_FRIENDLY_MESSAGES[message] || 'Terjadi kesalahan, silakan coba lagi'
 }

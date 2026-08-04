@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cart - Kopiness</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0,1" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#92400E',
+            'primary-600': '#92400E',
+            'primary-700': '#5C2E00',
+            muted: '#9ca3af',
+          },
+          fontFamily: {
+            poppins: ['Poppins', 'sans-serif'],
+            bebas: ['Bebas Neue', 'cursive'],
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    :root {
+      --primary: #92400E;
+      --primary-600: #92400E;
+      --primary-700: #5C2E00;
+      --muted: #9ca3af;
+      --bg: #ffffff;
+      --bgs: #E5E7EB;
+      --text: #0f172a;
+      --card: #f8fafc;
+      --border: 1px solid #92400E;
+      --card-shadow: 8px 8px 0px 0px rgba(92, 46, 0, 0.85);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: var(--text);
+      background: var(--bgs);
+    }
+    .theme-text { color: var(--text); }
+    .theme-bg { background-color: var(--bg); }
+    .bg-inside { background-color: var(--bgs); }
+    .border-var { border: var(--border); }
+    .card-shadow { box-shadow: var(--card-shadow); }
+    .bg-primary { background-color: var(--primary); color: #fff; }
+    .text-primary { color: var(--primary); }
+
+    .btn-solid {
+      background-color: var(--primary);
+      color: white;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .btn-solid:hover { filter: brightness(0.95); }
+    .btn-solid:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .btn-outline:hover { background-color: var(--primary); color: white; }
+    .btn-outline:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .product-card {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .product-card.show { opacity: 1; transform: translateY(0); }
+    .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="h-20 fixed w-full flex items-center justify-between px-4 md:px-32 bg-white border-b border-gray-200 z-50">
+    <span class="text-3xl font-bebas tracking-wide text-primary">KOPINESS</span>
+    <div class="flex items-center gap-6">
+      <a href="#" class="theme-text hover:text-primary font-medium text-sm flex items-center gap-1.5">
+        <span class="material-symbols-outlined" style="font-size:20px">store</span>Store
+      </a>
+      <div class="relative p-2 hover:bg-gray-100 rounded-lg transition cursor-pointer">
+        <span class="material-symbols-outlined text-primary">shopping_cart</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="min-h-screen bg-inside pt-24">
+    <div class="px-4 md:px-16 py-8">
+
+      <!-- CTA -->
+      <div class="relative overflow-hidden rounded-2xl shadow-lg bg-gradient-to-r from-amber-950 via-amber-800 to-orange-700 text-white py-6 px-7 mb-8">
+        <div class="pointer-events-none absolute inset-0 opacity-25">
+          <div class="absolute -top-16 -left-16 h-56 w-56 rounded-full bg-white/10 blur-2xl"></div>
+          <div class="absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-black/20 blur-2xl"></div>
+        </div>
+        <div class="pointer-events-none absolute inset-0">
+          <div class="absolute -left-1/2 top-0 h-full w-1/2 rotate-12 bg-white/10 blur-xl"></div>
+        </div>
+        <div class="relative flex items-center justify-between flex-wrap gap-4">
+          <div class="flex items-center gap-3">
+            <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-white/10">
+              <span class="material-symbols-outlined text-white">shopping_cart</span>
+            </div>
+            <div>
+              <h1 class="text-2xl font-extrabold tracking-tight">Cart</h1>
+              <p class="mt-1 text-base text-white/75">Atur jumlah barang sebelum ke kasir</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <span id="itemCount" class="text-sm text-white/60">0 item</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- LAYOUT: PRODUK (kiri) + RINGKASAN KASIR (kanan) -->
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
+
+        <!-- ============ KIRI: DAFTAR PRODUK ============ -->
+        <div class="lg:col-span-3 space-y-6">
+
+          <!-- DAFTAR PRODUK -->
+          <div id="productSection" class="bg-white rounded-2xl border border-neutral-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-5 border-b border-neutral-200">
+              <h2 class="text-lg font-semibold text-neutral-800">Daftar Produk</h2>
+              <p class="text-sm text-neutral-500 mt-0.5">Pilih produk dan atur jumlah yang mau diambil</p>
+            </div>
+            <div id="productList" class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+          </div>
+
+          <!-- KERANJANG -->
+          <div id="cartSection" class="bg-white rounded-2xl border border-neutral-200 shadow-sm overflow-hidden">
+            <div class="flex items-center justify-between px-6 py-5 border-b border-neutral-200">
+              <div>
+                <h2 class="text-lg font-semibold text-neutral-800">Keranjang</h2>
+                <p id="cartSubtitle" class="text-sm text-neutral-500">Belum ada item dipilih</p>
+              </div>
+              <button id="clearCartBtn" onclick="clearCart()" class="btn-outline px-4 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 hidden">
+                <span class="material-symbols-outlined" style="font-size:16px">delete_sweep</span>
+                Kosongkan
+              </button>
+            </div>
+            <div id="cartEmpty" class="text-center py-20">
+              <span class="material-symbols-outlined text-6xl text-gray-300 mb-4">shopping_cart_off</span>
+              <p class="text-lg font-semibold text-gray-400">Keranjang Kosong</p>
+              <p class="text-sm text-gray-400 mt-1">Pilih produk dari daftar di atas</p>
+            </div>
+            <div id="cartList" class="hidden p-6 space-y-3"></div>
+            <div id="cartFooter" class="hidden border-t border-neutral-200 px-6 py-5">
+              <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                  <p class="text-sm text-neutral-500">Subtotal</p>
+                  <p id="cartTotal" class="text-2xl font-extrabold text-primary">Rp 0</p>
+                </div>
+                <button onclick="checkout()" class="btn-solid px-6 py-2.5 rounded-lg font-semibold text-sm flex items-center gap-2">
+                  <span class="material-symbols-outlined" style="font-size:18px">payments</span>
+                  Lanjut ke Kasir
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ============ KANAN: RINGKASAN KASIR ============ -->
+        <div class="lg:col-span-1">
+          <div class="sticky top-28 border border-var rounded-2xl p-5 bg-white card-shadow">
+            <div class="flex items-center gap-2 mb-4 pb-3 border-b border-gray-200">
+              <span class="material-symbols-outlined text-primary">point_of_sale</span>
+              <h3 class="font-semibold text-sm">Ringkasan Kasir</h3>
+            </div>
+
+            <p class="text-xs text-gray-400 mb-3">Preview item yang akan muncul di kasir:</p>
+
+            <!-- ITEMS PREVIEW -->
+            <div id="cashierItems" class="space-y-2 max-h-64 overflow-auto mb-4">
+              <div class="text-center py-8 text-gray-300">
+                <span class="material-symbols-outlined text-4xl mb-2">receipt_long</span>
+                <p class="text-xs">Belum ada item</p>
+              </div>
+            </div>
+
+            <!-- TOTAL -->
+            <div class="border-t border-gray-200 pt-3 mt-3 space-y-1.5">
+              <div class="flex justify-between text-xs text-gray-400">
+                <span>Subtotal</span>
+                <span id="cashierSubtotal">Rp 0</span>
+              </div>
+              <div class="flex justify-between text-xs text-gray-400">
+                <span>Qty</span>
+                <span id="cashierQty">0 item</span>
+              </div>
+              <div class="flex justify-between text-base font-bold text-primary pt-1 border-t border-gray-100">
+                <span>Total</span>
+                <span id="cashierTotal">Rp 0</span>
+              </div>
+            </div>
+
+            <div class="mt-4 p-3 rounded-lg bg-amber-50 border border-amber-200">
+              <p class="text-xs text-amber-800 flex items-start gap-1.5">
+                <span class="material-symbols-outlined" style="font-size:14px">info</span>
+                Data ini akan muncul persis seperti ini di layar kasir saat checkout.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // ============== DUMMY DATA ==============
+    const products = [
+      { id: 'prod-001', name: 'Cold Brew', description: 'Kopi seduh dingin 12 jam', price: 35000, stock: 12, image: null, category: 'Minuman' },
+      { id: 'prod-002', name: 'Americano', description: 'Espresso + air panas', price: 28000, stock: 20, image: null, category: 'Minuman' },
+      { id: 'prod-003', name: 'Cafe Latte', description: 'Espresso + susu steamed', price: 32000, stock: 8, image: null, category: 'Minuman' },
+      { id: 'prod-004', name: 'Cappuccino', description: 'Espresso + susu + foam', price: 32000, stock: 15, image: null, category: 'Minuman' },
+      { id: 'prod-005', name: 'Espresso', description: 'Single shot espresso', price: 22000, stock: 30, image: null, category: 'Minuman' },
+      { id: 'prod-006', name: 'Caramel Machiatto', description: 'Susu + caramel + espresso', price: 38000, stock: 10, image: null, category: 'Minuman' },
+      { id: 'prod-007', name: 'Mocha', description: 'Espresso + coklat + susu', price: 35000, stock: 6, image: null, category: 'Minuman' },
+      { id: 'prod-008', name: 'Matcha Latte', description: 'Matcha bubuk + susu', price: 35000, stock: 10, image: null, category: 'Non Coffee' },
+      { id: 'prod-009', name: 'Taro Latte', description: 'Taro bubuk + susu', price: 32000, stock: 14, image: null, category: 'Non Coffee' },
+      { id: 'prod-010', name: 'Red Velvet', description: 'Red velvet + susu', price: 35000, stock: 5, image: null, category: 'Non Coffee' },
+      { id: 'prod-011', name: 'Chocolate', description: 'Coklat panas / dingin', price: 30000, stock: 18, image: null, category: 'Non Coffee' },
+      { id: 'prod-012', name: 'Vanilla Late', description: 'Vanilla syrup + susu', price: 32000, stock: 9, image: null, category: 'Non Coffee' },
+    ]
+
+    // cart items = { productId, name, price, qty, stock }
+    let cart = []
+
+    const formatCurrency = (val) =>
+      new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(val)
+
+    const $ = (id) => document.getElementById(id)
+
+    // ============== RENDER PRODUK ==============
+    function renderProducts() {
+      const list = $('productList')
+      list.innerHTML = products.map((p, i) => `
+        <div class="product-card show flex items-center gap-3 p-3 rounded-xl border border-gray-200 hover:border-amber-300 transition cursor-pointer"
+             style="transition-delay:${i*60}ms"
+             onclick="addToCart('${p.id}')">
+          <div class="w-14 h-14 rounded-xl bg-amber-50 flex items-center justify-center shrink-0 border border-amber-100">
+            <span class="material-symbols-outlined text-amber-400" style="font-size:28px">coffee</span>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <h4 class="font-semibold text-sm text-neutral-800">${p.name}</h4>
+                <p class="text-xs text-gray-400 truncate">${p.description}</p>
+              </div>
+            </div>
+            <div class="flex items-center justify-between mt-1">
+              <span class="text-sm font-bold text-primary">${formatCurrency(p.price)}</span>
+              <span class="text-xs text-gray-400">stok: ${p.stock}</span>
+            </div>
+          </div>
+          <button class="btn-solid w-7 h-7 rounded-lg flex items-center justify-center text-sm shrink-0" onclick="event.stopPropagation();addToCart('${p.id}')">
+            <span class="material-symbols-outlined" style="font-size:16px">add</span>
+          </button>
+        </div>
+      `).join('')
+    }
+
+    // ============== CART OPERATIONS ==============
+    function addToCart(productId) {
+      const prod = products.find(p => p.id === productId)
+      if (!prod) return
+
+      const existing = cart.find(c => c.productId === productId)
+      const currentQty = existing ? existing.qty : 0
+
+      if (currentQty >= prod.stock) {
+        alert(`Stok ${prod.name} hanya tersisa ${prod.stock}`)
+        return
+      }
+
+      if (existing) {
+        existing.qty++
+      } else {
+        cart.push({
+          productId: prod.id,
+          name: prod.name,
+          price: prod.price,
+          qty: 1,
+          stock: prod.stock,
+        })
+      }
+      renderCart()
+    }
+
+    function updateQty(productId, delta) {
+      const item = cart.find(c => c.productId === productId)
+      if (!item) return
+
+      const newQty = item.qty + delta
+      if (newQty < 1) return removeItem(productId)
+      if (newQty > item.stock) {
+        alert(`Stok ${item.name} hanya tersisa ${item.stock}`)
+        return
+      }
+      item.qty = newQty
+      renderCart()
+    }
+
+    function removeItem(productId) {
+      cart = cart.filter(c => c.productId !== productId)
+      renderCart()
+    }
+
+    function clearCart() {
+      if (cart.length === 0) return
+      if (!confirm('Kosongkan semua item di keranjang?')) return
+      cart = []
+      renderCart()
+    }
+
+    // ============== RENDER CART + KASIR ==============
+    function renderCart() {
+      const empty = $('cartEmpty')
+      const list = $('cartList')
+      const footer = $('cartFooter')
+      const clearBtn = $('clearCartBtn')
+      const count = $('itemCount')
+      const subtitle = $('cartSubtitle')
+
+      const totalQty = cart.reduce((s, c) => s + c.qty, 0)
+      count.textContent = `${totalQty} item${totalQty > 1 ? 's' : ''}`
+
+      if (cart.length === 0) {
+        empty.classList.remove('hidden')
+        list.classList.add('hidden')
+        footer.classList.add('hidden')
+        clearBtn.classList.add('hidden')
+        subtitle.textContent = 'Belum ada item dipilih'
+        renderCashierPreview()
+        return
+      }
+
+      empty.classList.add('hidden')
+      list.classList.remove('hidden')
+      footer.classList.remove('hidden')
+      clearBtn.classList.remove('hidden')
+      subtitle.textContent = `${cart.length} jenis produk · ${totalQty} item`
+
+      let total = 0
+      list.innerHTML = cart.map((item, i) => {
+        const subtotal = item.price * item.qty
+        total += subtotal
+        return `
+          <div class="product-card show flex items-center gap-3 p-3 rounded-xl border border-gray-200 card-shadow" style="transition-delay:${i*80}ms">
+            <div class="w-14 h-14 rounded-xl bg-amber-50 flex items-center justify-center shrink-0 border border-amber-100">
+              <span class="material-symbols-outlined text-amber-400" style="font-size:28px">coffee</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <h4 class="font-semibold text-sm text-neutral-800">${item.name}</h4>
+              <p class="text-sm font-bold text-primary">${formatCurrency(item.price)}</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button class="btn-outline w-7 h-7 rounded-lg flex items-center justify-center text-sm font-bold" onclick="updateQty('${item.productId}', -1)" ${item.qty <= 1 ? 'disabled' : ''}>
+                <span class="material-symbols-outlined" style="font-size:14px">remove</span>
+              </button>
+              <span class="w-8 text-center font-semibold text-sm">${item.qty}</span>
+              <button class="btn-outline w-7 h-7 rounded-lg flex items-center justify-center text-sm font-bold" onclick="updateQty('${item.productId}', 1)" ${item.qty >= item.stock ? 'disabled' : ''}>
+                <span class="material-symbols-outlined" style="font-size:14px">add</span>
+              </button>
+            </div>
+            <button class="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition" onclick="removeItem('${item.productId}')" title="Hapus">
+              <span class="material-symbols-outlined" style="font-size:20px">delete_outline</span>
+            </button>
+          </div>
+        `
+      }).join('')
+
+      $('cartTotal').textContent = formatCurrency(total)
+      renderCashierPreview()
+    }
+
+    function renderCashierPreview() {
+      const container = $('cashierItems')
+      const subtotalEl = $('cashierSubtotal')
+      const qtyEl = $('cashierQty')
+      const totalEl = $('cashierTotal')
+
+      if (cart.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-8 text-gray-300">
+            <span class="material-symbols-outlined text-4xl mb-2">receipt_long</span>
+            <p class="text-xs">Belum ada item</p>
+          </div>
+        `
+        subtotalEl.textContent = 'Rp 0'
+        qtyEl.textContent = '0 item'
+        totalEl.textContent = 'Rp 0'
+        return
+      }
+
+      let totalQty = 0
+      let totalPrice = 0
+
+      container.innerHTML = cart.map(item => {
+        const subtotal = item.price * item.qty
+        totalQty += item.qty
+        totalPrice += subtotal
+        return `
+          <div class="flex items-center justify-between py-2 border-b border-dashed border-gray-100 last:border-0">
+            <div class="flex-1 min-w-0">
+              <p class="text-xs font-medium text-neutral-700 truncate">${item.name}</p>
+              <p class="text-[10px] text-gray-400">${formatCurrency(item.price)} × ${item.qty}</p>
+            </div>
+            <span class="text-xs font-semibold text-neutral-800 ml-2">${formatCurrency(subtotal)}</span>
+          </div>
+        `
+      }).join('')
+
+      subtotalEl.textContent = formatCurrency(totalPrice)
+      qtyEl.textContent = `${totalQty} item`
+      totalEl.textContent = formatCurrency(totalPrice)
+    }
+
+    function checkout() {
+      if (cart.length === 0) return
+
+      const detail = cart.map(c => `${c.name} ${c.qty}× ${formatCurrency(c.subtotal || (c.price * c.qty))}`).join('\n')
+      const total = cart.reduce((s, c) => s + c.price * c.qty, 0)
+
+      alert(
+        `=== DATA KE KASIR ===\n\n` +
+        `Order Baru\n` +
+        `Items:\n${cart.map(c => `  • ${c.name} ${c.qty}× ${formatCurrency(c.price * c.qty)}`).join('\n')}\n\n` +
+        `Total: ${formatCurrency(total)}\n` +
+        `Qty: ${cart.reduce((s, c) => s + c.qty, 0)} item\n\n` +
+        `(Data ini akan muncul di halaman kasir)`
+      )
+    }
+
+    // ============== INIT ==============
+    document.addEventListener('DOMContentLoaded', () => {
+      renderProducts()
+      renderCart()
+    })
+  </script>
+
+</body>
+</html>

@@ -97,15 +97,10 @@ export const formatDate = (
     }
 }
 
-const stepOrder = [
-    'CREATED',
-    'PAYMENT_STARTED',
-    'PAID',
-    'CANCELLED',
-]
-
 export function hydrateTrackingSteps(steps: StepsTracking[], currentStatus: string) {
-    const currentIndex = stepOrder.indexOf(currentStatus)
+    const currentIndex = steps.findIndex((step) =>
+        step.action.toUpperCase() === currentStatus || step.label === currentStatus,
+    )
 
     return steps.map((step, idx) => {
         if (idx < currentIndex) {

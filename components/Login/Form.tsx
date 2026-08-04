@@ -61,7 +61,7 @@ export default function LoginPage() {
   }, [error])
 
   const handleWithGoogle = () => {
-    window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/google/callback`;
+    window.location.href = '/api/auth/google';
   }
 
   return (

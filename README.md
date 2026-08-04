@@ -176,7 +176,7 @@ All API calls are in `lib/api/` as standalone functions. Zustand stores call the
 Create `.env.local`:
 
 ```env
-NEXT_PUBLIC_API_URL=http://localhost:7243/api
+API_PROXY_TARGET=http://localhost:7243
 ```
 
 ## Scripts

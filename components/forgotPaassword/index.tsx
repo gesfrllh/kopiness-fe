@@ -4,26 +4,26 @@ import { useState } from 'react'
 import { Mail } from 'lucide-react'
 import Button from '../Base/Button'
 import apiClient from '@/lib/api'
-import Link from 'next/link'
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [sent, setSent] = useState(false)
-  const [linkData, setlinkData] = useState('')
+  const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
+    setError(null)
 
     try {
-      const res = await apiClient.post('/auth/forgot-password', {
+      await apiClient.post('/auth/forgot-password', {
         email: email
       })
-      setlinkData(res.data.data.resetLink)
-      setLoading(false)
       setSent(true)
     } catch {
+      setError('Permintaan reset gagal. Silakan coba lagi.')
+    } finally {
       setLoading(false)
     }
 
@@ -69,15 +69,13 @@ export default function ForgotPassword() {
             >
               {loading ? 'Sending...' : 'Send Reset Link'}
             </Button>
+            {error && <p className="text-sm text-red-600" role="alert">{error}</p>}
 
           </form>
         ) : (
           <div className="text-center text-sm text-gray-600">
             <p className="font-medium text-[#8b5e34]">
-              Link berhasil dikirim ☕
-            </p>
-            <p className="mt-2">
-              Klik <Link href={linkData} className='underline'>Disini</Link> Untuk melanjutkan Penggantian Password,
+              Jika email terdaftar, instruksi reset password telah dikirim.
             </p>
           </div>
         )}

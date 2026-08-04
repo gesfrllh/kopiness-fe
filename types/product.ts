@@ -39,8 +39,9 @@ export interface CartState {
     totalQty: number
 
     addToCart: (product: ProductResponse) => Promise<void>;
-    removeFromCart: (ids: string | string[]) => void
-    clearCart: () => void
+    updateItemQty: (productId: string, quantity: number) => Promise<void>
+    removeFromCart: (ids: string | string[]) => Promise<void>
+    clearCart: () => Promise<void>
     fetchCart: () => Promise<void>
 }
 

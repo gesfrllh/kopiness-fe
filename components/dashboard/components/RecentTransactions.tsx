@@ -11,9 +11,9 @@ interface RecentTransactionsProps {
 }
 
 const STATUS_STYLES: Record<string, string> = {
-  PAID: 'bg-[#E7F4EA] text-[#2E7D32]',
-  PENDING: 'bg-[#E3F2FD] text-[#1565C0]',
-  CANCELLED: 'bg-[#FFF4E5] text-[#E65100]',
+  PAID: 'bg-green-100 text-green-700',
+  PENDING: 'bg-blue-100 text-blue-700',
+  CANCELLED: 'bg-orange-100 text-orange-700',
 }
 
 function Badge({ label, className }: { label: string; className: string }) {

@@ -3,6 +3,7 @@ import { CoffePayload, CoffeResponseOptions } from '@/types/coffee'
 import { formatError } from '@/utils/formatError'
 import { create } from 'zustand'
 import { SelectOptions } from '@/types'
+import { showNotify } from '@/components/Base/notification/notify-controllers'
 
 type SelectedKey =
   | 'selected'
@@ -177,7 +178,8 @@ export const useCoffeeStore = create<CoffeState>((set, get) => ({
       strength: state.selectedStrength.value,
       milkType: state.selectedMilk.value,
       syrupType: state.selectedSyrup.value,
-      ice: state.iced
+      ice: state.iced,
+      dose: state.selectedType.value === 'BREW' ? 15 : 18,
     }
 
     try {
@@ -188,7 +190,11 @@ export const useCoffeeStore = create<CoffeState>((set, get) => ({
       })
 
     } catch (err: unknown) {
-      throw new Error(formatError(err) || 'Error generate Coffee')
+      showNotify({
+        type: 'error',
+        title: 'Gagal membuat resep',
+        text: formatError(err),
+      })
     } finally {
       set({ loading: false })
     }

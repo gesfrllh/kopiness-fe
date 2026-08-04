@@ -29,6 +29,7 @@ export default function ResetPassword() {
         title: 'Error!',
         text: 'Invalid Reset Link'
       })
+      setLoading(false)
       return
     }
 
@@ -37,7 +38,6 @@ export default function ResetPassword() {
         token: token,
         password: password
       })
-      setLoading(false)
       router.push("/login")
     } catch (err) {
       const message = formatError(err)
@@ -46,6 +46,8 @@ export default function ResetPassword() {
         title: 'Error!',
         text: message
       })
+    } finally {
+      setLoading(false)
     }
   }
 

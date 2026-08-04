@@ -1,6 +1,6 @@
 import { Product } from "./product"
 
-export type statusPayment = 'PENDING' | 'PAID' | 'IN_PROGRESS' | 'DELIVERED' | 'CANCELLED'
+export type statusPayment = 'PENDING' | 'PAID' | 'ACCEPTED' | 'REJECTED' | 'PREPARING' | 'HANDED_TO_COURIER' | 'ON_DELIVERY' | 'DELIVERED' | 'CANCELLED'
 
 export interface PaymentHistory {
   id: string,
@@ -60,7 +60,7 @@ export interface TrackingEvent {
 
 export interface TrackingInfo {
   trackingId: string;
-  status: 'PENDING' | 'PAID' | 'IN_PROGRESS' | 'DELIVERED' | 'CANCELLED';
+  status: statusPayment;
   updatedAt: string;
   events?: TrackingEvent[];
 }
@@ -96,12 +96,15 @@ export interface StepsTracking {
   completed: boolean;
   label: string;
   step: number;
-  timeStamp: string;
+  timestamp: string | null;
 }
 
 export interface HistoryTracking extends Pick<HistoryResponseAdmin, 'orderNumber' | 'status'> {
   steps: StepsTracking[]
   progressPercent: number
   timeline: null
+  courier?: { id: string; name: string } | null
+  location?: { latitude: number; longitude: number; updatedAt: string } | null
+  destination?: { address: string; latitude: number; longitude: number }
 }
 
