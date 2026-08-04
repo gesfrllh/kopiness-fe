@@ -16,7 +16,10 @@ export default function ChatRealtimeInit() {
         void useChatStore.getState().startRealtime(userId)
       }, 15_000)
 
-      return () => window.clearInterval(interval)
+      return () => {
+        window.clearInterval(interval)
+        useChatStore.getState().stopRealtime()
+      }
     }
   }, [userId])
 
