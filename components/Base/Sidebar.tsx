@@ -6,7 +6,6 @@ import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import { v4 as uuid } from 'uuid'
 import Image from 'next/image'
 import Logo from '@/public/assets/logo.svg'
-import Cookies from 'js-cookie'
 import { showNotify } from './notification/notify-controllers'
 import { useRouter, usePathname } from 'next/navigation'
 import { formatError } from '@/utils/formatError'
@@ -32,7 +31,7 @@ function isActiveLink(pathname: string, link: string) {
 
 const Sidebar = () => {
   const isMobile = useResponsiveStore(state => state.isMobile)
-  const [userData, setUserData] = useState<{ role?: string; name?: string } | null>(null)
+  const userData = useAuthStore(state => state.user)
   const logout = useAuthStore(state => state.logout)
   const router = useRouter()
   const pathname = usePathname()
@@ -63,12 +62,6 @@ const Sidebar = () => {
       showNotify({ type: 'error', title: 'Error!', text: formatError(err) })
     }
   }
-
-  useEffect(() => {
-    const roleCookie = Cookies.get('role')
-    const nameCookie = Cookies.get('name')
-    setUserData({ role: roleCookie, name: nameCookie })
-  }, [])
 
   const isManagement = userData?.role === 'SUPERADMIN' || userData?.role === 'STOREOWNER'
   const isSuperAdmin = userData?.role === 'SUPERADMIN'

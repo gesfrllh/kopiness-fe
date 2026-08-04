@@ -10,6 +10,7 @@ vi.mock('js-cookie', () => ({
 }))
 
 vi.mock('@/lib/api/auth', () => ({
+  getMe: vi.fn(),
   login: vi.fn(),
   logout: vi.fn(),
 }))
@@ -22,7 +23,7 @@ vi.mock('@/utils/formatError', () => ({
 }))
 
 import Cookies from 'js-cookie'
-import { login, logout } from '@/lib/api/auth'
+import { getMe, login, logout } from '@/lib/api/auth'
 
 const mockUser = {
   id: '1',
@@ -34,6 +35,7 @@ const mockUser = {
 
 describe('useAuthStore', () => {
   beforeEach(() => {
+    localStorage.clear()
     useAuthStore.setState({
       user: null,
       token: null,
@@ -92,28 +94,34 @@ describe('useAuthStore', () => {
     expect(state.user).toBeNull()
     expect(state.role).toBeNull()
     expect(state.loading).toBe(false)
-    expect(Cookies.remove).toHaveBeenCalledWith('role')
-    expect(Cookies.remove).toHaveBeenCalledWith('store_id')
+    expect(Cookies.remove).toHaveBeenCalledWith('role', { path: '/' })
+    expect(Cookies.remove).toHaveBeenCalledWith('store_id', { path: '/' })
   })
 
-  it('hydrate loads user from localStorage', () => {
+  it('hydrate loads user from verified backend session', async () => {
     const userData = { user: mockUser }
     localStorage.setItem('kopiness_auth', JSON.stringify(userData))
+    vi.mocked(getMe).mockResolvedValue({ user: { ...mockUser, name: 'Current User' }, isLoggedIn: true })
 
-    useAuthStore.getState().hydrate()
+    await useAuthStore.getState().hydrate()
 
     const state = useAuthStore.getState()
-    expect(state.user).toEqual(mockUser)
+    expect(state.user).toEqual({ ...mockUser, name: 'Current User' })
     expect(state.role).toBe('SUPERADMIN')
     expect(state.isHydrated).toBe(true)
   })
 
-  it('hydrate sets isHydrated when no stored data', () => {
-    localStorage.removeItem('kopiness_auth')
+  it('hydrate clears stale UI state when backend session is invalid', async () => {
+    localStorage.setItem('kopiness_auth', JSON.stringify({ user: mockUser }))
+    useAuthStore.setState({ user: mockUser, role: 'SUPERADMIN' })
+    vi.mocked(getMe).mockRejectedValue(new Error('Unauthorized'))
 
-    useAuthStore.getState().hydrate()
+    await useAuthStore.getState().hydrate()
 
     expect(useAuthStore.getState().isHydrated).toBe(true)
     expect(useAuthStore.getState().user).toBeNull()
+    expect(useAuthStore.getState().role).toBeNull()
+    expect(localStorage.getItem('kopiness_auth')).toBeNull()
+    expect(Cookies.remove).toHaveBeenCalledWith('is_logged_in', { path: '/' })
   })
 })

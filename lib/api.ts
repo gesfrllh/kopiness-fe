@@ -42,6 +42,7 @@ apiClient.interceptors.response.use(
     }
 
     if (error.response?.status === 401 && typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('auth:invalid-session'));
       window.location.href = '/login';
     }
     return Promise.reject(error);

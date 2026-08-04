@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import apiClient from '@/lib/api'
-import Cookies from 'js-cookie'
+import { useAuthStore } from '@/store/useAuthStore'
+import { homeForRole } from '@/lib/auth/routes'
 import AnimationLogin from '../animation/AnimationLogin'
 
 export default function OAuthSuccess() {
@@ -12,31 +12,16 @@ export default function OAuthSuccess() {
 
   useEffect(() => {
 
-    apiClient.get('/auth/me', { withCredentials: true })
-      .then((res) => {
-        setLoading(true)
-        if (res.status === 200) {
-          setLoading(false)
-          const data = res.data.data
-
-          const isLoggedin = data.isLoggedIn
-          const role = data.user.role
-
-          Cookies.set('status', res.status.toString(), { secure: true, sameSite: 'strict' })
-          Cookies.set('is_logged_in', isLoggedin, { secure: true, sameSite: 'strict' })
-          Cookies.set('role', role, { secure: true, sameSite: 'strict' })
-
-          if (role === 'SUPERADMIN' || role === 'STOREOWNER') {
-            router.replace('/manage/dashboard')
-          } else {
-            router.replace('/manage/home')
-          }
-        }
-      })
-      .catch(() => {
+    setLoading(true)
+    void useAuthStore.getState().hydrate().then(() => {
+      const role = useAuthStore.getState().role
+      if (role === 'SUPERADMIN' || role === 'STOREOWNER' || role === 'COURIER' || role === 'CUSTOMER') {
+        router.replace(homeForRole(role))
+      } else {
         router.replace('/login?error=oauth_failed')
-        setLoading(false)
-      })
+      }
+      setLoading(false)
+    })
   }, [router])
 
   return (

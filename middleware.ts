@@ -1,12 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-
-const customerOnlyPaths = ['/manage/home', '/manage/stores', '/manage/cart', '/manage/checkout', '/manage/history']
-const staffOnlyPaths = ['/manage/dashboard', '/manage/product', '/manage/order', '/manage/cashier', '/manage/profile']
-const courierOnlyPaths = ['/manage/courier']
-
-const matchesPath = (pathname: string, paths: string[]) =>
-  paths.some((path) => pathname === path || pathname.startsWith(`${path}/`))
+import { canVisit, homeForRole, isRole } from '@/lib/auth/routes'
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -16,7 +10,8 @@ export function middleware(request: NextRequest) {
 
   const isLoggedIn =
     request.cookies.get('is_logged_in')?.value === 'true'
-  const role = request.cookies.get('role')?.value
+  const roleHint = request.cookies.get('role')?.value
+  const role = isRole(roleHint) ? roleHint : undefined
 
   if (pathname === '/') {
     if (!isLoggedIn) {
@@ -34,30 +29,9 @@ export function middleware(request: NextRequest) {
   }
 
   if (isLoggedIn && isProtectedPage) {
-    if (role === 'CUSTOMER' && matchesPath(pathname, staffOnlyPaths.concat('/manage/users'))) {
-      return NextResponse.redirect(
-        new URL('/manage/home', request.url)
-      )
-    }
-
-    if ((role === 'SUPERADMIN' || role === 'STOREOWNER') && matchesPath(pathname, customerOnlyPaths)) {
-      return NextResponse.redirect(
-        new URL('/manage/dashboard', request.url)
-      )
-    }
-
-    if (role !== 'SUPERADMIN' && matchesPath(pathname, ['/manage/users'])) {
-      return NextResponse.redirect(
-        new URL(role === 'CUSTOMER' ? '/manage/home' : '/manage/dashboard', request.url)
-      )
-    }
-
-    if (role === 'COURIER' && !matchesPath(pathname, courierOnlyPaths.concat(['/manage/chat', '/manage/profile']))) {
-      return NextResponse.redirect(new URL('/manage/courier', request.url))
-    }
-
-    if (role !== 'COURIER' && matchesPath(pathname, courierOnlyPaths)) {
-      return NextResponse.redirect(new URL('/manage/home', request.url))
+    // Cookies are navigation hints only. Backend authorizes every API request.
+    if (!role || !canVisit(role, pathname)) {
+      return redirectByRole(role, request)
     }
   }
 
@@ -78,19 +52,7 @@ export function middleware(request: NextRequest) {
 }
 
 function redirectByRole(role: string | undefined, request: NextRequest) {
-  if (role === 'COURIER') {
-    return NextResponse.redirect(
-      new URL('/manage/courier', request.url)
-    )
-  }
-
-  return role === 'SUPERADMIN' || role === 'STOREOWNER'
-    ? NextResponse.redirect(
-      new URL('/manage/dashboard', request.url)
-    )
-    : NextResponse.redirect(
-      new URL('/manage/home', request.url)
-    )
+  return NextResponse.redirect(new URL(role && isRole(role) ? homeForRole(role) : '/login', request.url))
 }
 
 export const config = {
