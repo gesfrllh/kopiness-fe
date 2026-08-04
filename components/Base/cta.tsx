@@ -1,4 +1,5 @@
 import React from "react";
+import clsx from "clsx";
 
 interface CTAProps {
   title: string;
@@ -13,27 +14,27 @@ interface CTAProps {
 
 const sizeMap = {
   sm: {
-    wrap: "py-4 px-5",
+    wrap: "px-5 py-4",
     title: "text-lg",
     subtitle: "text-sm",
   },
   md: {
-    wrap: "py-6 px-7",
-    title: "text-2xl",
-    subtitle: "text-base",
+    wrap: "px-5 py-5 sm:px-7 sm:py-6",
+    title: "text-2xl sm:text-3xl",
+    subtitle: "text-sm sm:text-base",
   },
   lg: {
-    wrap: "py-8 px-9",
+    wrap: "px-6 py-7 sm:px-9 sm:py-8",
     title: "text-4xl",
-    subtitle: "text-lg",
+    subtitle: "text-base sm:text-lg",
   },
 };
 
 const variantMap = {
   gradient:
-    "bg-gradient-to-r from-amber-950 via-amber-800 to-orange-700 text-white border-white/10",
-  dark: "bg-zinc-900 text-white border-white/10",
-  light: "bg-white text-zinc-900 border-zinc-200",
+    "cta-gradient text-white border-[#D9A985]/30",
+  dark: "bg-[#29201B] text-white border-[#4B3930]",
+  light: "bg-white bg-[var(--surface)] text-[var(--ink)] border-[var(--line)]",
 };
 
 const CTA: React.FC<CTAProps> = ({
@@ -50,62 +51,61 @@ const CTA: React.FC<CTAProps> = ({
 
   return (
     <div className={`w-full ${className}`}>
-      <div
-        className={`
-          relative overflow-hidden rounded-2xl shadow-lg
-          border ${variantMap[variant]}
-          ${style.wrap}
-        `}
+      <section
+        className={clsx(
+          "relative isolate overflow-hidden rounded-[22px] border shadow-[0_14px_32px_rgba(75,45,25,0.10)]",
+          variantMap[variant],
+          style.wrap,
+        )}
       >
-        {/* efek background (cuma muncul kalau gradient/dark) */}
         {(variant === "gradient" || variant === "dark") && (
           <>
-            <div className="pointer-events-none absolute inset-0 opacity-25">
-              <div className="absolute -top-16 -left-16 h-56 w-56 rounded-full bg-white/10 blur-2xl" />
-              <div className="absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-black/20 blur-2xl" />
-            </div>
-
-            <div className="pointer-events-none absolute inset-0">
-              <div className="absolute -left-1/2 top-0 h-full w-1/2 rotate-12 bg-white/10 blur-xl" />
+            <div className="pointer-events-none absolute inset-0 opacity-30 cta-grain" />
+            <div className="pointer-events-none absolute -right-16 -top-20 h-52 w-52 rounded-full border border-white/15" />
+            <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full border border-white/10" />
+            <div className="pointer-events-none absolute bottom-0 left-0 h-1 w-full bg-gradient-to-r from-[#F2C89A] via-[#D68B58] to-transparent opacity-80" />
+            <div className="pointer-events-none absolute bottom-5 right-6 hidden text-[86px] leading-none text-white/[0.07] sm:block" aria-hidden="true">
+              K
             </div>
           </>
         )}
 
-        <div className="relative flex items-center justify-between gap-6">
-          {leftSlot && <div className="shrink-0">{leftSlot}</div>}
-          <div className="flex items-center gap-3">
+        <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex min-w-0 items-center gap-3 sm:gap-4">
+            {leftSlot && <div className="shrink-0">{leftSlot}</div>}
             {icon && (
               <div
-                className={`
-                  flex h-11 w-11 items-center justify-center rounded-xl
-                  ${variant === "light" ? "bg-zinc-100" : "bg-white/10"}
-                `}
+                className={clsx(
+                  "flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border",
+                  variant === "light"
+                    ? "border-[var(--line)] bg-[var(--surface-muted)] text-[#9A5B35]"
+                    : "border-white/15 bg-white/10 text-[#F5D4B5]",
+                )}
               >
                 {icon}
               </div>
             )}
 
-            <div>
-              <h1 className={`font-extrabold tracking-tight ${style.title}`}>
+            <div className="min-w-0">
+              <h1 className={clsx("font-bold tracking-[-0.035em]", style.title)}>
                 {title}
               </h1>
 
               {subtitle && (
-                <p
-                  className={`
-                    mt-1 ${style.subtitle}
-                    ${variant === "light" ? "text-zinc-600" : "text-white/75"}
-                  `}
-                >
+                <p className={clsx(
+                  "mt-1.5 max-w-2xl leading-relaxed",
+                  style.subtitle,
+                  variant === "light" ? "text-[var(--muted)]" : "text-white/70",
+                )}>
                   {subtitle}
                 </p>
               )}
             </div>
           </div>
 
-          {rightSlot && <div className="shrink-0">{rightSlot}</div>}
+          {rightSlot && <div className="flex shrink-0 items-center sm:justify-end">{rightSlot}</div>}
         </div>
-      </div>
+      </section>
     </div>
   );
 };

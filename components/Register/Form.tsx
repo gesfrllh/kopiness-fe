@@ -28,6 +28,16 @@ const Form = () => {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (form.password.length < 6) {
+      showNotify({
+        type: 'error',
+        title: 'Password terlalu pendek',
+        text: 'Password minimal terdiri dari 6 karakter.',
+      })
+      return
+    }
+
     setLoading(true)
 
     try {
@@ -102,6 +112,7 @@ const Form = () => {
               <FormInput
                 name='password'
                 type='password'
+                minLength={6}
                 value={form.password}
                 onChange={(e) =>
                   setForm({ ...form, password: e.target.value })

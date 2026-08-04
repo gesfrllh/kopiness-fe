@@ -1,6 +1,13 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
+const customerOnlyPaths = ['/manage/home', '/manage/stores', '/manage/cart', '/manage/checkout', '/manage/history']
+const staffOnlyPaths = ['/manage/dashboard', '/manage/product', '/manage/order', '/manage/cashier', '/manage/profile']
+const courierOnlyPaths = ['/manage/courier']
+
+const matchesPath = (pathname: string, paths: string[]) =>
+  paths.some((path) => pathname === path || pathname.startsWith(`${path}/`))
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
@@ -27,10 +34,30 @@ export function middleware(request: NextRequest) {
   }
 
   if (isLoggedIn && isProtectedPage) {
-    if (role === 'CUSTOMER' && pathname === '/manage/dashboard') {
+    if (role === 'CUSTOMER' && matchesPath(pathname, staffOnlyPaths.concat('/manage/users'))) {
       return NextResponse.redirect(
         new URL('/manage/home', request.url)
       )
+    }
+
+    if ((role === 'SUPERADMIN' || role === 'STOREOWNER') && matchesPath(pathname, customerOnlyPaths)) {
+      return NextResponse.redirect(
+        new URL('/manage/dashboard', request.url)
+      )
+    }
+
+    if (role !== 'SUPERADMIN' && matchesPath(pathname, ['/manage/users'])) {
+      return NextResponse.redirect(
+        new URL(role === 'CUSTOMER' ? '/manage/home' : '/manage/dashboard', request.url)
+      )
+    }
+
+    if (role === 'COURIER' && !matchesPath(pathname, courierOnlyPaths.concat(['/manage/chat', '/manage/profile']))) {
+      return NextResponse.redirect(new URL('/manage/courier', request.url))
+    }
+
+    if (role !== 'COURIER' && matchesPath(pathname, courierOnlyPaths)) {
+      return NextResponse.redirect(new URL('/manage/home', request.url))
     }
   }
 
@@ -51,6 +78,12 @@ export function middleware(request: NextRequest) {
 }
 
 function redirectByRole(role: string | undefined, request: NextRequest) {
+  if (role === 'COURIER') {
+    return NextResponse.redirect(
+      new URL('/manage/courier', request.url)
+    )
+  }
+
   return role === 'SUPERADMIN' || role === 'STOREOWNER'
     ? NextResponse.redirect(
       new URL('/manage/dashboard', request.url)

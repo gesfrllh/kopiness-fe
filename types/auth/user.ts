@@ -2,7 +2,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  role: "SUPERADMIN" | "STOREOWNER" | "CUSTOMER" | undefined;
+  role: "SUPERADMIN" | "STOREOWNER" | "COURIER" | "CUSTOMER" | undefined;
   store_id?: string;
 }
 

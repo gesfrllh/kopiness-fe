@@ -17,6 +17,9 @@ import Cookies from 'js-cookie'
 import Tooltip from '../Base/ui/Tooltip'
 import { ConfirmModal } from '../Base/ui/Modal/ConfirmModal'
 import { useCartStore } from '@/store/useCartStore'
+import { useChatStore } from '@/store/useChatStore'
+import { getStoreBySlug } from '@/lib/api/stores'
+import { showNotify } from '@/components/Base/notification/notify-controllers'
 import { ProductResponse } from '@/types/product'
 import { useRouter, useParams } from 'next/navigation'
 import { formatCurrency } from '@/utils/general'
@@ -66,9 +69,27 @@ const Product = () => {
   )
 
   const role = Cookies.get('role')
+  const isCustomer = role === 'CUSTOMER'
   const router = useRouter()
   const params = useParams()
   const slug = params.slug
+  const { createChat } = useChatStore()
+
+  const handleChat = async () => {
+    try {
+      const storeRes = await getStoreBySlug(slug as string)
+      const storeId = storeRes?.id || storeRes?.data?.id
+      if (!storeId) throw new Error('Store not found')
+      await createChat(storeId)
+      router.push('/manage/chat')
+    } catch {
+      showNotify({
+        type: 'error',
+        title: 'Gagal',
+        text: 'Gagal memulai chat',
+      })
+    }
+  }
 
   const toggleItem = (id: string) => {
     setCheckedItems((prev) => ({
@@ -117,10 +138,18 @@ const Product = () => {
   return (
     <>
       <div>
-        <CTA title="Product Cta" leftSlot={<Link href="/manage/stores" className="flex gap-2 items-center text-white font-semibold hover:text-amber-700 transition">
-          <Icon icon="material-symbols:arrow-circle-left" width={24} />
-          Store Page
-        </Link>} />
+        <CTA title="Product Cta" leftSlot={<div className="flex gap-3 items-center">
+          <Link href="/manage/stores" className="flex gap-2 items-center text-white font-semibold hover:text-amber-700 transition">
+            <Icon icon="material-symbols:arrow-circle-left" width={24} />
+            Store Page
+          </Link>
+          {isCustomer && (
+            <button onClick={handleChat} className="flex gap-2 items-center text-white font-semibold hover:text-amber-700 transition">
+              <Icon icon="mdi:chat-outline" width={20} />
+              Chat
+            </button>
+          )}
+        </div>} />
         <div className="bg-colors-var rounded-lg my-8 py-4 px-8">
           {/* Header */}
           <div className="flex items-center justify-between pb-4 border-b border-gray-300 flex-wrap gap-4">

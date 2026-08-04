@@ -81,7 +81,11 @@ export const useHistoryStore = create<HistoryState>((set, get) => ({
         const styles: Record<string, string> = {
           PENDING: 'bg-[#E3F2FD] text-[#1565C0]',
           PAID: 'bg-[#E7F4EA] text-[#2E7D32]',
-          IN_PROGRESS: 'bg-[#FFF3CD] text-[#856404]',
+          ACCEPTED: 'bg-[#E3F2FD] text-[#1565C0]',
+          REJECTED: 'bg-[#FDECEC] text-[#C62828]',
+          PREPARING: 'bg-[#FFF3CD] text-[#856404]',
+          HANDED_TO_COURIER: 'bg-[#F3E5F5] text-[#7B1FA2]',
+          ON_DELIVERY: 'bg-amber-50 text-amber-700',
           DELIVERED: 'bg-[#D1E7DD] text-[#0F5132]',
           CANCELLED: 'bg-[#FFF4E5] text-[#E65100]',
         }
@@ -141,6 +145,7 @@ export const useHistoryStore = create<HistoryState>((set, get) => ({
       const res = await getHistory(cleanedPayload)
       set({
         history: res.data,
+        localHistory: [],
         totalPages: res.meta.totalPages,
         total: res.meta.total,
         payload

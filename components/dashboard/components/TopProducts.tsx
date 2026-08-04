@@ -3,7 +3,7 @@
 import React, { useMemo } from 'react'
 import { TopProducts } from '@/types/dashboard'
 import { formatCurrency } from '@/utils/general'
-import { TrendingUp } from 'lucide-react'
+import { Icon } from '@iconify/react'
 
 interface TopProductsProps {
   data: TopProducts[]
@@ -22,9 +22,9 @@ const TopProductsCom: React.FC<TopProductsProps> = ({ data }) => {
 
   if (data.length === 0) {
     return (
-      <div className="py-8 text-center text-gray-500">
+        <div className="py-8 text-center text-[var(--muted)]">
         <div className="flex justify-center mb-2">
-          <TrendingUp className="text-gray-400" size={32} />
+          <Icon icon="mdi:trending-up" width={32} className="text-[#DCD9D5]" />
         </div>
         <p>No product sales yet</p>
       </div>
@@ -33,8 +33,8 @@ const TopProductsCom: React.FC<TopProductsProps> = ({ data }) => {
 
   return (
     <div>
-      <p className="text-gray-600 text-sm mb-4">
-        <span className="font-semibold text-gray-900">{totalSold}</span> units sold
+      <p className="text-[var(--muted)] text-sm mb-4">
+        <span className="font-semibold text-[var(--ink)]">{totalSold}</span> units sold
       </p>
 
       <div className="space-y-3">
@@ -45,24 +45,21 @@ const TopProductsCom: React.FC<TopProductsProps> = ({ data }) => {
             <div key={idx} className="space-y-1">
               <div className="flex justify-between items-start gap-2">
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-900 truncate">
+                  <p className="text-sm font-medium text-[var(--ink)] truncate">
                     {product.name}
                   </p>
-                  <p className="text-xs text-gray-500">
-                    {product.qty} units sold
-                  </p>
+                  <p className="text-xs text-[var(--muted)]">{product.qty} units sold</p>
                 </div>
-
                 <div className="text-right">
-                  <p className="text-sm font-semibold text-gray-900">
+                  <p className="text-sm font-semibold text-[var(--ink)]">
                     {formatCurrency(product.revenue)}
                   </p>
                 </div>
               </div>
 
-              <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+              <div className="w-full bg-[var(--surface-muted)] rounded-full h-2 overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-blue-400 to-blue-600 rounded-full transition-all duration-300"
+                  className="h-full bg-gradient-to-r from-[#BD6230] to-[#8B4513] rounded-full transition-all duration-300"
                   style={{ width: `${percentage}%` }}
                 />
               </div>

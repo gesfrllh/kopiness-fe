@@ -6,9 +6,10 @@ vi.mock('@/lib/api/cart', () => ({
   removeCartItem: vi.fn(),
   clearCartApi: vi.fn(),
   getCart: vi.fn(),
+  updateCartItem: vi.fn(),
 }))
 
-import { addCartItem, removeCartItem, clearCartApi, getCart } from '@/lib/api/cart'
+import { addCartItem, removeCartItem, clearCartApi, getCart, updateCartItem } from '@/lib/api/cart'
 
 const product = {
   id: 'prod-1',
@@ -44,6 +45,7 @@ describe('useCartStore', () => {
 
   it('addToCart does not add duplicate', async () => {
     vi.mocked(addCartItem).mockResolvedValue(undefined)
+    vi.mocked(updateCartItem).mockResolvedValue(undefined)
     await useCartStore.getState().addToCart(product)
     await useCartStore.getState().addToCart(product)
     expect(useCartStore.getState().items).toHaveLength(1)
@@ -91,13 +93,13 @@ describe('useCartStore', () => {
     expect(useCartStore.getState().items).toHaveLength(1)
     expect(useCartStore.getState().items[0].name).toBe('Kopi Arabika')
     expect(useCartStore.getState().items[0].qty).toBe(2)
-    expect(useCartStore.getState().totalQty).toBe(1)
+    expect(useCartStore.getState().totalQty).toBe(2)
   })
 
-  it('fetchCart keeps local state on API failure', async () => {
+  it('fetchCart clears stale state on API failure', async () => {
     vi.mocked(getCart).mockRejectedValue(new Error('Network error'))
 
-    await useCartStore.getState().fetchCart()
+    await expect(useCartStore.getState().fetchCart()).rejects.toThrow('Unable to load cart')
 
     expect(useCartStore.getState().items).toEqual([])
   })

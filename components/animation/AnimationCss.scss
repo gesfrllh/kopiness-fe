@@ -128,15 +128,16 @@
 }
 
 .mobile-menu {
-  position: absolute;
-  top: 5rem;
+  position: fixed;
+  top: 4rem;
+  left: 0;
   right: 0;
   width: 100%;
-  background: rgba(255, 255, 255, 0.8);
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
   backdrop-filter: blur(10px);
   padding: 1rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  overflow-y: auto;
   transform-origin: top;
   pointer-events: none;
   opacity: 0;
@@ -162,7 +163,7 @@
   100% {
     opacity: 1;
     transform: translateY(0);
-    max-height: 650px; // bebas, asal lebih tinggi dari konten
+    max-height: calc(100vh - 4rem);
   }
 }
 

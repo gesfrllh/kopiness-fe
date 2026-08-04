@@ -2,60 +2,46 @@
 
 import { Icon } from '@iconify/react'
 import { useCartStore } from '@/store/useCartStore'
-import { useHistoryStore } from '@/store/useHistory'
 import { formatCurrency } from '@/utils/general'
 import { createTransaction } from '@/lib/api/cashier'
 import Button from '@/components/Base/Button'
 import Link from 'next/link'
 import { useState } from 'react'
+import dynamic from 'next/dynamic'
+
+const DestinationPicker = dynamic(() => import('@/components/map/DestinationPicker'), { ssr: false })
 import { useRouter } from 'next/navigation'
 
 const CheckoutPage = () => {
   const { items, totalQty, clearCart } = useCartStore()
-  const addLocalHistory = useHistoryStore((s) => s.addLocalHistory)
   const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [deliveryAddress, setDeliveryAddress] = useState('')
+  const [destination, setDestination] = useState<{ latitude: number; longitude: number } | null>(null)
   const router = useRouter()
-  const totalPrice = items.reduce((sum, item) => sum + item.price, 0)
+  const totalPrice = items.reduce((sum, item) => sum + item.price * item.qty, 0)
 
   const handleCheckout = async () => {
     setSubmitting(true)
+    setError(null)
 
     try {
       await createTransaction({
         items: items.map((item) => ({
           productId: item.id as string,
-          quantity: 1,
+          quantity: item.qty,
         })),
+        deliveryAddress,
+        deliveryLatitude: destination!.latitude,
+        deliveryLongitude: destination!.longitude,
       })
+      await clearCart()
+      router.push('/manage/history')
     } catch {
-      const { v4: uuid } = await import('uuid')
-      const orderId = uuid().slice(0, 8)
-      const trackingId = `TRK-${Date.now().toString().slice(-6)}-${Math.random().toString(36).slice(2, 6)}`
-
-      addLocalHistory({
-        id: orderId,
-        orderNumber: `ORD-${Date.now().toString().slice(-6)}`,
-        invoiceNumber: `INV-${Date.now().toString().slice(-6)}`,
-        status: 'PENDING',
-        total: totalPrice,
-        paymentMethod: 'MANUAL',
-        itemCount: items.length,
-        createdAt: new Date().toISOString(),
-        customer: { id: '', name: '', email: '' },
-        tracking: {
-          trackingId,
-          status: 'PENDING',
-          updatedAt: new Date().toISOString(),
-          events: [
-            { time: new Date().toISOString(), description: 'Pesanan dibuat' },
-          ],
-        },
-      })
+      setError('Pesanan belum berhasil dibuat. Periksa koneksi lalu coba lagi.')
+    } finally {
+      setSubmitting(false)
     }
-
-    clearCart()
-    setSubmitting(false)
-    router.push('/manage/history')
   }
 
   if (items.length === 0) {
@@ -79,8 +65,8 @@ const CheckoutPage = () => {
 
         {items.map((item) => (
           <div key={item.id} className="flex justify-between text-sm">
-            <span className="text-muted">{item.name}</span>
-            <span className="font-medium">{formatCurrency(item.price)}</span>
+            <span className="text-muted">{item.name} x{item.qty}</span>
+            <span className="font-medium">{formatCurrency(item.price * item.qty)}</span>
           </div>
         ))}
 
@@ -91,13 +77,27 @@ const CheckoutPage = () => {
       </div>
 
       <div className="bg-white rounded-xl border shadow-sm p-5 space-y-3">
-        <p className="text-sm text-muted">
-          Pembayaran akan dilakukan secara manual di store.
-        </p>
+        <label className="block space-y-1 text-sm font-medium">
+          Alamat pengantaran
+          <textarea
+            value={deliveryAddress}
+            onChange={(event) => setDeliveryAddress(event.target.value)}
+            maxLength={300}
+            required
+            placeholder="Contoh: Jl. Raya Rawa Indah No. 35, Bojong Pd. Terong, Cipayung, Depok"
+            className="mt-1 min-h-24 w-full rounded-lg border border-[#DCD9D5] p-3 font-normal outline-none focus:border-[#BD6230]"
+          />
+        </label>
+        <p className="text-sm text-muted">Klik titik rumah di map. Alamat membantu kurir menemukan detail tujuan.</p>
+        <DestinationPicker value={destination} onChange={setDestination} />
+        <p className="text-xs text-muted">{destination ? 'Titik tujuan dipilih.' : 'Belum memilih titik tujuan.'}</p>
+        {error && (
+          <p className="text-sm text-red-600" role="alert">{error}</p>
+        )}
         <Button
           className="w-full"
           onClick={handleCheckout}
-          disabled={submitting}
+          disabled={submitting || !deliveryAddress.trim() || !destination}
         >
           {submitting ? 'Memproses...' : 'Buat Pesanan'}
         </Button>

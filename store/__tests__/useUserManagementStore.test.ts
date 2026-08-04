@@ -3,9 +3,10 @@ import { useUserManagementStore } from '@/store/useUserManagementStore'
 
 vi.mock('@/lib/api/auth', () => ({
   adminCreateUser: vi.fn(),
+  getUsers: vi.fn(),
 }))
 
-import { adminCreateUser } from '@/lib/api/auth'
+import { adminCreateUser, getUsers } from '@/lib/api/auth'
 
 describe('useUserManagementStore', () => {
   beforeEach(() => {
@@ -19,13 +20,19 @@ describe('useUserManagementStore', () => {
     expect(state.creating).toBe(false)
   })
 
-  it('fetchUsers populates dummy users', () => {
-    useUserManagementStore.getState().fetchUsers()
-    expect(useUserManagementStore.getState().users.length).toBeGreaterThan(0)
+  it('fetchUsers populates users from the API', async () => {
+    vi.mocked(getUsers).mockResolvedValue([
+      { id: '1', name: 'Owner', email: 'owner@test.com', role: 'STOREOWNER' },
+    ])
+
+    await useUserManagementStore.getState().fetchUsers()
+
+    expect(useUserManagementStore.getState().users).toHaveLength(1)
   })
 
   it('createUser returns true on success', async () => {
     vi.mocked(adminCreateUser).mockResolvedValue(undefined)
+    vi.mocked(getUsers).mockResolvedValue([])
 
     const result = await useUserManagementStore.getState().createUser({
       name: 'New Owner',

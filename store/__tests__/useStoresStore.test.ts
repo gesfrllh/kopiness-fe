@@ -35,14 +35,13 @@ describe('useStoresStore', () => {
     expect(useStoresStore.getState().loading).toBe(false)
   })
 
-  it('fetchStores uses dummy stores on API failure', async () => {
+  it('fetchStores clears stores on API failure', async () => {
     vi.mocked(getStores).mockRejectedValue(new Error('Network error'))
 
     await useStoresStore.getState().fetchStores()
 
     const stores = useStoresStore.getState().stores
-    expect(stores.length).toBeGreaterThan(0)
-    expect(stores[0].name).toContain('Kopiness')
+    expect(stores).toEqual([])
     expect(useStoresStore.getState().loading).toBe(false)
   })
 })

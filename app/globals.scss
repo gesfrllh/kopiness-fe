@@ -1,47 +1,23 @@
 @use "tailwindcss";
 
-
-[data-theme='dark'] {
-  --primary: #f59e0b;
-  --primary-600: #f59e0b;
-  --primary-700: #b45309;
-  --muted: #94a3b8;
-  --card-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 0.6);
-  /* notify colors for dark */
-  --notify-info: #1e40af;
-  --notify-success: #16a34a;
-  --notify-warning: #f59e0b;
-  --notify-error: #ef4444;
-  --notify-text: #e5e7eb;
-}
-
-:root {
-  /* notify defaults - light */
-  --notify-info: #2563eb;
-  --notify-success: #22c55e;
-  --notify-warning: #facc15;
-  --notify-error: #ef4444;
-  --notify-text: #0f172a;
-}
-
 /* =====================
    THEME TOKENS
 ===================== */
 
 $light-theme: (
-  bg: #ffffff,
-  bgs: #E5E7EB,
-  text: #0f172a,
-  card: #f8fafc,
-  border: 1px solid #92400E
+  bg: #F8F5F2,
+  bgs: #F1ECE7,
+  text: #2D2D2D,
+  card: #FFFFFF,
+  border: 1px solid #E4D9CE
 );
 
 $dark-theme: (
-  bg: #020617,
-  bgs: #0d1434,
-  text: #e5e7eb,
-  card: #020617,
-  border: 1px solid #92400E
+  bg: #1B1612,
+  bgs: #241D18,
+  text: #F5F5F4,
+  card: #2A221D,
+  border: 1px solid #4A3B30
 );
 
 @mixin theme-vars($theme) {
@@ -51,51 +27,81 @@ $dark-theme: (
 }
 
 /* =====================
-   FONTS
-===================== */
-
-// @font-face {
-//   font-family: 'Akira';
-//   src: url('/font/akira/Akira.otf') format('opentype');
-//   font-weight: normal;
-//   font-style: normal;
-// }
-
-/* =====================
    ROOT THEME
 ===================== */
 
 :root {
+  --surface: #fbfaf9;
+  --surface-muted: #f1ece7;
+  --canvas: #f7f2ec;
+  --ink: #2d2d2d;
+  --line: #dcd9d5;
+  // Brand Colors
+  --primary: #6F4E37;
+  /* Coffee Brown */
+  --primary-600: #5C4030;
+  --primary-700: #4A3225;
+
+  --secondary: #A67C52;
+  /* Caramel */
+  --accent: #DCC7AA;
+  /* Latte */
+
+  // Typography
+  --text: #2D2D2D;
+  --muted: #7A7A7A;
+
+  // Notifications
+  --notify-info: #2563eb;
+  --notify-success: #22c55e;
+  --notify-warning: #f59e0b;
+  --notify-error: #ef4444;
+  --notify-text: #0f172a;
+
+  // Effects
+  --card-shadow: 0px 8px 24px rgba(111, 78, 55, 0.08);
+
+  // Fonts
   --font-akira: 'Akira', sans-serif;
+
   @include theme-vars($light-theme);
 }
 
 [data-theme='dark'] {
+  --surface: #211a16;
+  --surface-muted: #2b211c;
+  --canvas: #181311;
+  --ink: #f3ece6;
+  --line: #4b3930;
+  // Brand Colors
+  --primary: #C4A484;
+  --primary-600: #B08D6B;
+  --primary-700: #967454;
+
+  --secondary: #DCC7AA;
+  --accent: #EADBC8;
+
+  // Typography
+  --text: #F5F5F4;
+  --muted: #B5B5B5;
+
+  // Notifications
+  --notify-info: #3b82f6;
+  --notify-success: #22c55e;
+  --notify-warning: #f59e0b;
+  --notify-error: #ef4444;
+  --notify-text: #F5F5F4;
+
+  // Effects
+  --card-shadow: 0px 8px 24px rgba(0, 0, 0, 0.35);
+
   @include theme-vars($dark-theme);
 }
 
 /* =====================
-   THEME TOKENS - EXTENDED
-   Utilities that components will use to stay theme-aware
+   UTILITY CLASSES
 ===================== */
 
-:root {
-  --primary: #92400E;
-  --primary-600: #92400E;
-  --primary-700: #5C2E00;
-  --muted: #9ca3af;
-  --card-shadow: 8px 8px 0px 0px rgba(92, 46, 0, 0.85);
-}
-
-[data-theme='dark'] {
-  --primary: #f59e0b;
-  --primary-600: #f59e0b;
-  --primary-700: #b45309;
-  --muted: #94a3b8;
-  --card-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 0.6);
-}
-
-/* Utility classes */
 .theme-text {
   color: var(--text);
 }
@@ -118,7 +124,7 @@ $dark-theme: (
 
 .bg-primary {
   background-color: var(--primary);
-  color: #fff;
+  color: white;
 }
 
 .dot-primary {
@@ -128,6 +134,7 @@ $dark-theme: (
 .btn-solid {
   background-color: var(--primary);
   color: white;
+  transition: .2s ease;
 }
 
 .btn-solid:hover {
@@ -138,10 +145,36 @@ $dark-theme: (
   background: transparent;
   border: 1px solid var(--primary);
   color: var(--primary);
+  transition: .2s ease;
+}
+
+.btn-outline:hover {
+  background: var(--primary);
+  color: white;
 }
 
 .card-shadow {
   box-shadow: var(--card-shadow);
+}
+
+/* =====================
+   KPI CARD COLORS
+===================== */
+
+.kpi-orders {
+  border-left: 4px solid var(--primary);
+}
+
+.kpi-revenue {
+  border-left: 4px solid var(--notify-success);
+}
+
+.kpi-pending {
+  border-left: 4px solid var(--notify-warning);
+}
+
+.kpi-completed {
+  border-left: 4px solid #3b82f6;
 }
 
 /* =====================
@@ -151,7 +184,7 @@ $dark-theme: (
 body {
   color: var(--text);
   background-color: var(--bg);
-  // font-family: var(--font-akira);
+  font-family: Inter, sans-serif;
 }
 
 .bg-colors-var {
@@ -170,12 +203,10 @@ body {
    SCROLLBAR
 ===================== */
 
-/* Chrome, Safari, Edge */
 ::-webkit-scrollbar {
   display: none;
 }
 
-/* Firefox */
 * {
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -185,23 +216,81 @@ html {
   scroll-behavior: smooth;
 }
 
+/* =====================
+   DIVIDER
+===================== */
+
 .divider {
   display: flex;
   align-items: center;
   width: 100%;
-  color: #999;
+  color: var(--muted);
 
   &::before,
   &::after {
     content: '';
     flex: 1;
     height: 1px;
-    background-color: #ddd;
+    background-color: #d6d3d1;
   }
 
   span {
     padding: 0 12px;
     font-size: 14px;
     white-space: nowrap;
+  }
+}
+
+.app-shell { background: var(--canvas); }
+.app-content { margin-left: var(--sidebar-width, 260px); }
+.app-main { background: var(--canvas); }
+.app-topbar { background: var(--surface); border-bottom: 1px solid var(--line); }
+.app-sidebar { background: var(--surface); border-right: 1px solid var(--line); }
+.app-search { background: var(--surface-muted); color: var(--muted); }
+.app-icon-button { align-items: center; justify-content: center; border-radius: 0.75rem; padding: 0.625rem; color: var(--muted); transition: 0.2s ease; }
+.app-icon-button:hover { background: var(--surface-muted); color: var(--primary); }
+.app-notification-panel { background: var(--surface); border: 1px solid var(--line); color: var(--ink); }
+.cta-gradient { background: linear-gradient(112deg, #3A2117 0%, #70402A 52%, #B76638 130%); }
+.cta-grain { background-image: radial-gradient(rgba(255,255,255,0.45) 0.6px, transparent 0.6px); background-size: 6px 6px; mix-blend-mode: soft-light; }
+
+[data-theme='dark'] {
+  .app-sidebar [class*='border-[#DCD9D5]'], .app-topbar [class*='border-[#DCD9D5]'] { border-color: var(--line) !important; }
+  .app-sidebar [class*='text-[#2D2D2D]'], .app-topbar [class*='text-[#2D2D2D]'] { color: var(--ink) !important; }
+  .app-sidebar [class*='text-[#7F7E77]'], .app-topbar [class*='text-[#7F7E77]'] { color: var(--muted) !important; }
+  .app-sidebar [class*='bg-[#FBFAF9]'], .app-topbar [class*='bg-[#FBFAF9]'] { background-color: var(--surface) !important; }
+  .app-sidebar [class*='bg-[#F1ECE7]'], .app-topbar [class*='bg-[#F1ECE7]'] { background-color: var(--surface-muted) !important; }
+  .chat-workspace .chat-messages { background-color: #1b1512; background-image: radial-gradient(rgba(220, 199, 170, 0.10) 0.8px, transparent 0.8px); }
+  .chat-workspace [class*='bg-[#FFFEFC]'] { background-color: var(--surface) !important; }
+  .chat-workspace [class*='bg-[#F7F2EC]'], .chat-workspace [class*='bg-[#F9F5F1]'] { background-color: var(--surface-muted) !important; }
+  .chat-workspace [class*='text-[#3B302A]'], .chat-workspace [class*='text-[#2D2D2D]'], .chat-workspace [class*='text-[#554238]'] { color: var(--ink) !important; }
+  .chat-workspace [class*='border-[#'] { border-color: var(--line) !important; }
+}
+
+/* Compatibility layer for legacy Tailwind utilities used across existing pages. */
+[data-theme='dark'] {
+  .bg-white, .bg-white\/70, .bg-white\/80, .bg-white\/90 { background-color: var(--surface) !important; }
+  .bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-neutral-50, .bg-neutral-100 { background-color: var(--surface-muted) !important; }
+  .bg-amber-50, .bg-amber-100 { background-color: #35261e !important; }
+  .bg-amber-200 { background-color: #493226 !important; }
+  .bg-amber-950 { background-color: #17100d !important; }
+  .border-gray-100, .border-gray-200, .border-gray-300, .border-neutral-100, .border-neutral-200, .border-amber-50, .border-amber-100, .border-amber-200 { border-color: var(--line) !important; }
+  .text-black, .text-gray-900, .text-gray-800, .text-gray-700, .text-gray-600, .text-neutral-900, .text-neutral-800, .text-neutral-700, .text-amber-900 { color: var(--ink) !important; }
+  .text-gray-500, .text-gray-400, .text-neutral-500, .text-neutral-400, .text-amber-700, .text-amber-800 { color: var(--muted) !important; }
+  input, textarea, select { color: var(--ink); }
+  input::placeholder, textarea::placeholder { color: var(--muted); opacity: 0.8; }
+  .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl { box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24); }
+  .dashboard-highlight { background-image: linear-gradient(135deg, var(--surface), rgba(189, 98, 48, 0.14)) !important; }
+  .cta-gradient { background: linear-gradient(112deg, #20140F 0%, #4B2A1C 54%, #784126 130%); }
+}
+
+@media (max-width: 767px) {
+  .app-content { margin-left: 0; }
+}
+
+.chat-workspace {
+  .chat-messages {
+    background-color: #f7f2ec;
+    background-image: radial-gradient(rgba(139, 84, 47, 0.09) 0.8px, transparent 0.8px);
+    background-size: 18px 18px;
   }
 }
