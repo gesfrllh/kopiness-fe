@@ -22,6 +22,9 @@ const CheckoutPage = () => {
   const totalPrice = items.reduce((sum, item) => sum + item.price * item.qty, 0)
 
   const handleCheckout = async () => {
+    const address = deliveryAddress.trim()
+    if (!items.length || !address || !destination) return
+
     setSubmitting(true)
     setError(null)
 
@@ -31,9 +34,9 @@ const CheckoutPage = () => {
           productId: item.id as string,
           quantity: item.qty,
         })),
-        deliveryAddress,
-        deliveryLatitude: destination!.latitude,
-        deliveryLongitude: destination!.longitude,
+        deliveryAddress: address,
+        deliveryLatitude: destination.latitude,
+        deliveryLongitude: destination.longitude,
       })
       await clearCart()
       router.push('/manage/history')

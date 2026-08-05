@@ -1,13 +1,32 @@
 import Pusher from 'pusher-js';
+import api from '@/lib/api';
 import { MessageResponseDto, TypingEventDto } from '@/types/chat';
 
 let pusherClient: Pusher | null = null;
 
-export const getPusherClient = (): Pusher => {
+export const getPusherClient = (): Pusher | null => {
   if (!pusherClient) {
-    pusherClient = new Pusher('e347e9a9fc2a90ec3bf4', {
-      cluster: 'ap1',
+    const key = process.env.NEXT_PUBLIC_PUSHER_KEY;
+    const cluster = process.env.NEXT_PUBLIC_PUSHER_CLUSTER;
+    if (!key || !cluster) return null;
+
+    pusherClient = new Pusher(key, {
+      cluster,
       forceTLS: true,
+      channelAuthorization: {
+        customHandler: async ({ socketId, channelName }, callback) => {
+          const chatId = channelName.replace('private-chat-', '');
+
+          try {
+            const response = await api.post(`/chats/${chatId}/pusher-auth`, {
+              socket_id: socketId,
+            });
+            callback(null, response.data);
+          } catch (error) {
+            callback(error as Error, null);
+          }
+        },
+      },
     });
   }
   return pusherClient;
@@ -19,7 +38,15 @@ type TypingCallback = (data: TypingEventDto) => void;
 
 export const subscribeToChatChannel = (chatId: string, userId: string) => {
   const client = getPusherClient();
-  const channelName = `chat-${chatId}`;
+  const channelName = `private-chat-${chatId}`;
+  if (!client) {
+    return {
+      onNewMessage: (_callback: NewMessageCallback) => undefined,
+      onMessageRead: (_callback: MessageReadCallback) => undefined,
+      onTyping: (_callback: TypingCallback) => undefined,
+      unsubscribe: () => undefined,
+    };
+  }
 
   const channel = client.subscribe(channelName);
 

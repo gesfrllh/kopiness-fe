@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import Cookies from 'js-cookie'
 import { AuthState, User } from '@/types/auth/user'
 import { formatError } from '@/utils/formatError'
-import { login, logout } from '@/lib/api/auth'
+import { getMe, login, logout } from '@/lib/api/auth'
 
 type SetStateFn = (partial: Partial<AuthState> | ((state: AuthState) => Partial<AuthState>)) => void
 
@@ -19,45 +19,22 @@ const saveAuthToStorage = (user: User | null) => {
   }
 }
 
-// Helper to load auth from localStorage
-const loadAuthFromStorage = (): { user: User } | null => {
-  if (typeof window !== 'undefined') {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY)
-      return stored ? JSON.parse(stored) : null
-    } catch {
-      return null
-    }
-  }
-  return null
+const clearAuthHints = () => {
+  const options = { path: '/' }
+  Cookies.remove('status', options)
+  Cookies.remove('role', options)
+  Cookies.remove('is_logged_in', options)
+  Cookies.remove('store_id', options)
 }
 
 export const useAuthStore = create<AuthState>((set: SetStateFn) => {
-  // Load dari localStorage saat store dibuat
-  const initialState = (() => {
-    const stored = loadAuthFromStorage()
-    if (stored) {
-      return {
-        user: stored.user,
-        token: null,
-        role: stored.user?.role || null,
-        loading: false,
-        error: null,
-        isHydrated: false, // Will be set to true after hydration
-      }
-    }
-    return {
-      user: null,
-      token: null,
-      role: null,
-      loading: false,
-      error: null,
-      isHydrated: false, // Will be set to true after hydration
-    }
-  })()
-
   return {
-    ...initialState,
+    user: null,
+    token: null,
+    role: null,
+    loading: false,
+    error: null,
+    isHydrated: false,
 
     login: async (email: string, password: string) => {
       set({ loading: true, error: null })
@@ -103,10 +80,7 @@ export const useAuthStore = create<AuthState>((set: SetStateFn) => {
           loading: false,
           error: null
         })
-        Cookies.remove('status')
-        Cookies.remove('role')
-        Cookies.remove('is_logged_in')
-        Cookies.remove('store_id')
+        clearAuthHints()
       } catch (error: unknown) {
         const message = formatError(error) || 'Logout Failed'
         set({ error: message, loading: false })
@@ -114,21 +88,30 @@ export const useAuthStore = create<AuthState>((set: SetStateFn) => {
       }
     },
 
-    // Initialize store dari localStorage on app load (fallback jika diperlukan)
-    hydrate: () => {
-      const stored = loadAuthFromStorage()
-      if (stored) {
-        set({
-          user: stored.user,
-          token: null, // Token di httpOnly cookies
-          role: stored.user?.role || null,
-          loading: false,
-          error: null,
-          isHydrated: true
-        })
-      } else {
-        set({ isHydrated: true })
+    // Backend session is authority; localStorage only mirrors verified user data.
+    hydrate: async () => {
+      try {
+        const session = await getMe()
+        if (!session?.isLoggedIn || !session.user) throw new Error('Invalid session')
+
+        const user = session.user as User
+        clearAuthHints()
+        Cookies.set('role', user.role ?? '', { path: '/', sameSite: 'strict' })
+        Cookies.set('is_logged_in', 'true', { path: '/', sameSite: 'strict' })
+        if (user.store_id) Cookies.set('store_id', user.store_id, { path: '/', sameSite: 'strict' })
+        saveAuthToStorage(user)
+        set({ user, token: null, role: user.role ?? null, loading: false, error: null, isHydrated: true })
+      } catch {
+        saveAuthToStorage(null)
+        clearAuthHints()
+        set({ user: null, token: null, role: null, loading: false, error: null, isHydrated: true })
       }
+    },
+
+    clearSession: () => {
+      saveAuthToStorage(null)
+      clearAuthHints()
+      set({ user: null, token: null, role: null, loading: false, error: null, isHydrated: true })
     },
 
     setError: (error: string | null) => set({ error })

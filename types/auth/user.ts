@@ -21,7 +21,8 @@ export interface AuthState {
 
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  hydrate: () => void;
+  hydrate: () => Promise<void>;
+  clearSession: () => void;
   setError: (error: string | null) => void
 }
 

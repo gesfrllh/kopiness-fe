@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { showNotify } from '../Base/notification/notify-controllers'
 import { useAuthStore } from '@/store/useAuthStore'
+import { homeForRole, isRole } from '@/lib/auth/routes'
 import FormGroup from '../../components/Base/FormGroup'
 import FormInput from '../../components/Base/FormInput'
 import LoginLogo from '@/public/assets/login-logo.svg'
@@ -44,7 +45,9 @@ export default function LoginPage() {
         title: 'Sukses!',
         text: "Login Berhasil!"
       })
-      router.push('/manage/dashboard')
+      const role = useAuthStore.getState().role
+      const validRole = role ?? undefined
+      router.push(homeForRole(isRole(validRole) ? validRole : 'CUSTOMER'))
     } catch {
       // error sudah di-handle oleh store dan useEffect
     }

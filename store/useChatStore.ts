@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { ChatState, ChatListItemDto, ChatDetailDto, MessageResponseDto, MessageSenderDto } from '@/types/chat'
 import { getChats, getChatDetail, createChat as createChatApi, sendMessage as sendMessageApi, markAsRead as markAsReadApi, deleteChat as deleteChatApi, broadcastTyping as broadcastTypingApi } from '@/lib/api/chat'
-import { subscribeToChatChannel } from '@/lib/pusher'
+import { disconnectPusher, subscribeToChatChannel } from '@/lib/pusher'
 
 let activeSubscriptions: { chatId: string; unsubscribe: () => void }[] = []
 let realtimeUserId: string | null = null
@@ -172,8 +172,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
     onNewMessage((data: MessageResponseDto) => {
       const state = get()
-      const isCurrentChat = state.currentChat?.id === chatId
-      if (isCurrentChat) {
+       const isCurrentChat = state.currentChat?.id === chatId
+       if (isCurrentChat && !state.messages.some((message) => message.id === data.id)) {
         set({ messages: [...state.messages, data] })
       }
       set({
@@ -223,9 +223,20 @@ export const useChatStore = create<ChatState>((set, get) => ({
   },
 
   startRealtime: async (userId: string) => {
+    if (realtimeUserId && realtimeUserId !== userId) {
+      activeSubscriptions.forEach((subscription) => subscription.unsubscribe())
+      activeSubscriptions = []
+    }
     realtimeUserId = userId
     await get().fetchChats()
     get().chatList.forEach((chat) => get().subscribeToChannel(chat.id, userId))
+  },
+
+  stopRealtime: () => {
+    activeSubscriptions.forEach((subscription) => subscription.unsubscribe())
+    activeSubscriptions = []
+    realtimeUserId = null
+    disconnectPusher()
   },
 
   clearNotifications: () => set({ notifications: [] }),

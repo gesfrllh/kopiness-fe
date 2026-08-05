@@ -92,5 +92,6 @@ export interface ChatState {
   subscribeToChannel: (chatId: string, userId: string) => void;
   unsubscribeChannel: (chatId: string) => void;
   startRealtime: (userId: string) => Promise<void>;
+  stopRealtime: () => void;
   clearNotifications: () => void;
 }

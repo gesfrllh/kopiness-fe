@@ -45,12 +45,13 @@ Multi-role coffee shop management frontend built with **Next.js 15**, **Zustand*
 ```
 SUPERADMIN  → Full access, creates STOREOWNER accounts
 STOREOWNER  → Manages own store products & orders
+COURIER     → Delivers assigned orders
 CUSTOMER    → Browse, cart, checkout, track orders
 ```
 
 Registration from the web is only for **CUSTOMER**. SUPERADMIN creates STOREOWNER via the Kelola Pengguna page.
 
-Auth cookies: `is_logged_in`, `role`, `store_id`. The `access_token` is stored as an httpOnly encrypted cookie by the backend.
+`access_token` is an httpOnly encrypted backend cookie. Client `is_logged_in`, `role`, and `store_id` cookies only guide navigation; backend authorizes every API request. On startup, client verifies session with `GET /auth/me` and clears cached UI auth state on an invalid session.
 
 ## Getting Started
 
@@ -151,6 +152,7 @@ All API calls are in `lib/api/` as standalone functions. Zustand stores call the
 | Method | Endpoint | Purpose |
 |---|---|---|
 | POST | `/auth/login` | Login |
+| GET | `/auth/me` | Verify current backend session and load client user state |
 | POST | `/auth/register` | Register (CUSTOMER only) |
 | POST | `/auth/storeowners` | SUPERADMIN creates STOREOWNER |
 | GET | `/auth/users` | List users (SUPERADMIN) |
